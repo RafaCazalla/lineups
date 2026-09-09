@@ -53,8 +53,19 @@ body{
 
 #escena{position:fixed; inset:0}
 #escena canvas{display:block; touch-action:none}
-/* Capa de etiquetas HTML (CSS2DRenderer). Vacía en esta fase. */
+/* Capa de etiquetas HTML (CSS2DRenderer). Los nombres van aquí, no en textura:
+   se leen nítidos a cualquier distancia y nunca salen del revés. */
 #etiquetas{position:fixed; inset:0; pointer-events:none; overflow:hidden}
+.rotulo{
+  font-family:var(--font-cond); font-weight:600; font-size:12.5px; line-height:1;
+  letter-spacing:.15px; white-space:nowrap;
+  padding:4px 8px 3px; border-radius:6px;
+  background:rgba(255,255,255,.93); color:var(--ink);
+  box-shadow:0 1px 3px rgba(0,0,0,.22);
+  border:1px solid transparent;
+  transform:translateY(3px);
+}
+.rotulo.sel{background:var(--green) !important; color:#fff !important; border-color:rgba(0,0,0,.25) !important}
 
 /* --- Cromo de la interfaz ------------------------------------------------ */
 .hud{position:fixed; z-index:5}
@@ -83,7 +94,7 @@ body{
 #marca p{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.45}
 
 /* Interruptores, izquierda */
-#ajustes{top:176px; left:18px; padding:8px; width:240px}
+#ajustes{top:206px; left:18px; padding:8px; width:240px}
 .sw{
   display:flex; align-items:center; gap:11px; width:100%;
   padding:9px 10px; border:0; border-radius:9px; background:none;
@@ -106,6 +117,96 @@ body{
 .sw[aria-pressed="true"] .palanca::after{transform:translateX(16px)}
 .sw[disabled]{opacity:.42; cursor:default}
 .sw[disabled]:hover{background:none}
+
+/* Cabecera del partido, arriba al centro */
+#cabecera{top:18px; left:50%; transform:translateX(-50%); padding:11px 16px 12px; width:min(474px,calc(100vw - 36px))}
+#cabecera .comp{
+  display:flex; align-items:center; justify-content:center; gap:7px;
+  font-family:var(--font-cond); font-size:12.5px; color:var(--ink-2); margin-bottom:1px;
+}
+#cabecera .comp b{font-weight:600; color:var(--ink)}
+#cabecera .jorn{text-align:center; font-family:var(--font-cond); font-size:11.5px; color:var(--ink-3); margin-bottom:7px}
+#cabecera .marcador{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px}
+#cabecera .equipo{display:flex; align-items:center; gap:9px; min-width:0}
+#cabecera .equipo.der{flex-direction:row-reverse}
+#cabecera .escudo{
+  width:30px; height:30px; border-radius:50%; flex:none;
+  display:grid; place-items:center;
+  font-family:var(--font-cond); font-weight:600; font-size:11px; letter-spacing:.3px;
+  border:1px solid rgba(56,56,56,.14);
+}
+#cabecera .equipo span{
+  font-family:var(--font-cond); font-weight:600; font-size:16.5px; letter-spacing:.1px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+#cabecera .centro{text-align:center}
+#cabecera .goles{
+  font-family:var(--font-cond); font-weight:600; font-size:26px; line-height:1;
+  font-variant-numeric:tabular-nums; letter-spacing:.5px;
+}
+#cabecera .min{
+  display:inline-flex; align-items:center; gap:5px; margin-top:3px;
+  font-family:var(--font-cond); font-size:12px; color:var(--ink-2);
+  font-variant-numeric:tabular-nums;
+}
+#cabecera .directo{
+  background:var(--live); color:#fff; border-radius:4px; padding:1px 5px 0;
+  font-weight:600; font-size:10px; letter-spacing:.4px;
+}
+/* Línea de tiempo: solo los sucesos que hay en los datos, nada calculado. */
+#linea{margin-top:10px; position:relative; height:26px}
+#linea .via{position:absolute; top:11px; left:0; right:0; height:3px; border-radius:2px; background:var(--hairline)}
+#linea .hecho{position:absolute; top:11px; left:0; height:3px; border-radius:2px; background:var(--green)}
+#linea .marca{position:absolute; top:0; transform:translateX(-50%); font-family:var(--font-cond); font-size:9.5px; color:var(--ink-3)}
+#linea .ev{position:absolute; top:6px; transform:translateX(-50%)}
+#linea .ev.gol{width:13px; height:13px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px rgba(56,56,56,.18)}
+#linea .ev.amarilla{width:7px; height:11px; border-radius:2px; background:#E9B12C; top:7px; box-shadow:0 0 0 1px rgba(56,56,56,.18)}
+#linea .ev.descanso{width:2px; height:11px; background:var(--ink-3); top:7px}
+#linea .pie{position:absolute; bottom:0; font-family:var(--font-cond); font-size:9.5px; color:var(--ink-3)}
+#linea .pie.der{right:0}
+
+/* Ficha del jugador, derecha. Vacía hasta que se selecciona uno. */
+#ficha{top:132px; right:18px; width:290px; padding:0; display:none; overflow:hidden}
+#ficha.abierta{display:block}
+#ficha .cerrar{
+  position:absolute; top:10px; right:10px; width:26px; height:26px; border:0; border-radius:7px;
+  background:rgba(56,56,56,.07); color:var(--ink-2); cursor:pointer; display:grid; place-items:center;
+}
+#ficha .cerrar:hover{background:rgba(56,56,56,.14)}
+#ficha .cerrar svg{width:13px; height:13px}
+#ficha .top{padding:14px 16px 12px; border-bottom:1px solid var(--hairline)}
+#ficha .nom{font-family:var(--font-cond); font-weight:600; font-size:21px; line-height:1.1; padding-right:30px}
+#ficha .id{display:flex; align-items:center; gap:9px; margin-top:9px}
+#ficha .placa{
+  width:34px; height:34px; border-radius:50%; flex:none; display:grid; place-items:center;
+  font-family:var(--font-cond); font-weight:600; font-size:15px;
+  border:2px solid rgba(56,56,56,.16); font-variant-numeric:tabular-nums;
+}
+#ficha .meta{flex:1; min-width:0; font-family:var(--font-cond); font-size:12.5px; color:var(--ink-2); line-height:1.35}
+#ficha .meta b{display:block; color:var(--ink); font-weight:600; font-size:13.5px}
+#ficha .nota{
+  width:44px; height:44px; border-radius:50%; flex:none; display:grid; place-items:center;
+  font-family:var(--font-cond); font-weight:600; font-size:17px; color:#fff;
+  font-variant-numeric:tabular-nums;
+}
+#ficha .stats{padding:6px 16px 10px}
+#ficha .stat{
+  display:flex; align-items:baseline; gap:8px; padding:6px 0;
+  font-size:13px; border-bottom:1px solid rgba(225,225,225,.6);
+}
+#ficha .stat:last-child{border-bottom:0}
+#ficha .stat .et{flex:1; color:var(--ink-2)}
+#ficha .stat .vl{font-family:var(--font-cond); font-weight:600; font-size:14.5px; font-variant-numeric:tabular-nums}
+#ficha .calor{padding:2px 16px 14px}
+#ficha .calor canvas{width:100%; height:auto; display:block; border-radius:7px}
+#ficha .calor .cap{
+  display:flex; justify-content:space-between; align-items:baseline; margin-top:6px;
+  font-family:var(--font-cond); font-size:11px; color:var(--ink-3);
+}
+#ficha .muestra{
+  padding:8px 16px 11px; border-top:1px solid var(--hairline);
+  font-size:10.5px; line-height:1.45; color:var(--ink-3);
+}
 
 /* Puntos de vista, arriba a la derecha. Rejilla de 3 para que no queden huérfanas. */
 #vistas{top:18px; right:18px; padding:8px; display:grid; grid-template-columns:repeat(3,1fr); gap:6px}
@@ -177,13 +278,29 @@ body{
 #fallo h2{font-family:var(--font-cond); font-size:20px; margin:0 0 8px}
 #fallo p{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.55}
 
+@media (max-width:1180px){
+  /* La cabecera manda en el centro: la marca se queda solo con el logo. */
+  #marca h1,#marca p{display:none}
+  #marca{padding:12px 14px; max-width:none}
+  #ajustes{top:96px}
+}
+
 @media (max-width:900px){
-  #marca{max-width:none; right:18px; padding:12px 14px}
-  #marca h1{font-size:21px; margin-top:9px}
-  #marca p{display:none}
+  #marca{padding:10px 12px}
+  #marca .nombre{font-size:18px}
+  #cabecera{top:16px; left:auto; right:18px; transform:none; width:calc(100vw - 150px); padding:9px 12px 10px}
+  #cabecera .jorn,#linea{display:none}
+  #cabecera .equipo span{font-size:14px}
   #ajustes{top:auto; bottom:78px; left:18px; width:auto; max-width:210px}
+  /* La ficha pasa a hoja inferior: en un móvil una columna lateral no cabe. */
+  #ficha{
+    top:auto; bottom:0; left:0; right:0; width:auto; max-height:56vh; overflow-y:auto;
+    border-radius:var(--r) var(--r) 0 0; border-bottom:0; z-index:8;
+  }
+  body.con-ficha #barra{display:none}
+  #ficha .calor{display:none}
   #vistas{
-    top:114px; left:18px; right:18px;
+    top:150px; left:18px; right:18px;
     display:flex; gap:6px; overflow-x:auto; scrollbar-width:none;
     -webkit-overflow-scrolling:touch;
   }
@@ -192,6 +309,13 @@ body{
   #nota,#perf{display:none !important}
   #barra{bottom:14px}
   #barra .pista{display:none}
+}
+
+@media (max-width:620px){
+  /* La cabecera necesita el sitio: la marca se queda en el logo. */
+  #marca .nombre{display:none}
+  #marca{padding:9px}
+  #cabecera{width:calc(100vw - 82px)}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -214,8 +338,22 @@ body{
     <span class="nombre">BeSoccer</span>
   </div>
   <h1>Explora la alineación en 3D</h1>
-  <p>Arrastra para orbitar · Botón derecho para desplazar · Rueda para acercar</p>
+  <p>Arrastra para orbitar · Toca un jugador para ver su ficha · ← → cambia de jugador</p>
 </div>
+
+<header class="hud tarjeta" id="cabecera">
+  <div class="comp"><b id="c-comp"></b></div>
+  <div class="jorn" id="c-jorn"></div>
+  <div class="marcador">
+    <div class="equipo"><span class="escudo" id="c-esc-l"></span><span id="c-nom-l"></span></div>
+    <div class="centro">
+      <div class="goles" id="c-goles"></div>
+      <div class="min" id="c-min"></div>
+    </div>
+    <div class="equipo der"><span class="escudo" id="c-esc-v"></span><span id="c-nom-v"></span></div>
+  </div>
+  <div id="linea" role="img"></div>
+</header>
 
 <div class="hud tarjeta" id="ajustes" role="group" aria-label="Ajustes de la escena">
   <button class="sw" id="sw-rotar" aria-pressed="false">
@@ -224,17 +362,24 @@ body{
     </svg>
     <span class="txt">Auto-rotar</span><span class="palanca" aria-hidden="true"></span>
   </button>
-  <button class="sw" id="sw-sombra" aria-pressed="true">
+  <button class="sw" id="sw-etiquetas" aria-pressed="true">
     <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <ellipse cx="12" cy="17" rx="8" ry="3.4"/><path d="M12 3v7"/>
-    </svg>
-    <span class="txt">Sombra de contacto</span><span class="palanca" aria-hidden="true"></span>
-  </button>
-  <button class="sw" id="sw-etiquetas" aria-pressed="false" disabled title="Llega con los jugadores">
-    <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M3 8h11l4 4-4 4H3z"/>
+      <path d="M3 8h11l4 4-4 4H3z"/><circle cx="7" cy="12" r="1.3" fill="currentColor" stroke="none"/>
     </svg>
     <span class="txt">Mostrar etiquetas</span><span class="palanca" aria-hidden="true"></span>
+  </button>
+  <button class="sw" id="sw-dorsales" aria-pressed="true">
+    <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/><path d="M10.4 8.6h2v6.8M9.4 15.4h4.6"/>
+    </svg>
+    <span class="txt">Mostrar dorsales</span><span class="palanca" aria-hidden="true"></span>
+  </button>
+  <button class="sw" id="sw-pases" aria-pressed="false">
+    <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="5.5" cy="6.5" r="2"/><circle cx="18.5" cy="9" r="2"/><circle cx="9" cy="18" r="2"/>
+      <path d="M7.3 7.4 16.7 8.5M6.3 8.4 8.2 16M11 17.3 17 10.6"/>
+    </svg>
+    <span class="txt">Mostrar líneas de pase</span><span class="palanca" aria-hidden="true"></span>
   </button>
 </div>
 
@@ -257,10 +402,31 @@ body{
   </button>
 </div>
 
+<aside class="hud tarjeta" id="ficha" aria-live="polite" aria-label="Ficha del jugador">
+  <button class="cerrar" id="f-cerrar" title="Cerrar" aria-label="Cerrar la ficha">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <div class="top">
+    <div class="nom" id="f-nom"></div>
+    <div class="id">
+      <span class="placa" id="f-placa"></span>
+      <span class="meta" id="f-meta"></span>
+      <span class="nota" id="f-nota"></span>
+    </div>
+  </div>
+  <div class="stats" id="f-stats"></div>
+  <div class="calor">
+    <canvas id="f-calor" width="240" height="155"></canvas>
+    <div class="cap"><span>Mapa de calor</span><span id="f-calor-pie"></span></div>
+  </div>
+  <p class="muestra" id="f-muestra"></p>
+</aside>
+
 <div class="hud tarjeta" id="nota">
-  <b>Fase 1 de 2</b>
-  Campo reglamentario y cámara. Los 22 jugadores, sus etiquetas y la ficha lateral
-  llegan en la siguiente. Toda la geometría se genera por código: no hay ni un modelo 3D.
+  <b>Datos de muestra</b>
+  El partido, las alineaciones y las estadísticas son inventados: sirven para decidir
+  jerarquía y copy, no para leer nada. Las líneas de pase son un grafo de proximidad
+  entre compañeros, no pases reales. La geometría se genera por código: no hay modelos 3D.
 </div>
 
 <div class="hud tarjeta" id="perf" aria-hidden="true"></div>
@@ -276,7 +442,7 @@ body{
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
@@ -307,6 +473,57 @@ const CESPED_OSCURO = '#3F8A28';
 const CESPED_CLARO  = '#4A9C31';
 
 /* ===========================================================================
+   1 bis · EL PARTIDO
+   DATOS DE MUESTRA, inventados de principio a fin. Están aquí arriba, en un
+   solo objeto, para poder cambiarlos por los de la API sin tocar nada más.
+   x va de 0 (fondo local) a 1 (fondo visitante); y de 0 a 1 a lo ancho.
+=========================================================================== */
+const PARTIDO = {
+  competicion: 'UEFA Champions League',
+  jornada: 'Fase de grupos · Jornada 1',
+  minuto: 67, segundo: 24, directo: true, duracion: 90,
+  local:     { nombre: 'Real Madrid', sigla: 'RMA', goles: 2,
+               fondo: '#F4F5F7', tinta: '#1B2B4B', borde: '#C9CDD6', acento: '#0479B2' },
+  visitante: { nombre: 'Inter',       sigla: 'INT', goles: 1,
+               fondo: '#1C2E6B', tinta: '#FFFFFF', borde: '#48588F', acento: '#7756D0' },
+  eventos: [
+    { min: 12, tipo: 'gol',      equipo: 'local' },
+    { min: 31, tipo: 'amarilla', equipo: 'visitante' },
+    { min: 44, tipo: 'gol',      equipo: 'visitante' },
+    { min: 45, tipo: 'descanso' },
+    { min: 58, tipo: 'gol',      equipo: 'local' },
+    { min: 63, tipo: 'amarilla', equipo: 'local' },
+  ],
+  // Real Madrid en 4-3-3, Inter en 3-5-2.
+  jugadores: [
+    { dorsal:  1, corto: 'Courtois',      nombre: 'Thibaut Courtois',       pos: 'POR', equipo: 'local',     x: 0.045, y: 0.50, nota: 7.1 },
+    { dorsal: 12, corto: 'Alexander-A.',  nombre: 'Trent Alexander-Arnold', pos: 'LTD', equipo: 'local',     x: 0.200, y: 0.15, nota: 6.8 },
+    { dorsal:  4, corto: 'Huijsen',       nombre: 'Dean Huijsen',           pos: 'DFC', equipo: 'local',     x: 0.150, y: 0.38, nota: 7.0 },
+    { dorsal: 16, corto: 'Konaté',        nombre: 'Ibrahima Konaté',        pos: 'DFC', equipo: 'local',     x: 0.150, y: 0.62, nota: 6.6 },
+    { dorsal: 17, corto: 'Cucurella',     nombre: 'Marc Cucurella',         pos: 'LTI', equipo: 'local',     x: 0.200, y: 0.85, nota: 6.9 },
+    { dorsal:  8, corto: 'Valverde',      nombre: 'Federico Valverde',      pos: 'MC',  equipo: 'local',     x: 0.320, y: 0.27, nota: 7.5 },
+    { dorsal: 18, corto: 'Bellingham',    nombre: 'Jude Bellingham',        pos: 'MC',  equipo: 'local',     x: 0.345, y: 0.50, nota: 7.8 },
+    { dorsal: 21, corto: 'Brahim Díaz',   nombre: 'Brahim Díaz',            pos: 'MC',  equipo: 'local',     x: 0.320, y: 0.73, nota: 6.7 },
+    { dorsal:  7, corto: 'Vinicius Jr.',  nombre: 'Vinicius Júnior',        pos: 'EI',  equipo: 'local',     x: 0.470, y: 0.20, nota: 7.4 },
+    { dorsal: 10, corto: 'Mbappé',        nombre: 'Kylian Mbappé',          pos: 'DC',  equipo: 'local',     x: 0.455, y: 0.50, nota: 8.2 },
+    { dorsal: 11, corto: 'Rodrygo',       nombre: 'Rodrygo Goes',           pos: 'ED',  equipo: 'local',     x: 0.470, y: 0.80, nota: 6.5 },
+
+    { dorsal: 13, corto: 'J. Martínez',   nombre: 'Josep Martínez',         pos: 'POR', equipo: 'visitante', x: 0.955, y: 0.50, nota: 6.4 },
+    { dorsal: 31, corto: 'Bisseck',       nombre: 'Yann Bisseck',           pos: 'DFC', equipo: 'visitante', x: 0.855, y: 0.30, nota: 6.6 },
+    { dorsal: 28, corto: 'Pavard',        nombre: 'Benjamin Pavard',        pos: 'DFC', equipo: 'visitante', x: 0.865, y: 0.50, nota: 6.9 },
+    { dorsal: 95, corto: 'Bastoni',       nombre: 'Alessandro Bastoni',     pos: 'DFC', equipo: 'visitante', x: 0.855, y: 0.70, nota: 7.2 },
+    { dorsal:  2, corto: 'Dumfries',      nombre: 'Denzel Dumfries',        pos: 'LTD', equipo: 'visitante', x: 0.715, y: 0.13, nota: 7.0 },
+    { dorsal: 23, corto: 'Barella',       nombre: 'Nicolò Barella',         pos: 'MC',  equipo: 'visitante', x: 0.665, y: 0.32, nota: 7.3 },
+    { dorsal: 20, corto: 'Çalhanoğlu',    nombre: 'Hakan Çalhanoğlu',       pos: 'MCD', equipo: 'visitante', x: 0.690, y: 0.50, nota: 6.8 },
+    { dorsal:  5, corto: 'A. Diouf',      nombre: 'Andy Diouf',             pos: 'MC',  equipo: 'visitante', x: 0.665, y: 0.68, nota: 6.3 },
+    { dorsal: 30, corto: 'C. Augusto',    nombre: 'Carlos Augusto',         pos: 'LTI', equipo: 'visitante', x: 0.715, y: 0.87, nota: 6.7 },
+    { dorsal:  9, corto: 'Thuram',        nombre: 'Marcus Thuram',          pos: 'DC',  equipo: 'visitante', x: 0.555, y: 0.38, nota: 7.1 },
+    { dorsal: 10, corto: 'Lautaro',       nombre: 'Lautaro Martínez',       pos: 'DC',  equipo: 'visitante', x: 0.555, y: 0.62, nota: 7.6 },
+  ],
+};
+PARTIDO.jugadores.forEach((j, i) => { j.id = j.equipo[0] + j.dorsal; j.i = i; });
+
+/* ===========================================================================
    2 · RENDERIZADOR, ESCENA Y LUZ
 =========================================================================== */
 const contenedor = document.getElementById('escena');
@@ -323,11 +540,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 0.98;
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = THREE.PCFShadowMap;   // PCFSoft se quitó en r186
 contenedor.appendChild(renderer.domElement);
 
 // Capa de etiquetas HTML. Sin objetos todavía; el bucle ya la dibuja.
-const rotulos = new CSS2DRenderer({ element: document.getElementById('etiquetas') });
+const capaRotulos = new CSS2DRenderer({ element: document.getElementById('etiquetas') });
 
 const escena = new THREE.Scene();
 
@@ -607,6 +824,252 @@ balon.castShadow = true;
 campo.add(balon);
 
 /* ===========================================================================
+   3 bis · LOS JUGADORES
+   Cada ficha son cuatro piezas: sombra elíptica, disco a ras de césped, poste
+   corto y un disco con el dorsal que siempre mira a la cámara. Las tres
+   primeras van en InstancedMesh (una llamada de dibujo cada una para los 22);
+   el dorsal es un único BufferGeometry de 22 cuadros cuyas posiciones se
+   reescriben cada cuadro con los ejes de la cámara. El nombre NO va en textura:
+   va en una etiqueta HTML, que se lee nítida a cualquier distancia.
+=========================================================================== */
+const JUG = PARTIDO.jugadores;
+const N = JUG.length;
+
+// De coordenadas normalizadas del campo a metros.
+const jx = j => (j.x - 0.5) * M.LARGO;
+const jz = j => (j.y - 0.5) * M.ANCHO;
+
+const RADIO_FICHA = 1.55;
+const ALTO_POSTE  = 2.1;
+const DORSAL_D    = 3.0;                          // diámetro del disco de dorsal
+const Y_DORSAL    = ALTO_POSTE + DORSAL_D / 2;
+const Y_ROTULO    = ALTO_POSTE - 0.05;            // el nombre cuelga bajo el dorsal
+const LEVANTA     = 0.4;                          // lo que sube la ficha al elegirla
+
+const jugadores = new THREE.Group();
+campo.add(jugadores);
+
+/* --- Sombra elíptica bajo cada ficha ------------------------------------- */
+function texturaManchita() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 128;
+  const g = c.getContext('2d');
+  const grd = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grd.addColorStop(0, 'rgba(0,0,0,.42)');
+  grd.addColorStop(0.55, 'rgba(0,0,0,.20)');
+  grd.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = grd; g.fillRect(0, 0, 128, 128);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+const geoSombraFicha = new THREE.PlaneGeometry(RADIO_FICHA * 2.9, RADIO_FICHA * 2.0);
+geoSombraFicha.rotateX(-Math.PI / 2);             // horizontal, así la instancia solo traslada
+const sombrasFicha = new THREE.InstancedMesh(geoSombraFicha, new THREE.MeshBasicMaterial({
+  map: texturaManchita(), transparent: true, depthWrite: false,
+}), N);
+sombrasFicha.renderOrder = 1;
+jugadores.add(sombrasFicha);
+
+/* --- Disco del pie y poste ----------------------------------------------- */
+const discos = new THREE.InstancedMesh(
+  new THREE.CylinderGeometry(RADIO_FICHA, RADIO_FICHA, 0.07, 24),
+  new THREE.MeshStandardMaterial({ roughness: 0.42, metalness: 0.05 }), N
+);
+discos.castShadow = true;
+jugadores.add(discos);
+
+const postes = new THREE.InstancedMesh(
+  new THREE.CylinderGeometry(0.13, 0.17, ALTO_POSTE, 10),
+  new THREE.MeshStandardMaterial({ color: 0xf1f3ef, roughness: 0.5, metalness: 0.05 }), N
+);
+postes.castShadow = true;
+jugadores.add(postes);
+
+/* --- Anillo de la ficha elegida ------------------------------------------ */
+const anillo = new THREE.Mesh(
+  new THREE.RingGeometry(RADIO_FICHA * 1.3, RADIO_FICHA * 1.62, 48),
+  new THREE.MeshBasicMaterial({ color: 0x3B811F, transparent: true, opacity: 0.95, depthWrite: false })
+);
+anillo.geometry.rotateX(-Math.PI / 2);
+anillo.renderOrder = 2;
+anillo.visible = false;
+jugadores.add(anillo);
+
+/* --- Líneas de pase -------------------------------------------------------
+   OJO: no son pases. Es un grafo de proximidad —cada jugador con sus tres
+   compañeros más cercanos, hasta 26 m— que dibuja la forma del equipo. Con
+   datos reales de pases esto se sustituye sin tocar nada más. */
+function lineasDePase() {
+  const pos = [], col = [];
+  for (const clave of ['local', 'visitante']) {
+    const eq = JUG.filter(j => j.equipo === clave);
+    const c = new THREE.Color(PARTIDO[clave].acento);
+    const hechos = new Set();
+    eq.forEach((a, ia) => {
+      eq.map((b, ib) => ({ ib, d: Math.hypot(jx(b) - jx(a), jz(b) - jz(a)) }))
+        .filter(o => o.ib !== ia && o.d <= 26)
+        .sort((u, v) => u.d - v.d).slice(0, 3)
+        .forEach(({ ib }) => {
+          const k = Math.min(ia, ib) + '-' + Math.max(ia, ib);
+          if (hechos.has(k)) return;
+          hechos.add(k);
+          const b = eq[ib];
+          pos.push(jx(a), NIVEL + 0.05, jz(a), jx(b), NIVEL + 0.05, jz(b));
+          col.push(c.r, c.g, c.b, c.r, c.g, c.b);
+        });
+    });
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  return new THREE.LineSegments(g, new THREE.LineBasicMaterial({
+    vertexColors: true, transparent: true, opacity: 0.55, depthWrite: false,
+  }));
+}
+const pases = lineasDePase();
+pases.visible = false;
+jugadores.add(pases);
+
+/* --- Disco del dorsal: atlas de texturas y 22 cuadros en una sola malla --- */
+const COLS = 6, FILAS = Math.ceil(N / COLS), CELDA = 256;
+
+function atlasDorsales() {
+  const c = document.createElement('canvas');
+  c.width = COLS * CELDA; c.height = FILAS * CELDA;
+  const g = c.getContext('2d');
+  JUG.forEach((j, i) => {
+    const cx = (i % COLS) * CELDA + CELDA / 2;
+    const cy = ((i / COLS) | 0) * CELDA + CELDA / 2;
+    const eq = PARTIDO[j.equipo];
+    g.beginPath(); g.arc(cx, cy, CELDA * 0.40, 0, Math.PI * 2);
+    g.fillStyle = eq.fondo; g.fill();
+    g.lineWidth = CELDA * 0.05; g.strokeStyle = eq.borde; g.stroke();
+    g.lineWidth = CELDA * 0.022; g.strokeStyle = 'rgba(0,0,0,.34)';
+    g.beginPath(); g.arc(cx, cy, CELDA * 0.425, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = eq.tinta;
+    g.font = `600 ${Math.round(CELDA * 0.44)}px "Asap Condensed", "Asap", sans-serif`;
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(String(j.dorsal), cx, cy + CELDA * 0.03);
+  });
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  return t;
+}
+
+// Las UV apuntan a la celda del atlas y no cambian nunca. Lo que cambia cada
+// cuadro son las posiciones: cada cuadro se orienta con los ejes de la cámara,
+// que es lo que hace que el dorsal nunca se vea de canto ni del revés.
+const dorsalPos = new THREE.BufferAttribute(new Float32Array(N * 4 * 3), 3);
+const dorsalUv = new Float32Array(N * 4 * 2);
+const dorsalIdx = new Uint16Array(N * 6);
+for (let i = 0; i < N; i++) {
+  const cl = i % COLS, fi = (i / COLS) | 0;
+  const u0 = cl / COLS, u1 = (cl + 1) / COLS;
+  const v0 = 1 - (fi + 1) / FILAS, v1 = 1 - fi / FILAS;
+  dorsalUv.set([u0, v0, u1, v0, u1, v1, u0, v1], i * 8);
+}
+const geoDorsal = new THREE.BufferGeometry();
+geoDorsal.setAttribute('position', dorsalPos.setUsage(THREE.DynamicDrawUsage));
+geoDorsal.setAttribute('uv', new THREE.BufferAttribute(dorsalUv, 2));
+geoDorsal.setIndex(new THREE.BufferAttribute(dorsalIdx, 1));
+const dorsales = new THREE.Mesh(geoDorsal, new THREE.MeshBasicMaterial({
+  transparent: true, depthWrite: false, side: THREE.DoubleSide,
+}));
+dorsales.frustumCulled = false;      // las posiciones cambian cada cuadro
+dorsales.renderOrder = 3;
+jugadores.add(dorsales);
+
+/* --- Etiquetas de nombre (HTML, no textura) ------------------------------ */
+const rotulos = JUG.map(j => {
+  const el = document.createElement('div');
+  el.className = 'rotulo';
+  el.textContent = j.corto;
+  const eq = PARTIDO[j.equipo];
+  el.style.background = eq.fondo;
+  el.style.color = eq.tinta;
+  el.style.borderColor = eq.borde;
+  const obj = new CSS2DObject(el);
+  obj.position.set(jx(j), NIVEL + Y_ROTULO, jz(j));
+  obj.center.set(0.5, 0);
+  jugadores.add(obj);
+  j.el = el;
+  return obj;
+});
+
+/* --- Estado de las fichas -------------------------------------------------
+   Se recalcula solo cuando cambia el ratón o la selección, no cada cuadro. */
+let elegido = -1, encima = -1;
+const _m = new THREE.Matrix4(), _v = new THREE.Vector3(), _q = new THREE.Quaternion(), _e = new THREE.Vector3();
+const colBase = JUG.map(j => new THREE.Color(PARTIDO[j.equipo].fondo));
+const colClaro = colBase.map(c => c.clone().lerp(new THREE.Color(0xffffff), 0.42));
+
+function refrescarFichas() {
+  for (let i = 0; i < N; i++) {
+    const j = JUG[i];
+    const sube = i === elegido ? LEVANTA : 0;
+    const x = jx(j), z = jz(j);
+
+    _m.makeTranslation(x, NIVEL + 0.038 + sube, z);
+    discos.setMatrixAt(i, _m);
+    _m.makeTranslation(x, NIVEL + ALTO_POSTE / 2 + sube, z);
+    postes.setMatrixAt(i, _m);
+    // La sombra crece un poco al levantarse la ficha: es lo que da la altura.
+    const k = 1 + sube * 0.55;
+    _m.compose(_v.set(x, NIVEL + 0.012, z), _q.identity(), _e.set(k, 1, k));
+    sombrasFicha.setMatrixAt(i, _m);
+
+    discos.setColorAt(i, i === encima || i === elegido ? colClaro[i] : colBase[i]);
+    rotulos[i].position.y = NIVEL + Y_ROTULO + sube;
+    j.el.classList.toggle('sel', i === elegido);
+  }
+  discos.instanceMatrix.needsUpdate = true;
+  postes.instanceMatrix.needsUpdate = true;
+  sombrasFicha.instanceMatrix.needsUpdate = true;
+  if (discos.instanceColor) discos.instanceColor.needsUpdate = true;
+
+  anillo.visible = elegido >= 0;
+  if (elegido >= 0) anillo.position.set(jx(JUG[elegido]), NIVEL + 0.02, jz(JUG[elegido]));
+}
+
+/* --- Billboard del dorsal: se reescribe cada cuadro ----------------------
+   Además los cuadros se ordenan de lejos a cerca. Sin ordenar, dos dorsales
+   que se solapan se mezclan en el orden equivocado y el de detrás tapa al de
+   delante. */
+const derCam = new THREE.Vector3(), arrCam = new THREE.Vector3(), centro = new THREE.Vector3();
+const orden = Array.from({ length: N }, (_, i) => i);
+const distancias = new Float32Array(N);
+
+function billboardDorsales() {
+  camara.updateMatrixWorld();
+  camara.matrixWorld.extractBasis(derCam, arrCam, _v);
+  const arr = dorsalPos.array;
+  for (let i = 0; i < N; i++) {
+    const j = JUG[i];
+    const escala = (i === encima || i === elegido ? 1.14 : 1) * DORSAL_D / 2;
+    centro.set(jx(j), NIVEL + Y_DORSAL + (i === elegido ? LEVANTA : 0), jz(j));
+    distancias[i] = centro.distanceToSquared(camara.position);
+    const dx = derCam.x * escala, dy = derCam.y * escala, dz = derCam.z * escala;
+    const ux = arrCam.x * escala, uy = arrCam.y * escala, uz = arrCam.z * escala;
+    const b = i * 12;
+    arr[b + 0] = centro.x - dx - ux; arr[b + 1] = centro.y - dy - uy; arr[b + 2] = centro.z - dz - uz;
+    arr[b + 3] = centro.x + dx - ux; arr[b + 4] = centro.y + dy - uy; arr[b + 5] = centro.z + dz - uz;
+    arr[b + 6] = centro.x + dx + ux; arr[b + 7] = centro.y + dy + uy; arr[b + 8] = centro.z + dz + uz;
+    arr[b + 9] = centro.x - dx + ux; arr[b +10] = centro.y - dy + uy; arr[b +11] = centro.z - dz + uz;
+  }
+  dorsalPos.needsUpdate = true;
+
+  orden.sort((a, b) => distancias[b] - distancias[a]);
+  for (let n = 0; n < N; n++) {
+    const i = orden[n], b = i * 4, o = n * 6;
+    dorsalIdx[o] = b; dorsalIdx[o + 1] = b + 1; dorsalIdx[o + 2] = b + 2;
+    dorsalIdx[o + 3] = b; dorsalIdx[o + 4] = b + 2; dorsalIdx[o + 5] = b + 3;
+  }
+  geoDorsal.index.needsUpdate = true;
+}
+
+/* ===========================================================================
    4 · CÁMARA Y CONTROLES
    La sensación que se busca: se gira ALREDEDOR del campo, el campo no se va
    del centro, y al soltar sigue girando un poco y frena solo.
@@ -760,15 +1223,282 @@ controles.addEventListener('start', () => {
 /* ===========================================================================
    5 · INTERFAZ
 =========================================================================== */
-const swRotar = document.getElementById('sw-rotar');
-const swSombra = document.getElementById('sw-sombra');
-function pintarRotar() { swRotar.setAttribute('aria-pressed', String(controles.autoRotate)); }
+let verDorsales = true, atlasListo = false, bajada = null;
 
+const swRotar = document.getElementById('sw-rotar');
+function pintarRotar() { swRotar.setAttribute('aria-pressed', String(controles.autoRotate)); }
 swRotar.addEventListener('click', () => { controles.autoRotate = !controles.autoRotate; pintarRotar(); });
-swSombra.addEventListener('click', () => {
-  sombra.visible = !sombra.visible;
-  swSombra.setAttribute('aria-pressed', String(sombra.visible));
+
+// Interruptor genérico: un botón, un objeto que se enseña o se esconde.
+// El estado inicial se puede fijar por URL (?pases=1, ?etiquetas=0) para poder
+// enlazar una vista concreta en una presentación.
+function palanca(id, activo, alCambiar) {
+  const b = document.getElementById(id);
+  const pedido = new URLSearchParams(location.search).get(id.replace('sw-', ''));
+  if (pedido !== null) activo = pedido !== '0';
+  b.setAttribute('aria-pressed', String(activo));
+  b.addEventListener('click', () => {
+    activo = !activo;
+    b.setAttribute('aria-pressed', String(activo));
+    alCambiar(activo);
+  });
+  alCambiar(activo);
+}
+palanca('sw-etiquetas', true, v => rotulos.forEach(r => { r.visible = v; }));
+palanca('sw-dorsales', true, v => { verDorsales = v; dorsales.visible = v && atlasListo; });
+palanca('sw-pases', false, v => { pases.visible = v; });
+
+/* --- Cabecera del partido -------------------------------------------------
+   Todo sale de PARTIDO. El reloj avanza en local para que se vea «en directo»;
+   no consulta nada. */
+const $ = id => document.getElementById(id);
+$('c-comp').textContent = PARTIDO.competicion;
+$('c-jorn').textContent = PARTIDO.jornada;
+$('c-goles').textContent = `${PARTIDO.local.goles} – ${PARTIDO.visitante.goles}`;
+for (const [clave, suf] of [['local', 'l'], ['visitante', 'v']]) {
+  const eq = PARTIDO[clave];
+  $(`c-nom-${suf}`).textContent = eq.nombre;
+  const esc = $(`c-esc-${suf}`);
+  esc.textContent = eq.sigla;               // escudo de posición, no el de verdad
+  esc.style.background = eq.fondo;
+  esc.style.color = eq.tinta;
+}
+
+let seg = PARTIDO.minuto * 60 + PARTIDO.segundo;
+function pintarReloj() {
+  const mm = String(Math.floor(seg / 60)).padStart(2, '0');
+  const ss = String(seg % 60).padStart(2, '0');
+  $('c-min').innerHTML = PARTIDO.directo
+    ? `<span class="directo">DIRECTO</span><span>${mm}:${ss}</span>`
+    : `<span>${mm}:${ss}</span>`;
+}
+pintarReloj();
+if (PARTIDO.directo) setInterval(() => { seg++; pintarReloj(); }, 1000);
+
+// Línea de tiempo: una marca por suceso de los datos, y nada más.
+(function pintarLinea() {
+  const l = $('linea');
+  const pc = min => Math.max(0, Math.min(100, min / PARTIDO.duracion * 100));
+  const partes = [`<span class="via"></span>`,
+    `<span class="hecho" style="width:${pc(PARTIDO.minuto)}%"></span>`,
+    `<span class="pie">0'</span>`, `<span class="pie der">${PARTIDO.duracion}'</span>`];
+  const nombres = { gol: 'Gol', amarilla: 'Tarjeta amarilla', descanso: 'Descanso' };
+  const cuenta = [];
+  for (const e of PARTIDO.eventos) {
+    const izq = `left:${pc(e.min)}%`;
+    const quien = e.equipo ? ` de ${PARTIDO[e.equipo].nombre}` : '';
+    cuenta.push(`${nombres[e.tipo]}${quien} en el ${e.min}'`);
+    if (e.tipo === 'descanso') {
+      partes.push(`<span class="ev descanso" style="${izq}"></span>`,
+                  `<span class="marca" style="${izq}">DES</span>`);
+    } else if (e.tipo === 'gol') {
+      const eq = PARTIDO[e.equipo];
+      partes.push(`<span class="ev gol" style="${izq};background:${eq.acento}"></span>`);
+    } else {
+      partes.push(`<span class="ev ${e.tipo}" style="${izq}"></span>`);
+    }
+  }
+  l.innerHTML = partes.join('');
+  l.setAttribute('aria-label', `Minuto ${PARTIDO.minuto} de ${PARTIDO.duracion}. ` + cuenta.join('. '));
+})();
+
+/* --- Ficha del jugador ----------------------------------------------------
+   Las estadísticas son de muestra y se generan con un PRNG sembrado con el id:
+   el mismo jugador da siempre los mismos números, así el prototipo no cambia
+   de cifras al recargarlo. */
+const GRUPO = { POR: 'POR', LTD: 'DEF', LTI: 'DEF', DFC: 'DEF', MCD: 'MED', MC: 'MED', EI: 'ATA', ED: 'ATA', DC: 'ATA' };
+const POS_LARGO = {
+  POR: 'Portero', LTD: 'Lateral derecho', LTI: 'Lateral izquierdo', DFC: 'Central',
+  MCD: 'Mediocentro defensivo', MC: 'Mediocentro', EI: 'Extremo izquierdo',
+  ED: 'Extremo derecho', DC: 'Delantero centro',
+};
+const FILAS_STAT = {
+  POR: [['Paradas', 1, 6], ['Salidas ganadas', 0, 4], ['Despejes', 0, 5], ['Precisión de pase', 58, 86, '%']],
+  DEF: [['Despejes', 1, 8], ['Duelos ganados', 1, 9], ['Entradas', 0, 5], ['Precisión de pase', 72, 93, '%']],
+  MED: [['Pases clave', 0, 5], ['Recuperaciones', 2, 11], ['Duelos ganados', 1, 8], ['Precisión de pase', 78, 95, '%']],
+  ATA: [['Tiros a puerta', 0, 4], ['Regates completados', 0, 7], ['Faltas recibidas', 0, 5], ['Precisión de pase', 64, 88, '%']],
+};
+
+function prng(semilla) {
+  let h = 2166136261;
+  for (let i = 0; i < semilla.length; i++) { h ^= semilla.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return () => { h += 0x6D2B79F5; let t = h; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}
+const colorNota = n => n >= 7.5 ? '#3B811F' : n >= 6.5 ? '#569F33' : n >= 6 ? '#E9B12C' : '#BD2F42';
+
+const nf1 = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const caja = $('ficha');
+
+function pintarFicha(j) {
+  const eq = PARTIDO[j.equipo];
+  $('f-nom').textContent = j.nombre;
+  const placa = $('f-placa');
+  placa.textContent = j.dorsal;
+  placa.style.background = eq.fondo;
+  placa.style.color = eq.tinta;
+  $('f-meta').innerHTML = '';
+  const m = $('f-meta');
+  const b = document.createElement('b'); b.textContent = eq.nombre;
+  m.append(b, document.createTextNode(`${POS_LARGO[j.pos] || j.pos} · Dorsal ${j.dorsal}`));
+  const nota = $('f-nota');
+  nota.textContent = nf1.format(j.nota);
+  nota.style.background = colorNota(j.nota);
+  nota.title = 'Nota en directo';
+
+  const rnd = prng(j.id + 's');
+  const cont = $('f-stats');
+  cont.textContent = '';
+  for (const [et, lo, hi, suf] of FILAS_STAT[GRUPO[j.pos]]) {
+    const fila = document.createElement('div');
+    fila.className = 'stat';
+    const e = document.createElement('span'); e.className = 'et'; e.textContent = et;
+    const v = document.createElement('span'); v.className = 'vl';
+    v.textContent = (lo + Math.round(rnd() * (hi - lo))) + (suf || '');
+    fila.append(e, v);
+    cont.appendChild(fila);
+  }
+
+  pintarCalor(j);
+  $('f-calor-pie').textContent = j.equipo === 'local' ? 'Ataca hacia la derecha' : 'Ataca hacia la izquierda';
+  $('f-muestra').textContent = 'Estadísticas y mapa de calor de muestra, generados para el prototipo. '
+    + 'No son datos del partido.';
+  caja.classList.add('abierta');
+}
+
+// Mapa de calor: se acumula intensidad en blanco y se pasa por una rampa.
+// Es la convención de los mapas de calor de fútbol, no una escala divergente.
+const RAMPA = [[0, 46, 92, 34, 0], [0.30, 63, 158, 44, 0.72], [0.55, 143, 194, 43, 0.85],
+               [0.78, 233, 177, 44, 0.92], [1, 200, 52, 44, 0.96]];
+function pintarCalor(j) {
+  const cv = $('f-calor'), g = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  const tmp = document.createElement('canvas'); tmp.width = W; tmp.height = H;
+  const tg = tmp.getContext('2d');
+  const rnd = prng(j.id + 'c');
+  const gr = GRUPO[j.pos];
+  const disp = gr === 'POR' ? [0.03, 0.06] : gr === 'DEF' ? [0.09, 0.14] : gr === 'MED' ? [0.15, 0.19] : [0.15, 0.17];
+  tg.globalCompositeOperation = 'lighter';
+  for (let n = 0; n < 80; n++) {
+    // Suma de tres uniformes: la nube sale con la densidad al centro, no plana.
+    const gx = Math.max(2, Math.min(W - 2, j.x * W + (rnd() + rnd() + rnd() - 1.5) * disp[0] * W * 1.6));
+    const gy = Math.max(2, Math.min(H - 2, j.y * H + (rnd() + rnd() + rnd() - 1.5) * disp[1] * H * 1.6));
+    const r = (0.04 + rnd() * 0.05) * W;
+    const grd = tg.createRadialGradient(gx, gy, 0, gx, gy, r);
+    grd.addColorStop(0, 'rgba(255,255,255,.055)');
+    grd.addColorStop(1, 'rgba(255,255,255,0)');
+    tg.fillStyle = grd; tg.fillRect(gx - r, gy - r, r * 2, r * 2);
+  }
+
+  g.fillStyle = '#2C5620'; g.fillRect(0, 0, W, H);
+  const src = tg.getImageData(0, 0, W, H), out = g.getImageData(0, 0, W, H);
+  // La intensidad se lee del ALFA, no del rojo: el lienzo guarda el color
+  // premultiplicado y getImageData lo devuelve desmultiplicado, así que el rojo
+  // de una mancha blanca vuelve a 255 en toda ella y el mapa sale plano.
+  // Y se normaliza por el máximo real: con un divisor fijo se satura.
+  let tope = 1;
+  for (let i = 3; i < src.data.length; i += 4) if (src.data[i] > tope) tope = src.data[i];
+  for (let i = 0; i < src.data.length; i += 4) {
+    const t = Math.min(1, src.data[i + 3] / tope);
+    let k = 0; while (k < RAMPA.length - 2 && t > RAMPA[k + 1][0]) k++;
+    const [t0, r0, v0, b0, a0] = RAMPA[k], [t1, r1, v1, b1, a1] = RAMPA[k + 1];
+    const f = t1 === t0 ? 0 : (t - t0) / (t1 - t0);
+    const a = a0 + (a1 - a0) * f;
+    out.data[i]     = Math.round((out.data[i]     * (1 - a)) + (r0 + (r1 - r0) * f) * a);
+    out.data[i + 1] = Math.round((out.data[i + 1] * (1 - a)) + (v0 + (v1 - v0) * f) * a);
+    out.data[i + 2] = Math.round((out.data[i + 2] * (1 - a)) + (b0 + (b1 - b0) * f) * a);
+    out.data[i + 3] = 255;
+  }
+  g.putImageData(out, 0, 0);
+
+  // Mini campo por encima, para saber dónde cae la mancha.
+  g.strokeStyle = 'rgba(255,255,255,.42)'; g.lineWidth = 1;
+  g.strokeRect(1.5, 1.5, W - 3, H - 3);
+  g.beginPath(); g.moveTo(W / 2, 1.5); g.lineTo(W / 2, H - 1.5); g.stroke();
+  g.beginPath(); g.arc(W / 2, H / 2, H * 0.135, 0, Math.PI * 2); g.stroke();
+  const aw = W * (M.AREA_P / M.LARGO), ah = H * (M.AREA_A / M.ANCHO);
+  g.strokeRect(1.5, (H - ah) / 2, aw, ah);
+  g.strokeRect(W - 1.5 - aw, (H - ah) / 2, aw, ah);
+}
+
+/* --- Selección: raycasting sobre los DISCOS, nunca sobre las etiquetas ---- */
+const rayo = new THREE.Raycaster();
+const puntero = new THREE.Vector2();
+const lienzo = renderer.domElement;
+function indiceEn(ev) {
+  const r = lienzo.getBoundingClientRect();
+  puntero.x = ((ev.clientX - r.left) / r.width) * 2 - 1;
+  puntero.y = -((ev.clientY - r.top) / r.height) * 2 + 1;
+  rayo.setFromCamera(puntero, camara);
+  const golpes = rayo.intersectObjects([discos, dorsales], false);
+  if (!golpes.length) return -1;
+  const g0 = golpes[0];
+  // En los discos el índice lo da la instancia; en los dorsales, el vértice:
+  // los cuatro de cada cuadro son consecutivos y no cambian de sitio.
+  return g0.object === discos ? g0.instanceId : Math.floor(g0.face.a / 4);
+}
+
+function elegir(i) {
+  if (i === elegido) return;
+  elegido = i;
+  refrescarFichas();
+  if (i >= 0) pintarFicha(JUG[i]); else caja.classList.remove('abierta');
+  document.body.classList.toggle('con-ficha', i >= 0);
+}
+
+lienzo.addEventListener('pointermove', ev => {
+  if (bajada) return;                                  // arrastrando: no hay hover
+  const i = indiceEn(ev);
+  if (i === encima) return;
+  encima = i;
+  lienzo.style.cursor = i >= 0 ? 'pointer' : '';
+  refrescarFichas();
 });
+lienzo.addEventListener('pointerleave', () => {
+  if (encima < 0) return;
+  encima = -1; lienzo.style.cursor = ''; refrescarFichas();
+});
+lienzo.addEventListener('pointerdown', ev => { bajada = { x: ev.clientX, y: ev.clientY }; });
+lienzo.addEventListener('pointerup', ev => {
+  const b = bajada; bajada = null;
+  // Un arrastre orbita; solo un toque limpio selecciona.
+  if (!b || Math.hypot(ev.clientX - b.x, ev.clientY - b.y) > 6) return;
+  const i = indiceEn(ev);
+  elegir(i === elegido ? -1 : i);
+});
+$('f-cerrar').addEventListener('click', () => elegir(-1));
+
+// Vía de teclado: sin esto la selección no existe para quien no usa ratón.
+addEventListener('keydown', ev => {
+  if (ev.key === 'Escape' && elegido >= 0) { elegir(-1); return; }
+  if (ev.key !== 'ArrowLeft' && ev.key !== 'ArrowRight') return;
+  ev.preventDefault();
+  const paso = ev.key === 'ArrowRight' ? 1 : -1;
+  elegir(elegido < 0 ? (paso > 0 ? 0 : N - 1) : (elegido + paso + N) % N);
+});
+
+// Enlace directo a un jugador: ?jugador=l7 (local, dorsal 7), ?jugador=v10.
+// Sirve para abrir una ficha concreta en una presentación.
+const jugPedido = new URLSearchParams(location.search).get('jugador');
+if (jugPedido) {
+  const iPedido = JUG.findIndex(j => j.id === jugPedido);
+  if (iPedido >= 0) elegir(iPedido);
+}
+
+/* --- El atlas de dorsales necesita la tipografía cargada -----------------
+   Si se dibuja antes, los números salen en la fuente de reserva. Con tope de
+   tiempo: si Google Fonts no contesta, el prototipo arranca igual. */
+Promise.race([
+  document.fonts.load('600 100px "Asap Condensed"'),
+  new Promise(r => setTimeout(r, 2500)),
+]).catch(() => {}).then(() => {
+  dorsales.material.map = atlasDorsales();
+  dorsales.material.needsUpdate = true;
+  atlasListo = true;
+  dorsales.visible = verDorsales;
+});
+
+dorsales.visible = false;
+refrescarFichas();
 
 // Zoom por botón: escala la distancia al objetivo, respetando los límites.
 function zoom(factor) {
@@ -802,7 +1532,7 @@ function redimensionar() {
   camara.aspect = w / h;
   camara.updateProjectionMatrix();
   renderer.setSize(w, h);
-  rotulos.setSize(w, h);
+  capaRotulos.setSize(w, h);
   // Si el encuadre lo puso un punto de vista y el usuario no ha tocado nada,
   // se recalcula: al girar el móvil el campo tiene que seguir cabiendo.
   if (vistaActiva && !tween) irA(vistaActiva, 0);
@@ -820,8 +1550,9 @@ renderer.setAnimationLoop(() => {
   const ahora = performance.now();
   avanzarTween(ahora);
   if (controles.enabled) controles.update();
+  billboardDorsales();
   renderer.render(escena, camara);
-  rotulos.render(escena, camara);
+  capaRotulos.render(escena, camara);
 
   cuadros++;
   if (ahora - t0 > 500) {

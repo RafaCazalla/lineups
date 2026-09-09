@@ -102,7 +102,19 @@ body{
 #marca p{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.45}
 
 /* Interruptores, izquierda */
-#ajustes{top:206px; left:18px; padding:8px; width:240px}
+#ajustes{top:206px; left:18px; padding:8px; width:252px}
+/* Selector de equipo: tres opciones excluyentes, una sola activa. */
+#equipos{display:flex; gap:3px; padding:3px; margin:2px 2px 6px; border-radius:9px; background:rgba(56,56,56,.06)}
+#equipos button{
+  flex:1; min-width:0; display:flex; align-items:center; justify-content:center; gap:5px;
+  padding:7px 4px 6px; border:0; border-radius:7px; background:none; cursor:pointer;
+  font-family:var(--font-cond); font-weight:500; font-size:13px; color:var(--ink-2);
+}
+#equipos button:hover{background:rgba(255,255,255,.7)}
+#equipos button:focus-visible{outline:2px solid var(--green); outline-offset:1px}
+#equipos button[aria-pressed="true"]{background:#fff; color:var(--ink); font-weight:600; box-shadow:0 1px 2px rgba(56,56,56,.14)}
+#equipos img{width:16px; height:16px; object-fit:contain; flex:none}
+#equipos span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .sw{
   display:flex; align-items:center; gap:11px; width:100%;
   padding:9px 10px; border:0; border-radius:9px; background:none;
@@ -439,6 +451,7 @@ body{
 </header>
 
 <div class="hud tarjeta" id="ajustes" role="group" aria-label="Ajustes de la escena">
+  <div id="equipos" role="group" aria-label="Equipos en el campo"></div>
   <button class="sw" id="sw-rotar" aria-pressed="false">
     <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M21 12a9 9 0 1 1-3.5-7.1"/><path d="M21 4v5h-5"/>
@@ -12665,6 +12678,14 @@ anillo.renderOrder = 3;
 anillo.visible = false;
 jugadores.add(anillo);
 
+/* --- Qué equipo está en el campo -----------------------------------------
+   'todos' | 'local' | 'visitante'. Va aquí, y no en el bloque de interfaz,
+   porque las líneas de pase se construyen en el arranque y ya lo necesitan.
+   Amontonados, los 22 en posición media real no se leen; de uno en uno, sí. */
+let equipoVisible = new URLSearchParams(location.search).get('equipo') || 'todos';
+if (!['todos', 'local', 'visitante'].includes(equipoVisible)) equipoVisible = 'todos';
+const enCampo = i => equipoVisible === 'todos' || JUG[i].equipo === equipoVisible;
+
 /* --- Líneas de pase -------------------------------------------------------
    OJO: no son pases. Es un grafo de proximidad —cada jugador con sus tres
    compañeros más cercanos, hasta 26 m— que dibuja la forma del equipo. Con
@@ -12672,6 +12693,7 @@ jugadores.add(anillo);
 function lineasDePase() {
   const pos = [], col = [];
   for (const clave of ['local', 'visitante']) {
+    if (equipoVisible !== 'todos' && equipoVisible !== clave) continue;
     const eq = JUG.filter(j => j.equipo === clave);
     const c = new THREE.Color(PARTIDO[clave].acento);
     const hechos = new Set();
@@ -12800,8 +12822,22 @@ const colClaro = colBase.map(c => c.clone().lerp(new THREE.Color(0xffffff), 0.42
 function refrescarFichas() {
   for (let i = 0; i < N; i++) {
     const j = JUG[i];
+    const vis = enCampo(i);
     const sube = i === elegido ? LEVANTA : 0;
-    const x = jx(j), z = jz(j);
+    // Al que no juega en este corte se le manda muy abajo en vez de escalarlo a
+    // cero: una matriz de instancia con escala 0 es singular y el raycaster la
+    // invierte, así que devolvería NaN en vez de «no hay nada aquí».
+    const x = vis ? jx(j) : 0, z = vis ? jz(j) : 0;
+    if (!vis) {
+      _m.makeTranslation(0, -1000, 0);
+      discos.setMatrixAt(i, _m);
+      postes.setMatrixAt(i, _m);
+      sombrasFicha.setMatrixAt(i, _m);
+      discos.setColorAt(i, colBase[i]);
+      rotulos[i].visible = false;
+      j.el.classList.remove('sel');
+      continue;
+    }
 
     _m.makeTranslation(x, NIVEL + 0.038 + sube, z);
     discos.setMatrixAt(i, _m);
@@ -12814,6 +12850,7 @@ function refrescarFichas() {
 
     discos.setColorAt(i, i === encima || i === elegido ? colClaro[i] : colBase[i]);
     rotulos[i].position.set(x, NIVEL + Y_ROTULO + sube, z);
+    rotulos[i].visible = verEtiquetas;
     j.el.classList.toggle('sel', i === elegido);
   }
   discos.instanceMatrix.needsUpdate = true;
@@ -12821,7 +12858,7 @@ function refrescarFichas() {
   sombrasFicha.instanceMatrix.needsUpdate = true;
   if (discos.instanceColor) discos.instanceColor.needsUpdate = true;
 
-  anillo.visible = elegido >= 0;
+  anillo.visible = elegido >= 0 && enCampo(elegido);
   if (elegido >= 0) anillo.position.set(jx(JUG[elegido]), NIVEL + 0.02, jz(JUG[elegido]));
 }
 
@@ -12839,7 +12876,9 @@ function billboardDorsales() {
   const arr = dorsalPos.array;
   for (let i = 0; i < N; i++) {
     const j = JUG[i];
-    const escala = (i === encima || i === elegido ? 1.14 : 1) * DORSAL_D / 2;
+    // Escala 0 colapsa el cuadro a un punto: no se dibuja y el raycaster no
+    // puede acertarle, que es justo lo que hace falta.
+    const escala = enCampo(i) ? (i === encima || i === elegido ? 1.14 : 1) * DORSAL_D / 2 : 0;
     centro.set(jx(j), NIVEL + Y_DORSAL + (i === elegido ? LEVANTA : 0), jz(j));
     distancias[i] = centro.distanceToSquared(camara.position);
     const dx = derCam.x * escala, dy = derCam.y * escala, dz = derCam.z * escala;
@@ -13015,7 +13054,7 @@ controles.addEventListener('start', () => {
 /* ===========================================================================
    5 · INTERFAZ
 =========================================================================== */
-let verDorsales = true, verPases = false, atlasListo = false, bajada = null;
+let verDorsales = true, verPases = false, verEtiquetas = true, atlasListo = false, bajada = null;
 let animPos = null;
 // La posición de la alineación se guarda aparte: `j.x/j.y` es la posición
 // vigente, que el interruptor de posición media va moviendo.
@@ -13040,7 +13079,7 @@ function palanca(id, activo, alCambiar) {
   });
   alCambiar(activo);
 }
-palanca('sw-etiquetas', true, v => rotulos.forEach(r => { r.visible = v; }));
+palanca('sw-etiquetas', true, v => { verEtiquetas = v; refrescarFichas(); });
 palanca('sw-dorsales', true, v => { verDorsales = v; dorsales.visible = v && atlasListo; });
 palanca('sw-pases', false, v => { verPases = v; pases.visible = v && !animPos; });
 
@@ -13305,6 +13344,45 @@ function pintarFicha(j) {
   caja.classList.add('abierta');
 }
 
+/* --- Selector de equipo --------------------------------------------------
+   Tres opciones excluyentes. Va aquí, y no en las pastillas de arriba, porque
+   esas mueven la cámara y esto cambia lo que hay en el campo: mezclarlas haría
+   que «Once local» significara dos cosas distintas. */
+const cajaEquipos = $('equipos');
+const OPCIONES = [
+  { id: 'todos', texto: 'Todos', largo: 'Los dos equipos' },
+  { id: 'local', texto: L.nombre.split(' ')[0], escudo: L.escudo, largo: L.nombre },
+  { id: 'visitante', texto: V.nombre.split(' ')[0], escudo: V.escudo, largo: V.nombre },
+];
+const botonesEquipo = OPCIONES.map(o => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.title = o.largo;
+  b.setAttribute('aria-label', o.largo);
+  if (o.escudo) {
+    const img = document.createElement('img');
+    img.src = o.escudo; img.alt = '';
+    b.appendChild(img);
+  }
+  const t = document.createElement('span');
+  t.textContent = o.texto;
+  b.appendChild(t);
+  b.addEventListener('click', () => verEquipo(o.id));
+  cajaEquipos.appendChild(b);
+  return b;
+});
+
+function verEquipo(id) {
+  equipoVisible = id;
+  OPCIONES.forEach((o, n) => botonesEquipo[n].setAttribute('aria-pressed', String(o.id === id)));
+  // Si el elegido se queda fuera del corte, se suelta: una ficha abierta de un
+  // jugador que no está en el campo no se sostiene.
+  if (elegido >= 0 && !enCampo(elegido)) elegir(-1);
+  refrescarFichas();
+  rehacerPases();
+}
+verEquipo(equipoVisible);
+
 /* --- Selección: raycasting sobre los DISCOS, nunca sobre las etiquetas ---- */
 const rayo = new THREE.Raycaster();
 const puntero = new THREE.Vector2();
@@ -13319,7 +13397,8 @@ function indiceEn(ev) {
   const g0 = golpes[0];
   // En los discos el índice lo da la instancia; en los dorsales, el vértice:
   // los cuatro de cada cuadro son consecutivos y no cambian de sitio.
-  return g0.object === discos ? g0.instanceId : Math.floor(g0.face.a / 4);
+  const i = g0.object === discos ? g0.instanceId : Math.floor(g0.face.a / 4);
+  return enCampo(i) ? i : -1;
 }
 
 function elegir(i) {
@@ -13365,7 +13444,12 @@ addEventListener('keydown', ev => {
   if (ev.key !== 'ArrowLeft' && ev.key !== 'ArrowRight') return;
   ev.preventDefault();
   const paso = ev.key === 'ArrowRight' ? 1 : -1;
-  elegir(elegido < 0 ? (paso > 0 ? 0 : N - 1) : (elegido + paso + N) % N);
+  let n = elegido < 0 ? (paso > 0 ? -1 : 0) : elegido;
+  // Se salta a los que están fuera del corte; si no queda ninguno, no hace nada.
+  for (let vuelta = 0; vuelta < N; vuelta++) {
+    n = (n + paso + N) % N;
+    if (enCampo(n)) { elegir(n); return; }
+  }
 });
 
 // Enlace directo a un jugador: ?jugador=l7 (local, dorsal 7), ?jugador=v10.

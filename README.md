@@ -24,7 +24,8 @@ escudos y los retratos de `cdn.resfu.com`.
 |---|---|
 | `?vista=` | `completo` · `local` · `visita` · `tactica` · `ras` |
 | `?jugador=` | `l10` (local, dorsal 10) · `v9` (visitante, dorsal 9) |
-| `?etiquetas=0` `?dorsales=0` `?pases=1` `?stats=1` | estado inicial de los paneles |
+| `?equipo=` | `todos` · `local` · `visitante` |
+| `?etiquetas=0` `?dorsales=0` `?pases=1` `?media=1` `?stats=1` | estado inicial de los paneles |
 | `?debug` | fps, llamadas de dibujo y triángulos (también con la tecla **D**) |
 
 Ejemplo: `index.html?vista=tactica&pases=1&etiquetas=0` deja la forma de los dos equipos.
@@ -33,6 +34,17 @@ Ejemplo: `index.html?vista=tactica&pases=1&etiquetas=0` deja la forma de los dos
 
 Arrastrar orbita · rueda o pinza acerca · botón derecho o dos dedos desplaza ·
 clic o toque en un jugador abre su ficha · **← →** cambia de jugador · **Esc** cierra.
+
+## Desplegado
+
+- GitHub Pages: <https://rafacazalla.github.io/lineups/>
+
+**Pendiente en Vercel.** En este Mac no hay Node, así que no hay CLI de Vercel, y no había
+token ni `.vercel` en ningún repo. Para montarlo: importar `RafaCazalla/lineups` en
+<https://vercel.com/be-soccer-product> como proyecto estático sin build. El `vercel.json`
+ya está en el repo con los encabezados (`noindex`, sin caché, sin `X-Frame-Options`, para
+que el hub pueda previsualizarlo en su iframe). En Pages esos encabezados **no** se
+aplican; el `noindex` lo lleva el propio HTML en una `<meta>`.
 
 ## Los datos
 
@@ -117,8 +129,17 @@ transición animada, porque el movimiento entre las dos es la información.
   forma del equipo, y la API avisa de que es automática.
 - **Posición media** es dato medido. En un partido completo de ida y vuelta tira hacia el
   centro del campo y **los dos equipos se solapan**: eso no es un fallo del prototipo, es
-  el partido. Las etiquetas se pisan bastante en ese modo; es el precio de enseñar el
-  dato en vez de una pizarra.
+  el partido.
+
+Por eso hay **selector de equipo** (Todos · un equipo · el otro) arriba del panel
+izquierdo: con los 22 en posición media real no se lee nada, y de once en once sí. Va
+ahí y no en las pastillas de la esquina porque esas mueven la cámara y esto cambia lo que
+hay en el campo; mezclarlas haría que «Once local» significase dos cosas.
+
+Al esconder un equipo, sus fichas se mandan mil metros abajo en vez de escalarlas a cero:
+una matriz de instancia con escala 0 es singular, el raycaster la invierte y devolvería
+`NaN` en lugar de «aquí no hay nada». El raycaster además comprueba el corte, las flechas
+← → se saltan a quien no está, y si el jugador abierto se queda fuera se suelta la ficha.
 
 El eje `x` de la API va de la portería propia a la contraria **para cada jugador**, así
 que el visitante se espeja en los dos ejes. El espejo en `x` está comprobado con los dos

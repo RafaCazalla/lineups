@@ -41,7 +41,7 @@ NEUTRA = {'fondo': '#ECECEC', 'tinta': '#383838', 'borde': '#A7A7A7'}
 # Color de serie de cada lado, para las líneas de pase y la línea de tiempo.
 # Sale de la paleta validada del panel, no de la camiseta: tiene que
 # distinguirse sobre césped y bajo daltonismo.
-ACENTOS = {'local': '#0479B2', 'visitante': '#0F1116'}
+ACENTOS = {'local': '#0A86C9', 'visitante': '#1A2340'}
 
 ROL_LARGO = {'PT': 'Portero', 'DEF': 'Defensa', 'MED': 'Centrocampista', 'DEL': 'Delantero'}
 # El rol que devuelve playerStats es más fino que el de las alineaciones.

@@ -70,6 +70,9 @@ body.con-estadio{
   box-shadow:0 1px 3px rgba(0,0,0,.22);
   border:1px solid transparent;
   transform:translateY(3px);
+  /* El fundido convierte el encendido/apagado en un cambio suave: sin él, una
+     etiqueta que cruza el borde de un dorsal parpadea al mover la cámara. */
+  transition:opacity .16s linear;
 }
 .rotulo.sel{background:var(--green) !important; color:#fff !important; border-color:rgba(0,0,0,.25) !important}
 /* Marcas del partido en la propia etiqueta: tarjeta y gol vienen de la API. */
@@ -656,7 +659,7 @@ const PARTIDO = {
   "tactica": "4-2-3-1",
   "nota": 7,
   "edadMedia": 27.1,
-  "acento": "#0479B2",
+  "acento": "#0A86C9",
   "fondo": "#F4F6F8",
   "tinta": "#1B2B4B",
   "borde": "#C9CDD6"
@@ -671,7 +674,7 @@ const PARTIDO = {
   "tactica": "3-5-2",
   "nota": 7.2,
   "edadMedia": 27.6,
-  "acento": "#0F1116",
+  "acento": "#1A2340",
   "fondo": "#1C2E6B",
   "tinta": "#FFFFFF",
   "borde": "#48588F"
@@ -13657,7 +13660,9 @@ function rehacerPases() {
     _cPase.set(PARTIDO[A.equipo].acento);
     // Fuerte la del elegido y muy tenue el resto: con el mapa de calor debajo,
     // una cinta a media tinta se pierde entre el naranja y el rojo.
-    const alfa = suya ? (0.14 + 0.58 * Math.pow(par.rel, 0.75)) : 0.08;
+    // Más tinta también en las flojas: con el suelo muy bajo la red se veía
+    // lavada, y el color del equipo es parte de la lectura.
+    const alfa = suya ? (0.24 + 0.6 * Math.pow(par.rel, 0.75)) : 0.1;
     for (let n = 0; n < 4; n++) col.push(_cPase.r, _cPase.g, _cPase.b, alfa);
     idx.push(v, v + 1, v + 2, v, v + 2, v + 3);
     v += 4;
@@ -13908,6 +13913,10 @@ const _golpesOcl = [];            // reutilizado: esto corre en cada cuadro
 const _proy = new THREE.Vector3();
 const sx = new Float32Array(N), sy = new Float32Array(N);
 const sr = new Float32Array(N), sd = new Float32Array(N);
+// Estado anterior de cada etiqueta: la histéresis lo necesita.
+const tapada = new Array(N).fill(false);
+const OPACIDAD_ROTULO = 0.82;   // se deja ver el campo por debajo
+const HISTERESIS = 10;          // píxeles de margen extra para volver a salir
 
 function ocluirRotulos() {
   const lienzoW = renderer.domElement.clientWidth;
@@ -13918,8 +13927,10 @@ function ocluirRotulos() {
 
   for (let i = 0; i < N; i++) {
     const j = JUG[i];
+    // El interruptor y el filtro de equipo sí son binarios: la etiqueta no
+    // está. Lo que se tapa por delante se apaga con opacidad, no quitándola.
     const base = verEtiquetas && enCampo(i);
-    let ver = base;
+    rotulos[i].visible = base;
     if (base && hayMuro) {
       _dirOcl.subVectors(rotulos[i].position, camara.position);
       const lejos = _dirOcl.length();
@@ -13927,9 +13938,10 @@ function ocluirRotulos() {
       rayoOcl.far = lejos - 0.5;     // el margen evita que se tape a sí misma
       _golpesOcl.length = 0;
       rayoOcl.intersectObject(muro, false, _golpesOcl);
-      ver = _golpesOcl.length === 0;
+      tapada[i] = _golpesOcl.length > 0;
+    } else {
+      tapada[i] = false;
     }
-    rotulos[i].visible = ver;
 
     // Dorsal en pantalla: centro, radio y distancia a la cámara.
     _proy.set(jx(j), NIVEL + Y_DORSAL + (i === elegido ? LEVANTA : 0), jz(j));
@@ -13940,28 +13952,55 @@ function ocluirRotulos() {
     sr[i] = (DORSAL_D / 2) * kPx / Math.max(0.001, sd[i]);
   }
 
-  if (!verDorsales || !atlasListo) return;   // sin dorsales no hay nada que tapar
+  const conDorsales = verDorsales && atlasListo;
 
   for (let i = 0; i < N; i++) {
-    if (!rotulos[i].visible) continue;
     const el = JUG[i].el;
-    const anchoEt = el.offsetWidth, altoEt = el.offsetHeight;
-    if (!anchoEt) continue;                  // aún sin medir: el primer cuadro
-    // La etiqueta cuelga del punto de anclaje, centrada en horizontal.
-    _proy.copy(rotulos[i].position).project(camara);
-    const ex = (_proy.x * 0.5 + 0.5) * lienzoW;
-    const ey = (-_proy.y * 0.5 + 0.5) * lienzoH;
-    const x0 = ex - anchoEt / 2, x1 = ex + anchoEt / 2, y0 = ey, y1 = ey + altoEt;
-    for (let k = 0; k < N; k++) {
-      if (k === i || !enCampo(k) || sd[k] >= sd[i]) continue;   // solo los de delante
-      // Se tapa de verdad cuando el CENTRO del dorsal cae dentro de la
-      // etiqueta; rozarla por un pixel no cuenta, o se apagaría media plantilla.
-      const m = sr[k] * 0.35;
-      if (sx[k] > x0 - m && sx[k] < x1 + m && sy[k] > y0 - m && sy[k] < y1 + m) {
-        rotulos[i].visible = false;
-        break;
+    if (!rotulos[i].visible) continue;
+    if (conDorsales && !tapada[i]) {
+      const anchoEt = el.offsetWidth, altoEt = el.offsetHeight;
+      if (anchoEt) {                         // el primer cuadro aún no mide
+        // La etiqueta cuelga del punto de anclaje, centrada en horizontal.
+        _proy.copy(rotulos[i].position).project(camara);
+        const ex = (_proy.x * 0.5 + 0.5) * lienzoW;
+        const ey = (-_proy.y * 0.5 + 0.5) * lienzoH;
+        const x0 = ex - anchoEt / 2, x1 = ex + anchoEt / 2, y0 = ey, y1 = ey + altoEt;
+        for (let k = 0; k < N; k++) {
+          // Solo los de delante, y con medio metro de margen: a igual
+          // profundidad el orden baila y la etiqueta se pondría a parpadear.
+          if (k === i || !enCampo(k) || sd[k] >= sd[i] - 0.4) continue;
+          // Se tapa de verdad cuando el CENTRO del dorsal cae dentro de la
+          // etiqueta; rozarla por un pixel no cuenta, o se apagaría media
+          // plantilla. Y una vez apagada hace falta despejar HISTERESIS píxeles
+          // de más para volver: si el umbral fuera el mismo en los dos
+          // sentidos, bastaría medio grado de giro para encenderla y apagarla.
+          const m = sr[k] * 0.35 + (tapada[i] ? HISTERESIS : 0);
+          if (sx[k] > x0 - m && sx[k] < x1 + m && sy[k] > y0 - m && sy[k] < y1 + m) {
+            tapada[i] = true;
+            break;
+          }
+        }
       }
+    } else if (conDorsales && tapada[i]) {
+      // Ya tapada: se vuelve a mirar, pero con el margen ampliado.
+      const anchoEt = el.offsetWidth, altoEt = el.offsetHeight;
+      _proy.copy(rotulos[i].position).project(camara);
+      const ex = (_proy.x * 0.5 + 0.5) * lienzoW;
+      const ey = (-_proy.y * 0.5 + 0.5) * lienzoH;
+      const x0 = ex - anchoEt / 2, x1 = ex + anchoEt / 2, y0 = ey, y1 = ey + altoEt;
+      let sigue = false;
+      for (let k = 0; k < N; k++) {
+        if (k === i || !enCampo(k) || sd[k] >= sd[i] - 0.4) continue;
+        const m = sr[k] * 0.35 + HISTERESIS;
+        if (sx[k] > x0 - m && sx[k] < x1 + m && sy[k] > y0 - m && sy[k] < y1 + m) {
+          sigue = true;
+          break;
+        }
+      }
+      tapada[i] = sigue;
     }
+    el.style.opacity = tapada[i] ? '0'
+      : (i === elegido ? '1' : String(OPACIDAD_ROTULO));
   }
 }
 

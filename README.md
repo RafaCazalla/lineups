@@ -364,6 +364,12 @@ Cambiar una medida en `M` cambia el campo entero: las líneas se dibujan de ahí
 - **El atlas se dibuja después de `document.fonts.load`,** con tope de 2,5 s. Antes, los
   números salían en la tipografía de reserva; con el tope, si Google Fonts no contesta el
   prototipo arranca igual.
+- **Nada de encender y apagar en seco.** El primer intento ocultaba la etiqueta con un
+  booleano, y al girar la cámara el borde del dorsal se cruzaba una y otra vez: parpadeo.
+  Dos cosas lo quitan: **histéresis** —una vez apagada hace falta despejar 10 px de más
+  para volver, así que medio grado de giro ya no la enciende y la apaga— y un **fundido
+  de 160 ms** en vez de un salto. Además solo cuentan los dorsales que están medio metro
+  más cerca: a igual profundidad el orden baila.
 - **Una etiqueta tampoco puede tapar el dorsal de quien está delante.** Es el mismo
   problema —el HTML va siempre por encima del lienzo— pero al revés: el nombre de uno del
   fondo se plantaba sobre el número de uno de delante, que es lo que lo identifica. Se

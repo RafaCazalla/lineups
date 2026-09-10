@@ -2,3 +2,5 @@
 .vercel
 # 32 MB de formatos de 3ds Max: en el repo va solo el GLB que sale de ellos
 campo 3d/
+3d-model*.zip
+3d-model.*

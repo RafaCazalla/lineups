@@ -75,6 +75,11 @@ Y tres reglas:
 - **Los datos van incrustados, no se piden al abrir.** Así funciona con doble clic, sin
   servidor y sin CORS, que es lo que hace que se pueda enseñar en cualquier sitio.
 - **Lo que la API no da, no está.** Ver abajo.
+- **`match_lineups` sin `year` devuelve media respuesta**, y sin dar error. Salen los
+  onces, pero desaparecen `team_names`, los entrenadores, las tácticas y el **banquillo
+  se queda vacío**. Con `year=2027` viene todo. Dar menos en silencio es peor que fallar:
+  si el extractor no lo pasara, el banquillo saldría vacío y parecería que el partido
+  no tiene.
 
 ### Lo que la API da, y lo que no
 
@@ -87,6 +92,7 @@ Y tres reglas:
 | entrenadores, tácticas, nota y edad media de cada equipo | segunda línea de la cabecera |
 | 13 estadísticas de partido (posesión, tiros, pases, faltas…) | panel «Estadísticas del partido» |
 | escudos y retratos por id | imágenes reales, no marcadores de posición |
+| el banquillo (`bench`), once por equipo, con el minuto en que entró cada uno | la tira de suplentes de móvil |
 
 **No da coordenadas de los jugadores.** Manda el nombre de la táctica (`4-2-3-1`,
 `3-5-2`), un `pos` de 1 a 11 que recorre las líneas de atrás hacia delante, y
@@ -709,8 +715,11 @@ Cambiar una medida en `M` cambia el campo entero: las líneas se dibujan de ahí
   proporciones del logo; con el SVG o el PNG de marca queda idéntica.
 - **Competición y jornada**: no vienen en estas dos peticiones. La cabecera lleva
   entrenadores y tácticas en su lugar, y no se inventa una jornada.
-- **Suplentes.** La API los da (`bench`), con el minuto en que entraron. Cabe un banquillo
-  al borde del campo, que es lo que hacía el interruptor «Mostrar banquillo» de la maqueta.
+- **Suplentes en el campo, y su ficha.** Ya están en los datos (`suplentes`) y en móvil
+  se listan debajo del campo, pero en escritorio no hay nada: cabe un banquillo dibujado
+  al borde del césped, que es lo que hacía el interruptor «Mostrar banquillo» de la
+  maqueta. Y con su `idApi` se les puede pedir `playerStats` para que su ficha se abra
+  igual que la de un titular.
 - **Forma ofensiva, defensiva y balón parado**, los tres puntos de vista del documento de
   encargo. No son ángulos de cámara: son tres juegos alternativos de posiciones, y no hay
   datos tácticos para sostenerlos.

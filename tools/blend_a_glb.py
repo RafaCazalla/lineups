@@ -124,6 +124,39 @@ def leer_escena(bl, escala_soldadura, sin_objetos=()):
     return verts, tris_por_mat, colores
 
 
+def repartir_por_forma(V, tris, alto_grada):
+    """Parte un material en piezas mirando la geometría.
+
+    En un estadio, el hormigón del graderío y el de los muros vienen con el
+    MISMO material, así que por nombre no se pueden pintar distinto. Lo que los
+    separa es hacia dónde miran: la grada mira al campo y la fachada afuera. Un
+    graderío escalonado alterna huella tumbada y contrahuella vertical, y las
+    dos miran adentro, así que con la inclinación sola no basta.
+    """
+    fuera = {}
+    for t in tris:
+        a, b, c = (V[i] for i in t)
+        cx = (a[0] + b[0] + c[0]) / 3
+        cy = (a[1] + b[1] + c[1]) / 3
+        cz = (a[2] + b[2] + c[2]) / 3
+        ux, uy, uz = b[0] - a[0], b[1] - a[1], b[2] - a[2]
+        vx, vy, vz = c[0] - a[0], c[1] - a[1], c[2] - a[2]
+        nx, ny, nz = uy * vz - uz * vy, uz * vx - ux * vz, ux * vy - uy * vx
+        largo = (nx * nx + ny * ny + nz * nz) ** 0.5 or 1
+        nx, ny, nz = nx / largo, ny / largo, nz / largo
+        plana = abs(ny)
+        if cy < 1.2:
+            k = 'suelo'
+        elif cy >= alto_grada:
+            k = 'cubierta' if plana > 0.5 else 'estructura'
+        elif plana > 0.35 or (nx * cx + nz * cz) < 0:
+            k = 'grada'
+        else:
+            k = 'estructura'
+        fuera.setdefault(k, []).append(t)
+    return fuera
+
+
 def alinear_cuenco(V, bins=240, vueltas=3):
     """Ángulo y centro del CUENCO, no de la caja del conjunto.
 
@@ -297,6 +330,11 @@ def main():
     ap.add_argument('--giro-fino', type=float, default=-1.0,
                     help='giro en grados sobre y, para enderezar un modelo torcido')
     ap.add_argument('--fuera', default='', help='materiales a descartar, separados por coma')
+    ap.add_argument('--repartir', default='',
+                    help='materiales a partir por geometría en grada/cubierta/estructura/'
+                         'suelo, separados por coma. El grupo pasa a «material:pieza»')
+    ap.add_argument('--alto-grada', type=float, default=30.0,
+                    help='metros a partir de los cuales una cara ya es cubierta')
     ap.add_argument('--sin-objetos', default='',
                     help='objetos a descartar por nombre, separados por coma')
     ap.add_argument('--listar', action='store_true', help='solo enseñar las piezas')
@@ -399,6 +437,20 @@ def main():
     for x, y, z in V:
         x, y, z = x * s, y * s - a.baja, z * s
         W.append([x * co + z * si, y, -x * si + z * co])
+
+    # Repartir por forma los materiales que mezclan piezas. Va aquí, con W ya
+    # escalado y con el césped a cero, porque la regla usa alturas reales.
+    for m in filter(None, (x.strip() for x in a.repartir.split(','))):
+        tris = grupos.pop(m, None)
+        if not tris:
+            print(f'  (ojo: no hay material «{m}» que repartir)')
+            continue
+        piezas = repartir_por_forma(W, tris, a.alto_grada)
+        for pieza, lista in piezas.items():
+            grupos[f'{m}:{pieza}'] = lista
+            colores[f'{m}:{pieza}'] = colores.get(m, [0.8, 0.8, 0.8, 1])
+        print(f'  {m} repartido: ' + ' · '.join(f'{k} {len(v)}' for k, v in
+                                                sorted(piezas.items(), key=lambda x: -len(x[1]))))
 
     datos = glb(W, grupos, colores)
     open(a.salida, 'wb').write(datos)

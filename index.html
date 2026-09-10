@@ -14672,14 +14672,27 @@ const ESCENARIOS = [
     // Este sí trae materiales con nombre, pero casi todos en el gris por
     // defecto de Blender porque su color venía de texturas que no se cargan.
     // Se repintan por nombre los que pesan; el resto se queda como viene.
+    // El hormigón del graderío y el de los muros vienen con el mismo material,
+    // así que el conversor los reparte por geometría («Cement:grada») y aquí
+    // se pintan distinto. Es lo que hace que las gradas parezcan gradas sin
+    // necesitar ni una textura.
     paleta: {
-      Cement:                 { color: 0xBAB5A8, roughness: 0.94 },
+      'Cement:grada':         { color: 0x8E4038, roughness: 0.9 },   // asientos
+      'Wall:grada':           { color: 0x8E4038, roughness: 0.9 },
+      'Aliminuim:grada':      { color: 0x9A4A40, roughness: 0.85 },
+      'Cement:cubierta':      { color: 0xB6BABC, roughness: 0.5, metalness: 0.35 },
+      'Wall:cubierta':        { color: 0xB6BABC, roughness: 0.5, metalness: 0.35 },
+      'Aliminuim:cubierta':   { color: 0xC2C6C8, roughness: 0.4, metalness: 0.5 },
+      'Cement:estructura':    { color: 0xC4BFB2, roughness: 0.94 },
+      'Wall:estructura':      { color: 0xCCC7BA, roughness: 0.92 },
+      'Aliminuim:estructura': { color: 0xB7BCC0, roughness: 0.45, metalness: 0.45 },
+      'Cement:suelo':         { color: 0x6E6A60, roughness: 0.95 },
+      'Wall:suelo':           { color: 0x6E6A60, roughness: 0.95 },
+      'Aliminuim:suelo':      { color: 0x7A7770, roughness: 0.7, metalness: 0.2 },
       Concret:                { color: 0xAFAA9D, roughness: 0.94 },
-      Wall:                   { color: 0xC6C1B4, roughness: 0.92 },
-      Aliminuim:              { color: 0xB7BCC0, roughness: 0.45, metalness: 0.45 },
       Metal_Corrogated_Shiny: { color: 0x9AA3A8, roughness: 0.4, metalness: 0.55 },
       IronGray:               { color: 0x7E848A, roughness: 0.5, metalness: 0.4 },
-      Couro_Azul:             { color: 0x24357A, roughness: 0.85 },
+      Couro_Azul:             { color: 0x24357A, roughness: 0.85 },   // banquillo
       Couro_branco:           { color: 0xE8E6E0, roughness: 0.85 },
       RooFStrecture:          { color: 0xAFB4B6, roughness: 0.5, metalness: 0.4 },
       Glass:                  { color: 0x8FA6AE, roughness: 0.25, metalness: 0.2 },

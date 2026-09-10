@@ -359,6 +359,13 @@ Con esto no hay textura que poner. Para tenerlas hacen falta los ficheros que fa
 —mejor— un GLB exportado desde Blender con **File → External Data → Pack Resources** y
 las imágenes empotradas.
 
+Lo que sí se puede sin ninguna textura: **repartir el hormigón por geometría**. El
+graderío y los muros vienen con el mismo material `Cement`, así que por nombre no se
+pueden pintar distinto; lo que los separa es hacia dónde miran. `--repartir Cement,Wall,
+Aliminuim` los parte en `Cement:grada`, `Cement:cubierta`… y la paleta los pinta aparte.
+Con eso las gradas parecen gradas —53.790 triángulos de graderío frente a 11.740 de
+fachada— y el estadio deja de ser un bloque de hormigón blanco.
+
 Tres cosas que hubo que averiguar mirando la geometría, porque el fichero no las dice:
 
 | | |

@@ -13015,7 +13015,7 @@ escena.add(sol);
    textura del césped. Sale más nítido, más barato en llamadas de dibujo, y
    permite retocar el diseño sin tocar la escena.
 =========================================================================== */
-function texturaCesped() {
+function texturaCesped(conMarcas = true) {
   // Ancho del lienzo: 4096 px sobre 116 m son ~35 px/m, así que una línea de
   // 12 cm cae en unos 4 px. Con menos, las líneas parpadean al alejarse.
   const ancho = Math.min(4096, renderer.capabilities.maxTextureSize);
@@ -13086,6 +13086,14 @@ function texturaCesped() {
     desgaste(fondo - lado * M.PENALTI, 0, 3.2, 3.2, 0.16); // punto de penalti
   }
   desgaste(0, 0, 11, 11, 0.07);                            // círculo central
+
+  if (!conMarcas) {                      // la alfombra va lisa: ni líneas ni logo
+    const lisa = new THREE.CanvasTexture(c);
+    lisa.colorSpace = THREE.SRGBColorSpace;
+    lisa.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    lisa.minFilter = THREE.LinearMipmapLinearFilter;
+    return lisa;
+  }
 
   // --- Marca de BeSoccer pintada sobre el césped --------------------------
   // Como en un campo de verdad: dos marcas en esquinas opuestas, con la pintura
@@ -13254,6 +13262,41 @@ cesped.rotation.x = -Math.PI / 2;
 cesped.position.y = NIVEL;
 cesped.receiveShadow = true;
 campo.add(cesped);
+
+/* --- Alfombra de césped ---------------------------------------------------
+   Dentro de un estadio, alrededor de nuestro campo asoma el suelo del modelo:
+   pista de atletismo y hormigón, en blanco, y canta muchísimo detrás de las
+   porterías. Se tapa con una alfombra del mismo césped pero SIN marcas, del
+   tamaño del hueco de cada estadio, que se mete por debajo de las gradas como
+   haría la hierba de verdad. Va 5 mm por debajo del campo para que las líneas
+   sigan siendo las nuestras. */
+const alfombra = new THREE.Mesh(
+  new THREE.PlaneGeometry(1, 1),
+  new THREE.MeshStandardMaterial({
+    map: texturaCesped(false),
+    roughnessMap: texturaRugosidad(),
+    roughness: 1, metalness: 0, envMapIntensity: 1.15,
+  })
+);
+alfombra.rotation.x = -Math.PI / 2;
+alfombra.position.y = NIVEL - 0.005;
+alfombra.receiveShadow = true;
+alfombra.visible = false;
+campo.add(alfombra);
+
+function ponerAlfombra(medidas) {
+  if (!medidas) { alfombra.visible = false; return; }
+  // Un poco más grande que el hueco, para que muera bajo la primera fila.
+  const ancho = medidas[0] * 2 + 14, largo = medidas[1] * 2 + 14;
+  alfombra.geometry.dispose();
+  alfombra.geometry = new THREE.PlaneGeometry(ancho, largo);
+  alfombra.geometry.rotateX(-Math.PI / 2);
+  alfombra.rotation.x = 0;
+  alfombra.material.map.repeat.set(ancho / M.LOSA_L, largo / M.LOSA_A);
+  alfombra.material.map.wrapS = alfombra.material.map.wrapT = THREE.RepeatWrapping;
+  alfombra.material.map.offset.set((1 - ancho / M.LOSA_L) / 2, (1 - largo / M.LOSA_A) / 2);
+  alfombra.visible = true;
+}
 
 // Zócalo: hace que el campo parezca una pieza apoyada y no una lámina flotando.
 // Su tapa se queda 5 cm por debajo del césped a propósito: dos caras a la misma
@@ -13880,9 +13923,11 @@ const rotulos = JUG.map(j => {
    comprobación de línea de visión por etiqueta. Son 22 rayos contra 8
    triángulos por cuadro, o sea nada. Contra el estadio de verdad serían 22
    rayos contra 48.916 triángulos, que no cabe en un cuadro a 60 fps. */
-function muroDelCuenco() {
-  // Medidos sobre el propio modelo: borde interior de la grada y alto del cuenco.
-  const xi = 54, zi = 35, xo = 92, zo = 68, h = 26;
+// [borde interior x, z · borde alto x, z · alto]. Medidos sobre cada modelo.
+const MURO_DEFECTO = [54, 35, 92, 68, 26];
+
+function muroDelCuenco(medidas = MURO_DEFECTO) {
+  const [xi, zi, xo, zo, h] = medidas;
   const v = [];
   const cuadro = (a, b, c, d) => v.push(...a, ...b, ...c, ...a, ...c, ...d);
   cuadro([-xi, 0, -zi], [-xi, 0, zi], [-xo, h, zo], [-xo, h, -zo]);   // fondo -x
@@ -13896,8 +13941,17 @@ function muroDelCuenco() {
   m.position.y = NIVEL;
   return m;
 }
-const muro = muroDelCuenco();
+let muro = muroDelCuenco();
 escena.add(muro);
+
+// Cada estadio tiene su cuenco: reusar el de otro tapa etiquetas de más o de
+// menos. Se rehace al cambiar de escenario.
+function ponerMuro(medidas) {
+  escena.remove(muro);
+  muro.geometry.dispose();
+  muro = muroDelCuenco(medidas || MURO_DEFECTO);
+  escena.add(muro);
+}
 
 const rayoOcl = new THREE.Raycaster();
 const _dirOcl = new THREE.Vector3();
@@ -14604,7 +14658,7 @@ if (new URLSearchParams(location.search).get('stats') === '1') verStats(true);
 const ESCENARIOS = [
   { id: 'defecto', nombre: 'Por defecto', pie: 'Campo suelto, generado por código' },
   { id: 'ewood', nombre: 'Ewood Park', pie: 'Blackburn Rovers · 577 KB al elegirlo',
-    glb: 'assets/estadio.glb',
+    glb: 'assets/estadio.glb', muro: [52, 35, 88, 64, 28],
     // Los ficheros de este modelo no traen color: el conversor reparte las
     // caras en cuatro piezas por su geometría y el color se pone aquí.
     paleta: {
@@ -14632,9 +14686,13 @@ const ESCENARIOS = [
     },
     // El modelo lleva una explanada enorme alrededor: encuadrar el conjunto
     // dejaría el campo del tamaño de un sello. Se encuadra el cuenco.
-    encuadre: [128, 42, 112] },
+    encuadre: [128, 42, 112], muro: [67, 36, 132, 120, 42] },
 ];
 let escenario = 'defecto', estadio = null, cargando = false;
+// Uno por id. Antes había una sola variable, así que al elegir el segundo
+// estadio se encontraba con que «ya había uno cargado», se saltaba la descarga
+// y seguía enseñando el primero.
+const cargados = {};
 
 function esquinasDe(obj) {
   const c = new THREE.Box3().setFromObject(obj);
@@ -14654,20 +14712,20 @@ function avisoMenu(txt) {
 async function ponerEscenario(id, ms = 700) {
   const def = ESCENARIOS.find(e => e.id === id);
   if (!def || cargando) return;
-  if (def.glb && !estadio) {
+  if (def.glb && !cargados[id]) {
     cargando = true;
     avisoMenu('Cargando el estadio…');
     pintarMenu();
     try {
       const gltf = await new GLTFLoader().loadAsync(def.glb);
-      estadio = gltf.scene;
+      const modelo = gltf.scene;
       const mats = {};
       for (const [nombre, cfg] of Object.entries(def.paleta || {})) {
         mats[nombre] = new THREE.MeshStandardMaterial({
           metalness: 0.03, ...cfg, flatShading: true, side: THREE.DoubleSide,
         });
       }
-      estadio.traverse(o => {
+      modelo.traverse(o => {
         if (!o.isMesh) return;
         const nom = o.material && o.material.name;
         if (mats[nom]) {
@@ -14681,10 +14739,12 @@ async function ponerEscenario(id, ms = 700) {
         }
         o.frustumCulled = false;
       });
-      // El GLB sale con el suelo en su y=0: se baja 2 cm bajo el césped para
+      // El GLB sale con el césped en su y=0: se baja 2 cm bajo el nuestro para
       // que el nuestro gane la profundidad y se vea por encima.
-      estadio.position.y = NIVEL - 0.02;
-      escena.add(estadio);
+      modelo.position.y = NIVEL - 0.02;
+      modelo.visible = false;
+      escena.add(modelo);
+      cargados[id] = modelo;
       avisoMenu('');
     } catch (e) {
       avisoMenu('No se pudo cargar el estadio. Con doble clic (file://) el navegador '
@@ -14697,7 +14757,12 @@ async function ponerEscenario(id, ms = 700) {
   }
   escenario = id;
   const dentro = !!def.glb;
-  if (estadio) estadio.visible = dentro;
+  // Se enseña el elegido y se esconden los demás, que siguen cargados: volver
+  // a uno ya visto es instantáneo.
+  for (const [k, o] of Object.entries(cargados)) o.visible = (k === id);
+  estadio = dentro ? cargados[id] || null : null;
+  ponerMuro(def.muro);
+  ponerAlfombra(dentro ? def.muro : null);
   // Dentro de un estadio el campo no flota: sobran el zócalo y la sombra.
   zocalo.visible = !dentro;
   sombra.visible = !dentro;

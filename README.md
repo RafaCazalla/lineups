@@ -214,8 +214,20 @@ El engranaje de la barra inferior abre un menú con tres opciones:
 Los dos estadios **solo se descargan al elegirlos**. Meterlos en el arranque sería
 pagarlos siempre por una opción que casi nadie va a tocar.
 
-Cada escenario lleva su **paleta por nombre de material** y, si hace falta, su propia
-caja de encuadre. Lo que no esté en la paleta se queda con el color que trae el GLB.
+Cada escenario lleva su **paleta por nombre de material**, su caja de encuadre y las
+medidas de su cuenco (para el muro que oculta etiquetas). Lo que no esté en la paleta se
+queda con el color que trae el GLB.
+
+Los modelos se guardan **uno por id** y se van escondiendo, no descargando: volver a uno
+ya visto es instantáneo. Con una sola variable, al elegir el segundo estadio se
+encontraba con que «ya había uno cargado», se saltaba la descarga y seguía enseñando el
+primero.
+
+**Alfombra de césped.** Dentro de un estadio, alrededor del campo asoma el suelo del
+modelo —pista de atletismo y hormigón, en blanco—, y canta detrás de las porterías. Se
+tapa con una alfombra del mismo césped pero sin marcas, del tamaño del hueco de cada
+estadio, que muere bajo la primera fila como haría la hierba de verdad. Va 5 mm por
+debajo del campo para que las líneas sigan siendo las nuestras.
 
 **No es Upton Park.** El modelo de la carpeta trae un grupo llamado `jack_walker_stan`:
 la Jack Walker Stand es de **Ewood Park (Blackburn Rovers)**. El nombre del menú dice lo

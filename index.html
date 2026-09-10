@@ -316,6 +316,63 @@ body.con-estadio{
 #stats .barra{display:flex; height:5px; border-radius:3px; overflow:hidden; background:var(--flat)}
 #stats .barra span{display:block; height:100%; border-radius:3px}
 
+/* Informe de ojeador: mismo sitio y mismo lenguaje que la ficha */
+#informe{
+  top:132px; right:18px; width:296px; padding:0; display:none;
+  max-height:calc(100vh - 226px); overflow:hidden auto; overscroll-behavior:contain;
+}
+#informe.abierta{display:block}
+#informe .top{padding:14px 16px 12px; border-bottom:1px solid var(--hairline)}
+#informe .rot{
+  font-family:var(--font-cond); font-weight:600; font-size:11.5px; letter-spacing:.4px;
+  text-transform:uppercase; color:var(--green-dark); margin-bottom:6px;
+}
+#informe .nom{font-family:var(--font-cond); font-weight:600; font-size:20px; line-height:1.1; padding-right:30px}
+#informe .sub{font-family:var(--font-cond); font-size:12.5px; color:var(--ink-2); margin-top:3px}
+#informe .cerrar{
+  position:absolute; top:10px; right:10px; width:26px; height:26px; border:0; border-radius:7px;
+  background:rgba(56,56,56,.07); color:var(--ink-2); cursor:pointer; display:grid; place-items:center;
+}
+#informe .cerrar:hover{background:rgba(56,56,56,.14)}
+#informe .cerrar svg{width:13px; height:13px}
+#informe .campos{padding:12px 16px 4px; display:grid; grid-template-columns:1fr 1fr; gap:10px}
+#informe .campo{display:flex; flex-direction:column; gap:4px; min-width:0}
+#informe .campo.ancho{grid-column:1 / -1}
+#informe label{
+  font-family:var(--font-cond); font-weight:600; font-size:11px; letter-spacing:.3px;
+  text-transform:uppercase; color:var(--ink-3);
+}
+#informe input, #informe select, #informe textarea{
+  font:inherit; font-size:13px; color:var(--ink); width:100%;
+  padding:7px 9px; border:1px solid var(--hairline); border-radius:8px;
+  background:rgba(255,255,255,.85);
+}
+#informe textarea{resize:vertical; min-height:66px; line-height:1.45}
+#informe input:focus, #informe select:focus, #informe textarea:focus{
+  outline:none; border-color:var(--green); box-shadow:0 0 0 2px rgba(59,129,31,.15);
+}
+#informe .pie{padding:10px 16px 13px; display:flex; align-items:center; gap:8px}
+#informe .guardar{
+  flex:1; padding:9px 12px 8px; border:0; border-radius:9px; cursor:pointer;
+  background:var(--green); color:#fff;
+  font-family:var(--font-cond); font-weight:600; font-size:14px;
+}
+#informe .guardar:hover{background:var(--green-dark)}
+#informe .aux{
+  padding:8px 10px; border:1px solid var(--hairline); border-radius:9px; background:none;
+  cursor:pointer; font-family:var(--font-cond); font-size:12.5px; color:var(--ink-2);
+}
+#informe .aux:hover{background:rgba(56,56,56,.05)}
+#informe .estado{
+  padding:0 16px 12px; font-size:11.5px; line-height:1.45; color:var(--ink-3); margin:0;
+}
+#informe .estado b{color:var(--green-dark); font-weight:600}
+/* Quien ya tiene informe lleva una marca en su etiqueta. */
+.rotulo i.inf{
+  width:9px; height:9px; border-radius:2px; background:var(--green);
+  box-shadow:0 0 0 1.5px rgba(255,255,255,.85);
+}
+
 /* Puntos de vista, arriba a la derecha. Rejilla de 3 para que no queden huérfanas. */
 #vistas{top:18px; right:18px; padding:8px; display:grid; grid-template-columns:repeat(3,1fr); gap:6px}
 .pastilla{
@@ -511,6 +568,12 @@ body.con-estadio{
     </svg>
     <span class="txt">Posición media real</span><span class="palanca" aria-hidden="true"></span>
   </button>
+  <button class="sw" id="sw-informe" aria-pressed="false">
+    <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M8 4h8a1 1 0 0 1 1 1v15l-5-2.5L7 20V5a1 1 0 0 1 1-1z"/><path d="M9.5 9h5M9.5 12.5h5"/>
+    </svg>
+    <span class="txt">Realizar informe</span><span class="palanca" aria-hidden="true"></span>
+  </button>
   <button class="sw" id="sw-pases" aria-pressed="false">
     <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <circle cx="5.5" cy="6.5" r="2"/><circle cx="18.5" cy="9" r="2"/><circle cx="9" cy="18" r="2"/>
@@ -567,6 +630,38 @@ body.con-estadio{
   <div id="menu-campos"></div>
   <p class="aviso" id="menu-aviso" hidden></p>
 </div>
+
+<aside class="hud tarjeta" id="informe" aria-label="Informe del jugador">
+  <button class="cerrar" id="i-cerrar" title="Cerrar" aria-label="Cerrar el informe">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <div class="top">
+    <div class="rot">Informe de ojeador</div>
+    <div class="nom" id="i-nom"></div>
+    <div class="sub" id="i-sub"></div>
+  </div>
+  <div class="campos">
+    <div class="campo"><label for="i-dorsal">Dorsal</label>
+      <input id="i-dorsal" type="number" min="1" max="99" inputmode="numeric"></div>
+    <div class="campo"><label for="i-born">Año nac.</label>
+      <input id="i-born" type="number" min="1970" max="2020" inputmode="numeric"></div>
+    <div class="campo ancho"><label for="i-posrm">Perfil</label>
+      <select id="i-posrm"></select></div>
+    <div class="campo"><label for="i-foot">Pie</label>
+      <select id="i-foot"></select></div>
+    <div class="campo"><label for="i-pts">Puntos</label>
+      <select id="i-pts"></select></div>
+    <div class="campo ancho"><label for="i-valoration">Valoración</label>
+      <select id="i-valoration"></select></div>
+    <div class="campo ancho"><label for="i-notas">Valoración general</label>
+      <textarea id="i-notas" placeholder="Qué has visto, en qué destaca, qué le falta…"></textarea></div>
+  </div>
+  <div class="pie">
+    <button class="guardar" id="i-guardar">Guardar informe</button>
+    <button class="aux" id="i-exportar" title="Copiar todos los informes en JSON">Exportar</button>
+  </div>
+  <p class="estado" id="i-estado"></p>
+</aside>
 
 <button class="hud tarjeta" id="bt-stats" aria-expanded="false" aria-controls="stats">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -14651,6 +14746,137 @@ btStats.addEventListener('click', ev => {
 });
 if (new URLSearchParams(location.search).get('stats') === '1') verStats(true);
 
+/* --- Informe de ojeador ---------------------------------------------------
+   El formulario sale del JSON de BeSoccer Pro: año de nacimiento, perfil, pie,
+   puntos (0 a 10, `type_pts: numeric`) y valoración A-D, más la valoración
+   general del ejemplo. Lo que se guarda usa **las claves de ese esquema**
+   (`born`, `posrm`, `foot`, `pts`, `valoration`), aunque la interfaz esté en
+   español: así el JSON que sale de aquí encaja con lo que espera Pro.
+
+   Ojo: `foot` no venía en el JSON. Se usan R/L/B, que es lo habitual, pero es
+   una suposición mía y hay que confirmarla antes de enchufarlo a nada. */
+const PERFILES = [                       // orden y claves, tal cual el JSON
+  ['1', 'Portero'], ['2', 'Lateral derecho'], ['3', 'Central derecho'],
+  ['4', 'Central izquierdo'], ['5', 'Lateral izquierdo'],
+  ['6', 'Mediocentro defensivo'], ['8', 'Mediocentro'], ['10', 'Mediapunta'],
+  ['7', 'Extremo derecho'], ['11', 'Extremo izquierdo'], ['9', 'Delantero'],
+];
+const PIES = [['R', 'Diestro'], ['L', 'Zurdo'], ['B', 'Ambidiestro']];
+const VALORACIONES = [['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D']];
+// De la demarcación que da la API al perfil del formulario. Los centrales no
+// se pueden desdoblar en derecho e izquierdo con lo que hay, así que se
+// propone el derecho y que lo corrija quien mira.
+const PERFIL_DE_ROL = {
+  PT: '1', LD: '2', CAD: '2', DFC: '3', CD: '3', CI: '4', LI: '5', CAI: '5',
+  MCD: '6', MC: '8', MP: '10', MD: '8', MI: '8', ED: '7', EI: '11', DC: '9', SD: '9',
+};
+
+const LLAVE_INFORMES = 'bsp-informes-' + PARTIDO.id;
+let informes = {};
+try { informes = JSON.parse(localStorage.getItem(LLAVE_INFORMES) || '{}'); } catch (e) { informes = {}; }
+
+let modoInforme = false;
+const cajaInf = $('informe');
+
+function opciones(sel, lista, vacio) {
+  sel.textContent = '';
+  const o = document.createElement('option');
+  o.value = ''; o.textContent = vacio;
+  sel.appendChild(o);
+  for (const [v, t] of lista) {
+    const e = document.createElement('option');
+    e.value = v; e.textContent = t;
+    sel.appendChild(e);
+  }
+}
+opciones($('i-posrm'), PERFILES, 'Seleccione posición');
+// Los dos estrechos van con guion: el rótulo de encima ya dice qué son, y
+// «Seleccione una puntuación» en media columna sale cortado.
+opciones($('i-foot'), PIES, '—');
+opciones($('i-pts'), Array.from({ length: 11 }, (_, n) => [String(n), String(n)]), '—');
+opciones($('i-valoration'), VALORACIONES, 'Seleccione una valoración');
+
+function pintarInforme(j) {
+  const eq = PARTIDO[j.equipo];
+  $('i-nom').textContent = j.nombre || j.corto;
+  $('i-sub').textContent = `${eq.nombre} · ${j.rolLargoFino || j.rolLargo} · dorsal ${j.dorsal}`;
+  const g = informes[j.id] || {};
+  $('i-dorsal').value = g.dorsal ?? j.dorsal ?? '';
+  // El año de nacimiento no viene en la API; se propone restando la edad al
+  // año del partido y se deja editable, que es mejor que dejarlo vacío.
+  const anoPartido = 2026;
+  $('i-born').value = g.born ?? (j.edad ? anoPartido - Number(j.edad) : '');
+  $('i-posrm').value = g.posrm ?? (PERFIL_DE_ROL[j.rolApi] || '');
+  $('i-foot').value = g.foot ?? '';
+  $('i-pts').value = g.pts ?? '';
+  $('i-valoration').value = g.valoration ?? '';
+  $('i-notas').value = g.notas ?? '';
+  $('i-estado').innerHTML = g.fecha
+    ? `Guardado el <b>${new Date(g.fecha).toLocaleString('es-ES')}</b>. `
+      + `${Object.keys(informes).length} informes en este navegador.`
+    : 'Sin guardar. Los informes se quedan en este navegador; «Exportar» los copia en JSON.';
+  cajaInf.classList.add('abierta');
+}
+
+function guardarInforme() {
+  if (elegido < 0) return;
+  const j = JUG[elegido];
+  informes[j.id] = {
+    jugador: j.id, idApi: j.idApi, nombre: j.nombre, equipo: PARTIDO[j.equipo].nombre,
+    dorsal: Number($('i-dorsal').value) || null,
+    born: Number($('i-born').value) || null,
+    posrm: $('i-posrm').value || null,
+    foot: $('i-foot').value || null,
+    pts: $('i-pts').value === '' ? null : Number($('i-pts').value),
+    valoration: $('i-valoration').value || null,
+    notas: $('i-notas').value.trim() || null,
+    fecha: new Date().toISOString(),
+  };
+  try { localStorage.setItem(LLAVE_INFORMES, JSON.stringify(informes)); } catch (e) {}
+  pintarInforme(j);
+  marcarConInforme();
+}
+
+// Marca en la etiqueta de quien ya tiene informe: se ve a quién falta por ver.
+function marcarConInforme() {
+  for (const j of JUG) {
+    const ya = j.el.querySelector('i.inf');
+    if (informes[j.id] && !ya) {
+      const i = document.createElement('i');
+      i.className = 'inf';
+      i.title = 'Con informe';
+      j.el.appendChild(i);
+    } else if (!informes[j.id] && ya) {
+      ya.remove();
+    }
+  }
+}
+marcarConInforme();
+
+$('i-guardar').addEventListener('click', guardarInforme);
+$('i-cerrar').addEventListener('click', () => elegir(-1));
+$('i-exportar').addEventListener('click', async () => {
+  const txt = JSON.stringify({
+    partido: PARTIDO.id, fuente: PARTIDO.fuente,
+    informes: Object.values(informes),
+  }, null, 2);
+  try {
+    await navigator.clipboard.writeText(txt);
+    $('i-estado').innerHTML = `<b>${Object.keys(informes).length} informes copiados</b> al portapapeles, en JSON.`;
+  } catch (e) {
+    $('i-estado').textContent = 'El navegador no ha dejado copiar. Con la página servida por https sí deja.';
+  }
+});
+
+palanca('sw-informe', false, v => {
+  modoInforme = v;
+  // Cambiar de modo con alguien elegido: se cambia el panel al vuelo.
+  if (elegido >= 0) {
+    caja.classList.toggle('abierta', !v);
+    if (v) pintarInforme(JUG[elegido]); else cajaInf.classList.remove('abierta');
+  }
+});
+
 /* --- Escenario: campo suelto o estadio -----------------------------------
    El campo por defecto es el generado por código, que pesa 0 y siempre está.
    El estadio es un GLB de 577 KB y **solo se descarga si se elige**: meterlo
@@ -14900,11 +15126,13 @@ function elegir(i) {
   refrescarFichas();
   if (verPases) rehacerPases(); else rehacerFlujo();
   if (i >= 0) {
-    pintarFicha(JUG[i]);
+    if (modoInforme) { caja.classList.remove('abierta'); pintarInforme(JUG[i]); }
+    else { cajaInf.classList.remove('abierta'); pintarFicha(JUG[i]); }
   } else {
     // Al soltar la selección se apaga TODO lo del jugador, mapa de calor
     // incluido: si la mancha se queda pintada, ya no dice de quién es.
     caja.classList.remove('abierta');
+    cajaInf.classList.remove('abierta');
     pintarCalorCampo(null);
   }
   document.body.classList.toggle('con-ficha', i >= 0);

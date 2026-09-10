@@ -292,6 +292,33 @@ gris claro sobre un fondo gris claro.** Con el estadio puesto, el fondo de la p�
 de tono (`body.con-estadio`) y el hormigón es más oscuro. Antes de buscar un fallo de
 cámara, comprobar el contraste.
 
+## Informe de ojeador
+
+El interruptor «Realizar informe» del panel izquierdo cambia lo que pasa al pulsar un
+jugador: en vez de su ficha de estadísticas sale un formulario para valorarlo, en el
+mismo sitio y con el mismo lenguaje que el resto de tarjetas. Los dos hablan del jugador
+elegido, así que comparten hueco en vez de pelearse por él.
+
+El formulario sale del **JSON de BeSoccer Pro**: año de nacimiento, perfil (los once de
+su lista, con sus claves), pie, puntos de 0 a 10 (`type_pts: numeric`) y valoración A-D,
+más la valoración general del ejemplo.
+
+- **Se guarda con las claves del esquema de Pro** —`born`, `posrm`, `foot`, `pts`,
+  `valoration`— aunque la interfaz esté en español, para que el JSON que sale de aquí
+  encaje con lo que ellos esperan.
+- **Se prellena lo que se puede.** El dorsal y el perfil salen de la API —la demarcación
+  se traduce al perfil más cercano—, y el año de nacimiento se propone restando la edad
+  al año del partido. Todo editable: es una propuesta, no un dato.
+- **Los centrales no se pueden desdoblar** en derecho e izquierdo con lo que da la API:
+  se propone el derecho y que lo corrija quien mira.
+- **`foot` no venía en el JSON.** Se usan `R`/`L`/`B`, que es lo habitual, pero es una
+  suposición y hay que confirmarla antes de enchufarlo a nada.
+- **Los informes se guardan en `localStorage`**, por partido, y «Exportar» los copia
+  todos en JSON al portapapeles. No hay servidor: es un prototipo, y esto permite
+  rellenar veintidós fichas y llevárselas.
+- **Quien ya tiene informe lleva una marca verde en su etiqueta**, para ver de un vistazo
+  a quién falta por mirar.
+
 ## El césped
 
 Lo que hace que un campo segado se vea segado **no es el color**: es que las franjas

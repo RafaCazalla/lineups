@@ -354,6 +354,16 @@ Cambiar una medida en `M` cambia el campo entero: las líneas se dibujan de ahí
 - **El atlas se dibuja después de `document.fonts.load`,** con tope de 2,5 s. Antes, los
   números salían en la tipografía de reserva; con el tope, si Google Fonts no contesta el
   prototipo arranca igual.
+- **Las etiquetas HTML no las tapa nada, y con estadio se nota.** Los dorsales son
+  geometría y el buffer de profundidad los oculta solo; los nombres son DOM y se quedaban
+  flotando sobre la grada al mirar el estadio desde fuera. Se comprueba la línea de visión
+  contra un **muro invisible con la forma del cuenco** —cuatro cuadros inclinados, del
+  borde interior de la grada al alero, medidos sobre el propio modelo—: 22 rayos contra 8
+  triángulos por cuadro. Contra el estadio de verdad serían 22 rayos contra 48.916
+  triángulos, que no cabe en un cuadro a 60 fps.
+  Comprobado: desde arriba y fuera 22/22 etiquetas, desde fuera y a ras 0/22, dentro 22/22.
+- **`A ras de césped` se mete dentro del campo cuando hay estadio.** A 47 m del eje la
+  cámara queda metida en el graderío; con estadio esa vista pasa a 32 m, que es la banda.
 - **El nombre va en HTML (`CSS2DRenderer`), nunca en textura.** La etiqueta lleva los
   colores de la equipación, y las marcas de gol y tarjeta que da la API: la alineación ya
   cuenta el partido sin abrir ninguna ficha.

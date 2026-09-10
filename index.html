@@ -13842,6 +13842,55 @@ const rotulos = JUG.map(j => {
   return obj;
 });
 
+/* --- Ocultador de etiquetas ----------------------------------------------
+   Los nombres van en HTML (CSS2DRenderer) y eso tiene un precio: **no los tapa
+   nada**. Los dorsales, que son geometría, los oculta el buffer de profundidad
+   solos; las etiquetas se quedan flotando sobre la grada cuando miras el
+   estadio desde fuera.
+
+   La solución barata: un muro invisible con la forma del cuenco —cuatro
+   cuadros inclinados, del borde interior de la grada al alero— y una
+   comprobación de línea de visión por etiqueta. Son 22 rayos contra 8
+   triángulos por cuadro, o sea nada. Contra el estadio de verdad serían 22
+   rayos contra 48.916 triángulos, que no cabe en un cuadro a 60 fps. */
+function muroDelCuenco() {
+  // Medidos sobre el propio modelo: borde interior de la grada y alto del cuenco.
+  const xi = 54, zi = 35, xo = 92, zo = 68, h = 26;
+  const v = [];
+  const cuadro = (a, b, c, d) => v.push(...a, ...b, ...c, ...a, ...c, ...d);
+  cuadro([-xi, 0, -zi], [-xi, 0, zi], [-xo, h, zo], [-xo, h, -zo]);   // fondo -x
+  cuadro([xi, 0, zi], [xi, 0, -zi], [xo, h, -zo], [xo, h, zo]);       // fondo +x
+  cuadro([xi, 0, -zi], [-xi, 0, -zi], [-xo, h, -zo], [xo, h, -zo]);   // banda -z
+  cuadro([-xi, 0, zi], [xi, 0, zi], [xo, h, zo], [-xo, h, zo]);       // banda +z
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
+  const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }));
+  m.visible = false;                 // solo existe para el raycaster
+  m.position.y = NIVEL;
+  return m;
+}
+const muro = muroDelCuenco();
+escena.add(muro);
+
+const rayoOcl = new THREE.Raycaster();
+const _dirOcl = new THREE.Vector3();
+const _golpesOcl = [];            // reutilizado: esto corre en cada cuadro
+
+function ocluirRotulos() {
+  const hayMuro = !!(estadio && estadio.visible);
+  for (let i = 0; i < N; i++) {
+    const base = verEtiquetas && enCampo(i);
+    if (!base || !hayMuro) { rotulos[i].visible = base; continue; }
+    _dirOcl.subVectors(rotulos[i].position, camara.position);
+    const lejos = _dirOcl.length();
+    rayoOcl.set(camara.position, _dirOcl.normalize());
+    rayoOcl.far = lejos - 0.5;       // el margen evita que se tape a sí misma
+    _golpesOcl.length = 0;
+    rayoOcl.intersectObject(muro, false, _golpesOcl);
+    rotulos[i].visible = _golpesOcl.length === 0;
+  }
+}
+
 /* --- Estado de las fichas -------------------------------------------------
    Se recalcula solo cuando cambia el ratón o la selección, no cada cuadro. */
 const _m = new THREE.Matrix4(), _v = new THREE.Vector3(), _q = new THREE.Quaternion(), _e = new THREE.Vector3();
@@ -14002,12 +14051,16 @@ const VISTAS = [
   { id: 'tactica',  nombre: 'Vista táctica',   polar: 3,  azimut: 0,   obj: [0, NIVEL, 0],    margen: 1.04, giroVertical: true },
   // A ras de césped hay que soltar el límite polar: mirando casi horizontal el
   // ángulo pasa de 83° y OrbitControls devolvería la cámara hacia arriba.
-  { id: 'ras',      nombre: 'A ras de césped', pos: [-13, NIVEL + 2.6, 47], obj: [5, NIVEL - 1.2, -8], polarMax: 1.555 },
+  // Con el estadio puesto la cámara se mete dentro del graderío si se queda a
+  // 47 m del eje: ahí la posición de banda es la de dentro del campo.
+  { id: 'ras',      nombre: 'A ras de césped', pos: [-13, NIVEL + 2.6, 47],
+    posEstadio: [-11, NIVEL + 2.2, 32], obj: [5, NIVEL - 1.2, -8], polarMax: 1.555 },
 ];
 
 function posicionDe(vista) {
   const objetivo = new THREE.Vector3(...vista.obj);
-  if (vista.pos) return { pos: new THREE.Vector3(...vista.pos), obj: objetivo };
+  const fijo = (estadio && estadio.visible && vista.posEstadio) || vista.pos;
+  if (fijo) return { pos: new THREE.Vector3(...fijo), obj: objetivo };
   // En pantalla vertical el campo se mira de canto: así los 105 m caen sobre el
   // lado largo. Las vistas de portería no giran, que ahí el eje es el del campo.
   const vertical = vista.giroVertical && camara.aspect < 1;
@@ -14703,6 +14756,7 @@ renderer.setAnimationLoop(() => {
   anterior = ahora;
   if (controles.enabled) controles.update();
   billboardDorsales();
+  ocluirRotulos();
   renderer.render(escena, camara);
   capaRotulos.render(escena, camara);
 

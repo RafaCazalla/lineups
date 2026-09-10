@@ -14554,6 +14554,49 @@ function pintarFicha(j) {
   caja.classList.add('abierta');
 }
 
+/* --- Estadísticas del partido (reales) -----------------------------------
+   Las 13 filas que manda la API, con su barra de reparto. */
+(function pintarStats() {
+  $('s-sub').textContent = `${L.nombre} · ${V.nombre} — ${PARTIDO.fuente.split(' · ')[0]}`;
+  const cont = $('s-filas');
+  cont.textContent = '';
+  for (const e of PARTIDO.estadisticas || []) {
+    const a = Number(e.local) || 0, b = Number(e.visitante) || 0, t = a + b;
+    const fila = document.createElement('div');
+    fila.className = 'fila';
+    const cif = document.createElement('div');
+    cif.className = 'cifras';
+    const iz = document.createElement('b'); iz.textContent = (e.local ?? '—') + e.sufijo;
+    const md = document.createElement('span'); md.textContent = e.titulo;
+    const de = document.createElement('b'); de.textContent = (e.visitante ?? '—') + e.sufijo;
+    cif.append(iz, md, de);
+    const bar = document.createElement('div');
+    bar.className = 'barra';
+    // Sin total no hay reparto que dibujar: 0-0 deja la barra vacía en vez de
+    // pintar dos mitades que no significan nada.
+    if (t) {
+      const s1 = document.createElement('span');
+      s1.style.cssText = `width:${a / t * 100}%;background:${L.acento}`;
+      const s2 = document.createElement('span');
+      s2.style.cssText = `width:${b / t * 100}%;background:${V.acento}`;
+      bar.append(s1, s2);
+    }
+    fila.append(cif, bar);
+    cont.appendChild(fila);
+  }
+})();
+
+const btStats = $('bt-stats'), panelStats = $('stats');
+function verStats(abierto) {
+  panelStats.classList.toggle('abierto', abierto);
+  btStats.setAttribute('aria-expanded', String(abierto));
+}
+btStats.addEventListener('click', ev => {
+  ev.stopPropagation();
+  verStats(!panelStats.classList.contains('abierto'));
+});
+if (new URLSearchParams(location.search).get('stats') === '1') verStats(true);
+
 /* --- Escenario: campo suelto o estadio -----------------------------------
    El campo por defecto es el generado por código, que pesa 0 y siempre está.
    El estadio es un GLB de 577 KB y **solo se descarga si se elige**: meterlo

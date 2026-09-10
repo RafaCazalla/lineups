@@ -314,10 +314,16 @@ desplaza cuatro bytes todo lo que viene detrás y el fichero deja de tener senti
 - **Compacta.** Al descartar piezas quedan vértices que ya no usa ningún triángulo, y
   ocupan 12 bytes cada uno: sin compactar, quitar los asientos solo bajaba de 9,5 a
   9,5 MB; con compactación, a 3,5.
-- **Endereza solo.** El modelo venía girado 51°; el ángulo se busca probando: el que
-  deja la caja en planta más pequeña es el que alinea el óvalo con los ejes.
-- **Calcula la escala él.** Mide el hueco interior del cuenco y lo escala para que
-  nuestro campo quepa. Las unidades del fichero no eran metros: el hueco medía 94.
+- **Endereza por el cuenco, no por la caja envolvente.** Primero lo hice por la caja y
+  salió mal: la explanada exterior tiene su propia orientación y arrastraba el resultado,
+  con lo que el campo quedaba girado 35° y descentrado dentro del estadio. Lo que sí
+  define el estadio es el borde interior del graderío: se recorre en 240 sectores
+  quedándose con el punto más cercano al centro de cada uno —eso dibuja el óvalo de la
+  primera fila— y de esa nube salen el centro y el eje mayor.
+- **Se calibra con el césped del modelo, no con el hueco.** El hueco del cuenco incluye
+  la pista de atletismo, así que ajustar contra él dejaba el campo enorme. El modelo trae
+  un material `Grass_002` que **es** el césped: se escala para que mida 105 m y se baja a
+  cota cero. Así el nuestro cae encima por construcción, no por tanteo.
 - **Una primitiva por material**, para poder colorear cada pieza.
 
 Tres cosas que hubo que averiguar mirando la geometría, porque el fichero no las dice:

@@ -124,6 +124,57 @@ def leer_escena(bl, escala_soldadura, sin_objetos=()):
     return verts, tris_por_mat, colores
 
 
+def alinear_cuenco(V, bins=240, vueltas=3):
+    """Ángulo y centro del CUENCO, no de la caja del conjunto.
+
+    Enderezar por la caja envolvente falla en cuanto el modelo trae explanada,
+    calles o aparcamiento alrededor: esa geometría tiene su propia orientación
+    y arrastra el resultado. El campo queda torcido y descentrado dentro del
+    estadio, que es justo lo que se ve.
+
+    Lo que sí define el estadio es el borde interior del graderío. Se recorre
+    en 240 sectores quedándose con el punto más cercano al centro de cada uno
+    —eso dibuja el óvalo de la primera fila—, y de esa nube salen el centro y
+    el eje mayor. Se repite un par de veces porque el centro de partida es
+    malo y cada vuelta lo mejora.
+    """
+    import math
+    alturas = sorted(p[1] for p in V)
+    lo, hi = alturas[int(len(alturas) * 0.3)], alturas[int(len(alturas) * 0.7)]
+    banda = [(p[0], p[2]) for p in V if lo <= p[1] <= hi]
+    if len(banda) < 500:
+        banda = [(p[0], p[2]) for p in V]
+    cx = sum(p[0] for p in banda) / len(banda)
+    cz = sum(p[1] for p in banda) / len(banda)
+
+    borde = []
+    for _ in range(vueltas):
+        mejor = [None] * bins
+        for x, z in banda:
+            dx, dz = x - cx, z - cz
+            r = math.hypot(dx, dz)
+            if r < 1e-6:
+                continue
+            k = int((math.atan2(dz, dx) + math.pi) / (2 * math.pi) * bins) % bins
+            if mejor[k] is None or r < mejor[k][0]:
+                mejor[k] = (r, x, z)
+        borde = [(x, z) for m in mejor if m for _, x, z in [m]]
+        if not borde:
+            break
+        cx = sum(p[0] for p in borde) / len(borde)
+        cz = sum(p[1] for p in borde) / len(borde)
+
+    # Eje mayor de la nube del borde: el mayor autovector de su covarianza.
+    sxx = syy = sxy = 0.0
+    for x, z in borde:
+        dx, dz = x - cx, z - cz
+        sxx += dx * dx; syy += dz * dz; sxy += dx * dz
+    n = max(1, len(borde))
+    sxx /= n; syy /= n; sxy /= n
+    ang = 0.5 * math.atan2(2 * sxy, sxx - syy)      # dirección del eje mayor
+    return math.degrees(ang), cx, cz, borde
+
+
 def listar_objetos(bl, giro):
     """Cada objeto con su tamaño y a qué distancia del centro está. Sirve para
     separar el estadio de lo que le rodea: explanadas, calles, aparcamientos."""
@@ -228,12 +279,21 @@ def main():
     ap.add_argument('--baja', type=float, default=0.0,
                     help='metros a restar en y tras escalar; sirve para poner el césped '
                          'del modelo a la altura cero (el suelo del fichero no suele serlo)')
+    ap.add_argument('--campo-material', default='',
+                    help='material que ES el césped del modelo. De él se sacan la escala '
+                         'y la altura del campo, que es la calibración exacta: el hueco '
+                         'del cuenco no sirve porque incluye la pista de atletismo')
+    ap.add_argument('--campo-largo', type=float, default=105.0,
+                    help='metros que debe medir ese material a lo largo')
     ap.add_argument('--ajustar-hueco', type=float, default=0.0,
                     help='metros que debe medir el hueco interior del cuenco a lo largo; '
                          'la escala se calcula sola para que el campo quepa')
     ap.add_argument('--soldadura', type=float, default=0.001,
                     help='vértices más cerca que esto se funden, en unidades del fichero')
     ap.add_argument('--giro', type=int, default=0, choices=[0, 90, 180, 270])
+    ap.add_argument('--alinear-cuenco', action='store_true',
+                    help='sacar giro y centro del borde interior del graderío, no de la '
+                         'caja envolvente: es lo único que define de verdad el estadio')
     ap.add_argument('--giro-fino', type=float, default=-1.0,
                     help='giro en grados sobre y, para enderezar un modelo torcido')
     ap.add_argument('--fuera', default='', help='materiales a descartar, separados por coma')
@@ -277,32 +337,53 @@ def main():
                   f'{c[0]:.2f} {c[1]:.2f} {c[2]:.2f}')
         return
 
-    # Enderezar: muchos modelos vienen girados respecto a los ejes. El ángulo
-    # se puede dar a mano o buscarlo: el que deja la caja en planta más pequeña
-    # es el que alinea el óvalo con los ejes.
     import math
-    giro = a.giro_fino
-    if giro < 0:
-        mejor = (1e30, 0)
-        for gr in range(180):
-            r = math.radians(gr); c1, s1 = math.cos(r), math.sin(r)
-            xs = [p[0] * c1 + p[2] * s1 for p in V]
-            zs = [-p[0] * s1 + p[2] * c1 for p in V]
-            area = (max(xs) - min(xs)) * (max(zs) - min(zs))
-            if area < mejor[0]:
-                mejor = (area, gr)
-        giro = mejor[1]
-        print(f'giro automático: {giro}°')
-    r = math.radians(giro); c1, s1 = math.cos(r), math.sin(r)
-    V = [(p[0] * c1 + p[2] * s1, p[1], -p[0] * s1 + p[2] * c1) for p in V]
+    if a.alinear_cuenco:
+        giro, cx, cz, borde = alinear_cuenco(V)
+        ancho = max(math.hypot(x - cx, z - cz) for x, z in borde) * 2
+        print(f'cuenco: giro {giro:.1f}° · centro ({cx:.1f}, {cz:.1f}) · '
+              f'{len(borde)} puntos de borde · eje mayor {ancho:.0f} unidades')
+    else:
+        giro = a.giro_fino
+        if giro < 0:
+            mejor = (1e30, 0)
+            for gr in range(180):
+                r = math.radians(gr); c1, s1 = math.cos(r), math.sin(r)
+                xs = [p[0] * c1 + p[2] * s1 for p in V]
+                zs = [-p[0] * s1 + p[2] * c1 for p in V]
+                area = (max(xs) - min(xs)) * (max(zs) - min(zs))
+                if area < mejor[0]:
+                    mejor = (area, gr)
+            giro = mejor[1]
+            print(f'giro por caja envolvente: {giro}°')
+        xs = [p[0] for p in V]; zs = [p[2] for p in V]
+        cx, cz = (min(xs) + max(xs)) / 2, (min(zs) + max(zs)) / 2
 
-    # Normalizar: metros, suelo a cero, centrado y el lado largo sobre x.
-    xs = [p[0] for p in V]; ys = [p[1] for p in V]; zs = [p[2] for p in V]
-    cx, cz, suelo = (min(xs) + max(xs)) / 2, (min(zs) + max(zs)) / 2, min(ys)
-    V = [(p[0] - cx, p[1] - suelo, p[2] - cz) for p in V]
+    # Girar alrededor del centro del cuenco y bajar el suelo a cero.
+    r = math.radians(giro); c1, s1 = math.cos(r), math.sin(r)
+    V = [((p[0] - cx) * c1 + (p[2] - cz) * s1, p[1],
+          -(p[0] - cx) * s1 + (p[2] - cz) * c1) for p in V]
+    suelo = min(p[1] for p in V)
+    V = [(p[0], p[1] - suelo, p[2]) for p in V]
 
     s = a.escala
-    if a.ajustar_hueco:
+    if a.campo_material:
+        tris = grupos.get(a.campo_material)
+        if not tris:
+            sys.exit(f'no hay ningún material «{a.campo_material}». '
+                     f'Con --listar se ven todos.')
+        ids = {i for t in tris for i in t}
+        pts = [V[i] for i in ids]
+        largo = max(p[0] for p in pts) - min(p[0] for p in pts)
+        ancho = max(p[2] for p in pts) - min(p[2] for p in pts)
+        alto = sum(p[1] for p in pts) / len(pts)
+        s = a.campo_largo / largo
+        # El césped del modelo baja a cero: es la cota a la que va el nuestro.
+        V = [(p[0], p[1] - alto, p[2]) for p in V]
+        print(f'césped del modelo «{a.campo_material}»: {largo:.1f} x {ancho:.1f} '
+              f'unidades a y={alto:.1f} -> escala {s:.4f} '
+              f'(queda {largo*s:.1f} x {ancho*s:.1f} m)')
+    elif a.ajustar_hueco:
         # El hueco del cuenco: lo más cerca del eje que llega la primera fila.
         # Se mide en la franja de altura donde hay más geometría, que es el
         # graderío, y solo cerca del eje corto, para no coger las esquinas.

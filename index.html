@@ -111,9 +111,28 @@ body.con-estadio{
 #marca p{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.45}
 
 /* Interruptores, izquierda */
-#ajustes{top:206px; left:18px; padding:8px; width:252px}
+/* Columna izquierda: ajustes e informe, uno debajo del otro. En columna y no
+   con posiciones absolutas para que no se pisen sea cual sea su alto. */
+#izquierda{
+  top:192px; left:18px; width:320px; display:flex; flex-direction:column; gap:12px;
+  max-height:calc(100vh - 236px);
+}
+#ajustes{padding:6px; flex:none}
+#ajustes .cab{
+  width:100%; display:flex; align-items:center; gap:9px; padding:8px 10px;
+  border:0; border-radius:9px; background:none; cursor:pointer; font:inherit;
+  font-family:var(--font-cond); font-weight:600; font-size:13.5px; color:var(--ink);
+}
+#ajustes .cab:hover{background:rgba(56,56,56,.05)}
+#ajustes .cab:focus-visible{outline:2px solid var(--green); outline-offset:1px}
+#ajustes .cab .icono{width:17px; height:17px; color:var(--ink-2); flex:none}
+#ajustes .cab .txt{flex:1; text-align:left}
+#ajustes .cab .flecha{width:12px; height:12px; color:var(--ink-3); transition:transform .18s ease}
+#ajustes[data-abierto="false"] .cab .flecha{transform:rotate(-90deg)}
+#ajustes[data-abierto="false"] .cuerpo{display:none}
+#ajustes .cuerpo{padding-top:2px}
 /* Selector de equipo: tres opciones excluyentes, una sola activa. */
-#equipos{display:flex; gap:3px; padding:3px; margin:2px 2px 6px; border-radius:9px; background:rgba(56,56,56,.06)}
+#equipos{display:flex; gap:3px; padding:3px; margin:2px 4px 6px; border-radius:9px; background:rgba(56,56,56,.06)}
 #equipos button{
   flex:1; min-width:0; display:flex; align-items:center; justify-content:center; gap:5px;
   padding:7px 4px 6px; border:0; border-radius:7px; background:none; cursor:pointer;
@@ -318,10 +337,11 @@ body.con-estadio{
 
 /* Informe de ojeador: mismo sitio y mismo lenguaje que la ficha */
 #informe{
-  top:132px; right:18px; width:296px; padding:0; display:none;
-  max-height:calc(100vh - 226px); overflow:hidden auto; overscroll-behavior:contain;
+  padding:0; display:none; min-height:0; overflow:hidden auto;
+  overscroll-behavior:contain;
 }
 #informe.abierta{display:block}
+#informe .campos{grid-template-columns:1fr 1fr}
 #informe .top{padding:14px 16px 12px; border-bottom:1px solid var(--hairline)}
 #informe .rot{
   font-family:var(--font-cond); font-weight:600; font-size:11.5px; letter-spacing:.4px;
@@ -467,7 +487,7 @@ body.con-estadio{
   /* La cabecera manda en el centro: la marca se queda solo con el logo. */
   #marca h1,#marca p{display:none}
   #marca{padding:12px 14px; max-width:none}
-  #ajustes{top:96px}
+  #izquierda{top:96px}
 }
 
 @media (max-width:900px){
@@ -476,7 +496,7 @@ body.con-estadio{
   #cabecera{top:16px; left:auto; right:18px; transform:none; width:calc(100vw - 150px); padding:9px 12px 10px}
   #cabecera .jorn,#linea{display:none}
   #cabecera .equipo span{font-size:14px}
-  #ajustes{top:auto; bottom:78px; left:18px; width:auto; max-width:210px}
+  #izquierda{top:auto; bottom:78px; left:18px; width:auto; max-width:230px; max-height:60vh}
   /* La ficha pasa a hoja inferior: en un móvil una columna lateral no cabe. */
   #ficha{
     top:auto; bottom:0; left:0; right:0; width:auto; max-height:56vh; overflow-y:auto;
@@ -542,7 +562,16 @@ body.con-estadio{
   <div id="linea" role="img"></div>
 </header>
 
-<div class="hud tarjeta" id="ajustes" role="group" aria-label="Ajustes de la escena">
+<div class="hud" id="izquierda">
+<section class="tarjeta" id="ajustes" data-abierto="true" role="group" aria-label="Ajustes de la escena">
+  <button class="cab" id="ajustes-cab" aria-expanded="true" aria-controls="ajustes-cuerpo">
+    <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.1"/><path d="M12 2.6v2.1M12 19.3v2.1M21.4 12h-2.1M4.7 12H2.6M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5M18.6 18.6l-1.5-1.5M6.9 6.9 5.4 5.4"/>
+    </svg>
+    <span class="txt">Ajustes</span>
+    <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+  <div class="cuerpo" id="ajustes-cuerpo">
   <div id="equipos" role="group" aria-label="Equipos en el campo"></div>
   <button class="sw" id="sw-rotar" aria-pressed="false">
     <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -581,7 +610,41 @@ body.con-estadio{
     </svg>
     <span class="txt">Mapa de pases</span><span class="palanca" aria-hidden="true"></span>
   </button>
+  </div>
+</section>
+<aside class="tarjeta" id="informe" aria-label="Informe del jugador">
+  <button class="cerrar" id="i-cerrar" title="Cerrar" aria-label="Cerrar el informe">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <div class="top">
+    <div class="rot">Informe de ojeador</div>
+    <div class="nom" id="i-nom"></div>
+    <div class="sub" id="i-sub"></div>
+  </div>
+  <div class="campos">
+    <div class="campo"><label for="i-dorsal">Dorsal</label>
+      <input id="i-dorsal" type="number" min="1" max="99" inputmode="numeric"></div>
+    <div class="campo"><label for="i-born">Año nac.</label>
+      <input id="i-born" type="number" min="1970" max="2020" inputmode="numeric"></div>
+    <div class="campo ancho"><label for="i-posrm">Perfil</label>
+      <select id="i-posrm"></select></div>
+    <div class="campo"><label for="i-foot">Pie</label>
+      <select id="i-foot"></select></div>
+    <div class="campo"><label for="i-pts">Puntos</label>
+      <select id="i-pts"></select></div>
+    <div class="campo ancho"><label for="i-valoration">Valoración</label>
+      <select id="i-valoration"></select></div>
+    <div class="campo ancho"><label for="i-notas">Valoración general</label>
+      <textarea id="i-notas" placeholder="Qué has visto, en qué destaca, qué le falta…"></textarea></div>
+  </div>
+  <div class="pie">
+    <button class="guardar" id="i-guardar">Guardar informe</button>
+    <button class="aux" id="i-exportar" title="Copiar todos los informes en JSON">Exportar</button>
+  </div>
+  <p class="estado" id="i-estado"></p>
+</aside>
 </div>
+
 
 <div class="hud tarjeta" id="vistas" role="group" aria-label="Puntos de vista"></div>
 
@@ -631,37 +694,6 @@ body.con-estadio{
   <p class="aviso" id="menu-aviso" hidden></p>
 </div>
 
-<aside class="hud tarjeta" id="informe" aria-label="Informe del jugador">
-  <button class="cerrar" id="i-cerrar" title="Cerrar" aria-label="Cerrar el informe">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
-  </button>
-  <div class="top">
-    <div class="rot">Informe de ojeador</div>
-    <div class="nom" id="i-nom"></div>
-    <div class="sub" id="i-sub"></div>
-  </div>
-  <div class="campos">
-    <div class="campo"><label for="i-dorsal">Dorsal</label>
-      <input id="i-dorsal" type="number" min="1" max="99" inputmode="numeric"></div>
-    <div class="campo"><label for="i-born">Año nac.</label>
-      <input id="i-born" type="number" min="1970" max="2020" inputmode="numeric"></div>
-    <div class="campo ancho"><label for="i-posrm">Perfil</label>
-      <select id="i-posrm"></select></div>
-    <div class="campo"><label for="i-foot">Pie</label>
-      <select id="i-foot"></select></div>
-    <div class="campo"><label for="i-pts">Puntos</label>
-      <select id="i-pts"></select></div>
-    <div class="campo ancho"><label for="i-valoration">Valoración</label>
-      <select id="i-valoration"></select></div>
-    <div class="campo ancho"><label for="i-notas">Valoración general</label>
-      <textarea id="i-notas" placeholder="Qué has visto, en qué destaca, qué le falta…"></textarea></div>
-  </div>
-  <div class="pie">
-    <button class="guardar" id="i-guardar">Guardar informe</button>
-    <button class="aux" id="i-exportar" title="Copiar todos los informes en JSON">Exportar</button>
-  </div>
-  <p class="estado" id="i-estado"></p>
-</aside>
 
 <button class="hud tarjeta" id="bt-stats" aria-expanded="false" aria-controls="stats">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -14811,6 +14843,8 @@ function pintarInforme(j) {
   $('i-pts').value = g.pts ?? '';
   $('i-valoration').value = g.valoration ?? '';
   $('i-notas').value = g.notas ?? '';
+  // Los dos comparten columna: al abrir el informe los ajustes se apartan.
+  verAjustes(false, false);
   $('i-estado').innerHTML = g.fecha
     ? `Guardado el <b>${new Date(g.fecha).toLocaleString('es-ES')}</b>. `
       + `${Object.keys(informes).length} informes en este navegador.`
@@ -14870,12 +14904,29 @@ $('i-exportar').addEventListener('click', async () => {
 
 palanca('sw-informe', false, v => {
   modoInforme = v;
-  // Cambiar de modo con alguien elegido: se cambia el panel al vuelo.
+  // Al encender con alguien ya elegido, el informe aparece sin tener que
+  // volver a pulsarlo.
   if (elegido >= 0) {
-    caja.classList.toggle('abierta', !v);
     if (v) pintarInforme(JUG[elegido]); else cajaInf.classList.remove('abierta');
   }
 });
+
+/* --- Ajustes plegables ----------------------------------------------------
+   Con el informe en la misma columna, los ajustes tienen que poder quitarse
+   de en medio. El estado se recuerda: quien lo cierra no quiere volver a
+   cerrarlo en cada recarga. */
+const cajaAjustes = $('ajustes'), cabAjustes = $('ajustes-cab');
+function verAjustes(abierto, guardar = true) {
+  cajaAjustes.dataset.abierto = String(abierto);
+  cabAjustes.setAttribute('aria-expanded', String(abierto));
+  // El plegado automático al abrir un informe NO se guarda: la preferencia es
+  // la que el usuario elige a mano, no la que le impone la app.
+  if (guardar) { try { localStorage.setItem('bsp-ajustes', abierto ? '1' : '0'); } catch (e) {} }
+}
+cabAjustes.addEventListener('click', () => verAjustes(cajaAjustes.dataset.abierto !== 'true'));
+let ajustesAbierto = true;
+try { ajustesAbierto = localStorage.getItem('bsp-ajustes') !== '0'; } catch (e) {}
+verAjustes(ajustesAbierto);
 
 /* --- Escenario: campo suelto o estadio -----------------------------------
    El campo por defecto es el generado por código, que pesa 0 y siempre está.
@@ -15126,8 +15177,11 @@ function elegir(i) {
   refrescarFichas();
   if (verPases) rehacerPases(); else rehacerFlujo();
   if (i >= 0) {
-    if (modoInforme) { caja.classList.remove('abierta'); pintarInforme(JUG[i]); }
-    else { cajaInf.classList.remove('abierta'); pintarFicha(JUG[i]); }
+    // La ficha de estadísticas sale siempre: el informe se suma a la izquierda,
+    // no la sustituye. Son dos cosas distintas del mismo jugador y se miran a
+    // la vez —se valora mirando los números—.
+    pintarFicha(JUG[i]);
+    if (modoInforme) pintarInforme(JUG[i]); else cajaInf.classList.remove('abierta');
   } else {
     // Al soltar la selección se apaga TODO lo del jugador, mapa de calor
     // incluido: si la mancha se queda pintada, ya no dice de quién es.

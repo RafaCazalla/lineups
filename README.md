@@ -294,10 +294,14 @@ cámara, comprobar el contraste.
 
 ## Informe de ojeador
 
-El interruptor «Realizar informe» del panel izquierdo cambia lo que pasa al pulsar un
-jugador: en vez de su ficha de estadísticas sale un formulario para valorarlo, en el
-mismo sitio y con el mismo lenguaje que el resto de tarjetas. Los dos hablan del jugador
-elegido, así que comparten hueco en vez de pelearse por él.
+El interruptor «Realizar informe» añade, al pulsar un jugador, un formulario para
+valorarlo **a la izquierda**, con la ficha de estadísticas en su sitio a la derecha. Se
+valora mirando los números, así que las dos cosas tienen que verse a la vez.
+
+La izquierda es una **columna**, no dos tarjetas con posiciones absolutas: los ajustes
+arriba —plegables, y el estado se recuerda— y el informe debajo. Así no se pisan sea cual
+sea su alto. Al abrir un informe los ajustes se apartan solos, pero **ese plegado
+automático no se guarda**: la preferencia es la que el usuario elige a mano.
 
 El formulario sale del **JSON de BeSoccer Pro**: año de nacimiento, perfil (los once de
 su lista, con sus claves), pie, puntos de 0 a 10 (`type_pts: numeric`) y valoración A-D,

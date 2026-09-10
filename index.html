@@ -13577,13 +13577,14 @@ const enCampo = i => equipoVisible === 'todos' || JUG[i].equipo === equipoVisibl
    Es una malla de dos triángulos por pareja, con color por vértice: una sola
    llamada de dibujo, y el ancho puede variar, cosa que `LineSegments` no
    permite —el grosor de línea lo ignoran casi todas las plataformas—. */
-/* El umbral es RELATIVO a cada equipo, no absoluto. El Inter dio 452 pases
-   entre titulares y el Madrid 292: con un mínimo fijo, uno sale con 45 cintas
-   y el otro con 32, y el que más pasa parece un ovillo justo por eso. Con el
-   25 % de su propia pareja más fuerte, los dos se quedan en unas veinte cintas
-   que recogen el 70 % de sus pases. Once nodos admiten 55 parejas: dibujarlas
-   todas no es una red, es una maraña. */
-const UMBRAL_REL = 0.25;
+/* Se dibujan TODAS las parejas que se pasaron el balón, aunque fuera una vez.
+   Con umbral, un portero que reparte poco se quedaba con dos líneas y la red
+   parecía rota —que es exactamente lo que no puede pasar en un mapa de pases—.
+   El peso lo lleva el dibujo: el ancho y la opacidad se escalan contra la
+   pareja más fuerte DE SU EQUIPO, no contra un máximo global, porque el Inter
+   dio 452 pases entre titulares y el Madrid 292 y si no el que más pasa sale
+   más gordo por serlo. Así una pareja de un pase es un hilo casi transparente
+   y la más fuerte una cinta ancha, y la estructura se lee sola. */
 const RECORTE = 2.4;             // metros libres junto a cada ficha
 
 const IDX_JUG = new Map(JUG.map((j, i) => [j.id, i]));
@@ -13605,7 +13606,6 @@ const PAREJAS = (() => {
   for (const p of todas) tope[p.equipo] = Math.max(tope[p.equipo] || 1, p.n);
   return todas
     .map(p => ({ ...p, rel: p.n / tope[p.equipo] }))
-    .filter(p => p.rel >= UMBRAL_REL)
     .sort((x, y) => x.rel - y.rel);   // las gordas encima
 })();
 
@@ -13643,7 +13643,9 @@ function rehacerPases() {
     const nx = -dz, nz = dx;                       // perpendicular sobre el césped
     // Ancho y opacidad crecen los dos con el volumen: una conexión floja tiene
     // que ser fina Y tenue, o veinte cintas acaban pesando lo mismo.
-    const w = 0.13 + 0.72 * Math.pow(par.rel, 0.9);
+    // Curva agresiva: con 48 parejas por equipo, si las flojas no se hunden
+    // no hay estructura que ver.
+    const w = 0.05 + 0.85 * Math.pow(par.rel, 1.15);
     const y = NIVEL + 0.04;
     pos.push(ax + nx * w, y, az + nz * w,
              ax - nx * w, y, az - nz * w,
@@ -13655,7 +13657,7 @@ function rehacerPases() {
     _cPase.set(PARTIDO[A.equipo].acento);
     // Fuerte la del elegido y muy tenue el resto: con el mapa de calor debajo,
     // una cinta a media tinta se pierde entre el naranja y el rojo.
-    const alfa = suya ? (0.32 + 0.46 * par.rel) : 0.1;
+    const alfa = suya ? (0.14 + 0.58 * Math.pow(par.rel, 0.75)) : 0.08;
     for (let n = 0; n < 4; n++) col.push(_cPase.r, _cPase.g, _cPase.b, alfa);
     idx.push(v, v + 1, v + 2, v, v + 2, v + 3);
     v += 4;
@@ -13896,18 +13898,70 @@ const rayoOcl = new THREE.Raycaster();
 const _dirOcl = new THREE.Vector3();
 const _golpesOcl = [];            // reutilizado: esto corre en cada cuadro
 
+/* Segunda parte del mismo problema: como el HTML va siempre por encima del
+   lienzo, la etiqueta de un jugador del fondo se planta sobre el DORSAL de uno
+   que está delante, y tapa justo lo que identifica a ese jugador. No lo
+   arregla el buffer de profundidad —la etiqueta no es geometría—, así que se
+   comprueba en pantalla: si una etiqueta cubre el centro del dorsal de alguien
+   MÁS CERCA de la cámara, esa etiqueta se calla. El dorsal manda sobre el
+   nombre: es el que identifica. */
+const _proy = new THREE.Vector3();
+const sx = new Float32Array(N), sy = new Float32Array(N);
+const sr = new Float32Array(N), sd = new Float32Array(N);
+
 function ocluirRotulos() {
+  const lienzoW = renderer.domElement.clientWidth;
+  const lienzoH = renderer.domElement.clientHeight;
   const hayMuro = !!(estadio && estadio.visible);
+  // Media altura del plano de proyección a un metro: convierte metros a píxeles.
+  const kPx = lienzoH / (2 * Math.tan(THREE.MathUtils.degToRad(camara.fov) / 2));
+
   for (let i = 0; i < N; i++) {
+    const j = JUG[i];
     const base = verEtiquetas && enCampo(i);
-    if (!base || !hayMuro) { rotulos[i].visible = base; continue; }
-    _dirOcl.subVectors(rotulos[i].position, camara.position);
-    const lejos = _dirOcl.length();
-    rayoOcl.set(camara.position, _dirOcl.normalize());
-    rayoOcl.far = lejos - 0.5;       // el margen evita que se tape a sí misma
-    _golpesOcl.length = 0;
-    rayoOcl.intersectObject(muro, false, _golpesOcl);
-    rotulos[i].visible = _golpesOcl.length === 0;
+    let ver = base;
+    if (base && hayMuro) {
+      _dirOcl.subVectors(rotulos[i].position, camara.position);
+      const lejos = _dirOcl.length();
+      rayoOcl.set(camara.position, _dirOcl.normalize());
+      rayoOcl.far = lejos - 0.5;     // el margen evita que se tape a sí misma
+      _golpesOcl.length = 0;
+      rayoOcl.intersectObject(muro, false, _golpesOcl);
+      ver = _golpesOcl.length === 0;
+    }
+    rotulos[i].visible = ver;
+
+    // Dorsal en pantalla: centro, radio y distancia a la cámara.
+    _proy.set(jx(j), NIVEL + Y_DORSAL + (i === elegido ? LEVANTA : 0), jz(j));
+    sd[i] = _proy.distanceTo(camara.position);
+    _proy.project(camara);
+    sx[i] = (_proy.x * 0.5 + 0.5) * lienzoW;
+    sy[i] = (-_proy.y * 0.5 + 0.5) * lienzoH;
+    sr[i] = (DORSAL_D / 2) * kPx / Math.max(0.001, sd[i]);
+  }
+
+  if (!verDorsales || !atlasListo) return;   // sin dorsales no hay nada que tapar
+
+  for (let i = 0; i < N; i++) {
+    if (!rotulos[i].visible) continue;
+    const el = JUG[i].el;
+    const anchoEt = el.offsetWidth, altoEt = el.offsetHeight;
+    if (!anchoEt) continue;                  // aún sin medir: el primer cuadro
+    // La etiqueta cuelga del punto de anclaje, centrada en horizontal.
+    _proy.copy(rotulos[i].position).project(camara);
+    const ex = (_proy.x * 0.5 + 0.5) * lienzoW;
+    const ey = (-_proy.y * 0.5 + 0.5) * lienzoH;
+    const x0 = ex - anchoEt / 2, x1 = ex + anchoEt / 2, y0 = ey, y1 = ey + altoEt;
+    for (let k = 0; k < N; k++) {
+      if (k === i || !enCampo(k) || sd[k] >= sd[i]) continue;   // solo los de delante
+      // Se tapa de verdad cuando el CENTRO del dorsal cae dentro de la
+      // etiqueta; rozarla por un pixel no cuenta, o se apagaría media plantilla.
+      const m = sr[k] * 0.35;
+      if (sx[k] > x0 - m && sx[k] < x1 + m && sy[k] > y0 - m && sy[k] < y1 + m) {
+        rotulos[i].visible = false;
+        break;
+      }
+    }
   }
 }
 

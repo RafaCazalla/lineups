@@ -163,14 +163,16 @@ validan entre ellas.
 
 - **744 pases entre titulares.** Los pases con suplentes se descartan: los suplentes no
   están en el campo del prototipo.
-- **El umbral es relativo a cada equipo, no absoluto.** El Inter dio 452 pases entre
-  titulares y el Madrid 292: con un mínimo fijo, uno salía con 45 cintas y el otro con 32,
-  y el que más pasa parecía un ovillo justo por eso. Con el **25 % de su propia pareja más
-  fuerte**, los dos se quedan en unas veinte cintas que recogen el 70 % de sus pases.
-  Once nodos admiten 55 parejas: dibujarlas todas no es una red, es una maraña.
-- **Cada cinta es una pareja, y su ancho es el total de pases entre los dos.** El ancho y
-  la opacidad crecen los dos con el volumen: una conexión floja tiene que ser fina **y**
-  tenue, o veinte cintas acaban pesando lo mismo.
+- **Se dibujan todas las parejas que se pasaron el balón, aunque fuera una vez.** Se probó
+  con umbral y fue un error: un portero que reparte poco se quedaba con dos líneas y la red
+  parecía **rota**, que es justo lo que no puede pasar en un mapa de pases. Courtois tiene
+  siete conexiones, y seis de ellas son de uno a cinco pases.
+- **El peso lo lleva el dibujo, no el filtro.** Ancho y opacidad se escalan contra la
+  pareja más fuerte **de su equipo** —el Inter dio 452 pases entre titulares y el Madrid
+  292, y con un máximo global el que más pasa sale más gordo por serlo— y con curva
+  agresiva (`rel^1.15`): con 48 parejas por equipo, si las flojas no se hunden no hay
+  estructura que ver. Una pareja de un pase es un hilo casi transparente; la más fuerte,
+  una cinta ancha.
 - **Las cintas no llegan al jugador: se paran a 2,4 m.** Si mueren en el centro del nodo,
   los jugadores desaparecen bajo el nudo y la red deja de leerse. Es el cambio que más se
   nota de todos.
@@ -362,6 +364,13 @@ Cambiar una medida en `M` cambia el campo entero: las líneas se dibujan de ahí
 - **El atlas se dibuja después de `document.fonts.load`,** con tope de 2,5 s. Antes, los
   números salían en la tipografía de reserva; con el tope, si Google Fonts no contesta el
   prototipo arranca igual.
+- **Una etiqueta tampoco puede tapar el dorsal de quien está delante.** Es el mismo
+  problema —el HTML va siempre por encima del lienzo— pero al revés: el nombre de uno del
+  fondo se plantaba sobre el número de uno de delante, que es lo que lo identifica. Se
+  comprueba en pantalla: si el centro de un dorsal más cercano cae dentro del rectángulo
+  de una etiqueta, esa etiqueta se calla. Solo cuando lo cubre de verdad, no al rozarlo:
+  medido, silencia 1 de 22 en «Once local» y 3 en «Campo completo», y ninguna en las
+  vistas cenital y a ras.
 - **Las etiquetas HTML no las tapa nada, y con estadio se nota.** Los dorsales son
   geometría y el buffer de profundidad los oculta solo; los nombres son DOM y se quedaban
   flotando sobre la grada al mirar el estadio desde fuera. Se comprueba la línea de visión

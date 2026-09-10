@@ -634,6 +634,25 @@ body.con-estadio{
   body.movil #informe .campos{padding-bottom:12px}
   body.movil #informe .pie{flex:none; border-top:1px solid var(--hairline)}
   body.movil #informe .estado{flex:none}
+  /* Pestañas: el mismo control segmentado que el selector de equipos, para
+     que no haya dos formas distintas de decir «elige una de estas». */
+  body.movil .pestanas{
+    display:none; flex:none; gap:3px; padding:3px; margin:0 56px 8px 12px;
+    border-radius:9px; background:rgba(56,56,56,.06);
+  }
+  body.movil.con-pestanas .pestanas{display:flex}
+  body.movil .pestanas button{
+    flex:1; min-width:0; padding:7px 4px 6px; border:0; border-radius:7px;
+    background:none; cursor:pointer; font-family:var(--font-cond);
+    font-weight:500; font-size:13.5px; color:var(--ink-2);
+  }
+  body.movil .pestanas button:focus-visible{outline:2px solid var(--green); outline-offset:1px}
+  body.movil .pestanas button[aria-selected="true"]{
+    background:#fff; color:var(--ink); font-weight:600; box-shadow:0 1px 2px rgba(56,56,56,.14);
+  }
+  /* La hoja que no toca sigue «abierta» —cuenta para el velo y para que el
+     campo se encoja—, pero no se dibuja. */
+  body.movil #ficha.oculta, body.movil #informe.oculta{display:none}
   body.movil #stats{padding:11px 15px 12px}
   body.movil #stats h2{padding-right:44px}
   body.movil #stats #s-filas{margin:0 -15px; padding:0 15px}
@@ -13771,7 +13790,7 @@ const N = JUG.length;
 const jx = j => (j.x - 0.5) * M.LARGO;
 const jz = j => (j.y - 0.5) * M.ANCHO;
 
-const RADIO_FICHA = esMovil ? 2.1 : 1.55;
+const RADIO_FICHA = esMovil ? 2.4 : 1.55;
 // Vista cenital: todo lo que el dorsal flote por encima del césped lo separa
 // en pantalla de su propia ficha en los bordes del campo. Con el disco más
 // grande, el poste se acorta para que el conjunto quede a la misma altura.
@@ -13779,7 +13798,7 @@ const ALTO_POSTE  = esMovil ? 1 : 2.1;
 // En móvil el campo se ve entero y pequeño: con 3,6 m el disco sale a 16 px y
 // no se lee ni se acierta con el dedo. 7,2 m lo dejan en unos 47 px, y aun así
 // los de una misma línea no llegan a tocarse: se reparten 13 m de campo.
-const DORSAL_D    = esMovil ? 7.2 : 3.6;          // diámetro del disco de dorsal
+const DORSAL_D    = esMovil ? 8.4 : 3.6;          // diámetro del disco de dorsal
 const Y_DORSAL    = ALTO_POSTE + DORSAL_D / 2;
 const Y_ROTULO    = ALTO_POSTE - 0.05;            // el nombre cuelga bajo el dorsal
 const LEVANTA     = 0.4;                          // lo que sube la ficha al elegirla
@@ -13911,7 +13930,7 @@ function pintarCalorCampo(j) {
    la cámara está inclinada y el anillo se lee como lo que es: una marca en el
    césped a los pies del jugador. */
 const anillo = new THREE.Mesh(
-  esMovil ? new THREE.RingGeometry(4.3, 5.15, 56)
+  esMovil ? new THREE.RingGeometry(5, 6, 56)
           : new THREE.RingGeometry(RADIO_FICHA * 1.3, RADIO_FICHA * 1.62, 48),
   new THREE.MeshBasicMaterial({ color: 0x3B811F, transparent: true, opacity: 0.95, depthWrite: false })
 );
@@ -14592,7 +14611,9 @@ function posicionDe(vista) {
   if (fijo) return { pos: new THREE.Vector3(...fijo), obj: objetivo };
   // En pantalla vertical el campo se mira de canto: así los 105 m caen sobre el
   // lado largo. Las vistas de portería no giran, que ahí el eje es el del campo.
-  const vertical = vista.giroVertical && camara.aspect < 1;
+  // En móvil NO se gira: el campo se mira en horizontal, como en la tele, y
+  // girarlo al abrir y cerrar una hoja además lo dejaba dando tumbos.
+  const vertical = vista.giroVertical && camara.aspect < 1 && !esMovil;
   const dir = direccion(vista.polar, vista.azimut + (vertical ? 90 : 0));
   const d = distanciaEncuadre(dir, objetivo, vista.margen);
   // El encuadre manda sobre el tope de zoom: en un móvil en vertical la losa
@@ -14816,6 +14837,13 @@ const TIPO_TARJETA = { '5': ['#E9B12C', 'Amarilla'], '6': ['#BD2F42', 'Roja'], '
 const NOMBRE_TIRO = { goal: 'Gol', post: 'Al palo', miss: 'Fuera', save: 'Parado', block: 'Bloqueado' };
 const secAbierta = {};        // qué secciones deja abiertas el usuario
 
+/* Pestañas de la hoja de móvil. Con «Realizar informe» encendido, un jugador
+   tiene dos caras —lo que hizo y lo que opinas de él— y en un teléfono no
+   caben las dos a la vez. Comparten hoja y se cambia con pestañas: se valora
+   mirando los números, así que hay que poder ir y volver sin cerrar nada. */
+let pestana = 'informe';
+const barras = [];            // una barra idéntica en cada hoja
+
 /* En móvil la ficha entra arriba de la columna (order:-1), pero si el usuario
    había bajado a los ajustes se abriría fuera de la vista. */
 /* --- Qué hay abierto encima del campo -------------------------------------
@@ -14832,6 +14860,19 @@ function refrescarCapas() {
   const hoja = c.contains('con-ficha') || c.contains('con-informe') || c.contains('con-stats');
   c.toggle('con-hoja', hoja);
   c.toggle('con-velo', hoja || c.contains('con-ajustes'));
+}
+
+/* Qué cara del jugador se enseña. Solo hay pestañas si el informe está
+   encendido: sin él la ficha va sola y una barra de una pestaña no es una
+   barra, es un adorno. */
+function sincronizarHojas() {
+  if (!esMovil) return;
+  const dos = modoInforme && elegido >= 0;
+  document.body.classList.toggle('con-pestanas', dos);
+  caja.classList.toggle('oculta', dos && pestana !== 'stats');
+  cajaInf.classList.toggle('oculta', dos && pestana !== 'informe');
+  for (const b of barras) for (const bt of b.children)
+    bt.setAttribute('aria-selected', String(bt.dataset.p === pestana));
 }
 
 /* Cada panel se abre y se cierra por su función y solo por ahí. */
@@ -15191,8 +15232,9 @@ palanca('sw-informe', false, v => {
   // Al encender con alguien ya elegido, el informe aparece sin tener que
   // volver a pulsarlo.
   if (elegido >= 0) {
-    if (v) pintarInforme(JUG[elegido]); else verInforme(false);
+    if (v) { pestana = 'informe'; pintarInforme(JUG[elegido]); } else verInforme(false);
   }
+  sincronizarHojas();
 });
 
 /* --- Ajustes plegables ----------------------------------------------------
@@ -15475,6 +15517,10 @@ function indiceEn(ev, tolerancia = 0) {
 
 function elegir(i) {
   if (i === elegido) return;
+  // Al ABRIR se empieza por el informe, que es a lo que vas si lo tienes
+  // encendido. Al cambiar de jugador con la hoja ya abierta se respeta la
+  // pestaña en la que estabas: comparar la misma cara de varios es lo normal.
+  if (i >= 0 && elegido < 0) pestana = 'informe';
   elegido = i;
   refrescarFichas();
   if (verPases) rehacerPases(); else rehacerFlujo();
@@ -15491,6 +15537,7 @@ function elegir(i) {
     verInforme(false);
     pintarCalorCampo(null);
   }
+  sincronizarHojas();
 }
 
 lienzo.addEventListener('pointermove', ev => {
@@ -15610,6 +15657,26 @@ if (esMovil) {
   cuerpo.className = 'cuerpo';
   caja.appendChild(cuerpo);
   cuerpo.append($('f-secciones'), $('f-calor-caja'), $('f-muestra'));
+
+  /* Una barra de pestañas IDÉNTICA en cada hoja, en vez de una sola flotando
+     por encima de las dos: así la barra se mueve, se esconde y se desplaza con
+     su hoja, sin tener que colocarla a mano contra nada. */
+  for (const hoja of [cajaInf, caja]) {
+    const b = document.createElement('div');
+    b.className = 'pestanas';
+    b.setAttribute('role', 'tablist');
+    for (const [pid, txt] of [['informe', 'Informe'], ['stats', 'Estadísticas']]) {
+      const bt = document.createElement('button');
+      bt.type = 'button';
+      bt.dataset.p = pid;
+      bt.setAttribute('role', 'tab');
+      bt.textContent = txt;
+      bt.addEventListener('click', () => { pestana = pid; sincronizarHojas(); });
+      b.appendChild(bt);
+    }
+    hoja.insertBefore(b, hoja.querySelector('.top'));
+    barras.push(b);
+  }
 
   // La rueda de al lado de la cabecera abre y cierra el cajón.
   $('bt-ajustes').addEventListener('click', () => {

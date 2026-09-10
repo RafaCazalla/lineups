@@ -340,16 +340,28 @@ Detalles que costaron:
 
 Tres piezas y ya está:
 
-- **El campo se queda con toda la pantalla**, y en vertical: la vista táctica ya sabía
-  girarse cuando el lienzo es más alto que ancho (`giroVertical`), así que un teléfono en
-  retrato enseña el campo de portería a portería, que es como se ven las alineaciones en
-  cualquier app de fútbol.
+- **El campo se queda con toda la pantalla**, y **en horizontal**. `giroVertical` sabe
+  poner el campo de canto cuando el lienzo es más alto que ancho, pero en móvil se
+  desactiva a propósito: el campo se mira como en la tele, y además girándolo cambiaba de
+  orientación cada vez que se abría o cerraba una hoja (la franja de arriba sí es
+  apaisada), lo que dejaba el campo dando tumbos.
 - **Los ajustes son un cajón por la derecha.** La rueda va al lado de la cabecera del
   partido y el cajón entra por el borde que has pulsado, con velo detrás. Dentro, la
   cabecera «Ajustes» es un título y no un plegable: plegar secciones dentro de un cajón
   que se cierra entero no aporta nada.
 - **Todo lo que se abre es una hoja inferior al 70 %**: la ficha del jugador, el informe
   y las estadísticas del partido. Misma forma para las tres, así se entiende una vez.
+- **Con el informe encendido, la hoja tiene pestañas**: «Informe» y «Estadísticas». Un
+  jugador tiene dos caras —lo que hizo y lo que opinas de él— y en un teléfono no caben
+  a la vez, pero **se valora mirando los números**, así que hay que poder ir y volver sin
+  cerrar nada. Se abre por el informe, que es a lo que vas si lo tienes encendido; al
+  cambiar de jugador con la hoja ya abierta se respeta la pestaña en la que estabas,
+  porque comparar la misma cara de varios es lo normal. Sin el informe encendido no hay
+  barra: una barra de una pestaña no es una barra, es un adorno.
+  La barra va **duplicada, una idéntica dentro de cada hoja**, en vez de una sola
+  flotando por encima de las dos: así se mueve, se esconde y se desplaza con su hoja sin
+  tener que colocarla a mano contra nada. La que no toca se marca `.oculta`: sigue
+  «abierta» —cuenta para el velo y para que el campo se encoja— pero no se dibuja.
 
 Lo que costó de esto:
 
@@ -372,9 +384,9 @@ Lo que costó de esto:
 Lo que en escritorio se resuelve con el ratón —pasar por encima, ver el rótulo— aquí no
 existe, así que la selección tiene que verse sola:
 
-- **El dorsal mide 7,2 m** en vez de 3,6 (unos 47 px con el campo entero). Los de una
-  misma línea siguen sin tocarse: se reparten 13 m de campo. La ficha del césped sube de
-  1,55 a 2,1 m de radio.
+- **El dorsal mide 8,4 m** en vez de 3,6 (unos 36 px con el campo entero, donde la escala
+  la marca el ancho de la pantalla). Los de una misma línea siguen sin tocarse: se
+  reparten 13 m de campo. La ficha del césped sube de 1,55 a 2,4 m de radio.
 - **Al elegir a uno, los otros veintiuno se apagan** a opacidad 0,34. Para eso el dorsal
   necesita **color RGBA por vértice** (`vertexColors`, atributo de 4 componentes: con
   tres, three multiplica el color y deja la opacidad quieta). No desaparecen —siguen

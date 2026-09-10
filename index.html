@@ -619,8 +619,11 @@ M.LOSA_L = M.LARGO + M.BORDE * 2;   // 116 m
 M.LOSA_A = M.ANCHO + M.BORDE * 2;   // 79 m
 const NIVEL = M.ZOCALO;             // cota del césped
 
-const CESPED_OSCURO = '#3F8A28';
-const CESPED_CLARO  = '#4A9C31';
+// Dos verdes muy próximos: en un campo de verdad la franja no cambia de color,
+// cambia de CÓMO refleja la luz según hacia dónde está peinada la hierba. Ese
+// trabajo lo hace el mapa de rugosidad, no el de color.
+const CESPED_OSCURO = '#2E6B22';
+const CESPED_CLARO  = '#377C29';
 
 /* ===========================================================================
    1 bis · EL PARTIDO
@@ -13033,19 +13036,53 @@ function texturaCesped() {
     g.fillRect(px(-M.LARGO / 2 + i * M.CORTE), 0, M.CORTE * S, c.height);
   }
 
+  // Dentro de cada franja, la hierba no refleja igual de un borde al otro.
+  for (let i = -4; i < 24; i++) {
+    const x0 = px(-M.LARGO / 2 + i * M.CORTE);
+    const grd = g.createLinearGradient(x0, 0, x0 + M.CORTE * S, 0);
+    const alto = i % 2 === 0;
+    grd.addColorStop(0, alto ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.045)');
+    grd.addColorStop(0.5, 'rgba(0,0,0,0)');
+    grd.addColorStop(1, alto ? 'rgba(0,0,0,.045)' : 'rgba(255,255,255,.05)');
+    g.fillStyle = grd;
+    g.fillRect(x0, 0, M.CORTE * S, c.height);
+  }
+
   // --- Manchas suaves: el césped no es un color plano ---------------------
   // A propósito con manchas GRANDES y no con ruido por píxel: el ruido fino
   // en una textura de 4096 px hace moiré en cuanto el campo se ve de lejos.
-  for (let i = 0; i < 240; i++) {
+  for (let i = 0; i < 260; i++) {
     const x = Math.random() * c.width, y = Math.random() * c.height;
     const r = (3 + Math.random() * 12) * S;
     const claro = Math.random() < 0.5;
     const grd = g.createRadialGradient(x, y, 0, x, y, r);
-    grd.addColorStop(0, claro ? 'rgba(255,255,255,.055)' : 'rgba(0,0,0,.05)');
+    grd.addColorStop(0, claro ? 'rgba(214,232,178,.05)' : 'rgba(12,42,8,.055)');
     grd.addColorStop(1, 'rgba(0,0,0,0)');
     g.fillStyle = grd;
     g.fillRect(x - r, y - r, r * 2, r * 2);
   }
+
+  // --- Desgaste: un campo jugado no está impecable ------------------------
+  // Se pisa donde se juega: bocas de gol, punto de penalti, círculo central y
+  // los pasillos de banda. Es lo que más delata a un césped dibujado.
+  const desgaste = (x, z, rx, rz, fuerza) => {
+    g.save();
+    g.translate(px(x), pz(z));
+    g.scale(1, rz / rx);
+    const grd = g.createRadialGradient(0, 0, 0, 0, 0, rx * S);
+    grd.addColorStop(0, `rgba(150,140,96,${fuerza})`);
+    grd.addColorStop(0.6, `rgba(150,140,96,${fuerza * 0.45})`);
+    grd.addColorStop(1, 'rgba(150,140,96,0)');
+    g.fillStyle = grd;
+    g.fillRect(-rx * S, -rx * S, rx * 2 * S, rx * 2 * S);
+    g.restore();
+  };
+  for (const lado of [-1, 1]) {
+    const fondo = lado * M.LARGO / 2;
+    desgaste(fondo - lado * 3.5, 0, 11, 6.5, 0.16);        // boca de gol
+    desgaste(fondo - lado * M.PENALTI, 0, 3.2, 3.2, 0.16); // punto de penalti
+  }
+  desgaste(0, 0, 11, 11, 0.07);                            // círculo central
 
   // --- Marca de BeSoccer pintada sobre el césped --------------------------
   // Como en un campo de verdad: dos marcas en esquinas opuestas, con la pintura
@@ -13163,10 +13200,52 @@ function texturaCesped() {
   return tex;
 }
 
+/* --- Rugosidad del césped -------------------------------------------------
+   Lo que hace que un campo segado se vea segado no es el color: es que las
+   franjas peinadas hacia la luz brillan y las peinadas al revés no. Eso es un
+   mapa de RUGOSIDAD, no de color, y es la diferencia entre un césped a rayas
+   y un césped de verdad. `roughnessMap` lee el canal verde. */
+function texturaRugosidad() {
+  const ancho = 1024;                       // no necesita el detalle del color
+  const S = ancho / M.LOSA_L;
+  const c = document.createElement('canvas');
+  c.width = ancho;
+  c.height = Math.round(M.LOSA_A * S);
+  const g = c.getContext('2d');
+  const px = x => (x + M.LOSA_L / 2) * S;
+
+  g.fillStyle = '#e0e0e0';                  // rugoso por defecto
+  g.fillRect(0, 0, c.width, c.height);
+  g.fillStyle = '#9a9a9a';                  // franja peinada al otro lado: brilla
+  for (let i = -4; i < 24; i += 2) {
+    g.fillRect(px(-M.LARGO / 2 + i * M.CORTE), 0, M.CORTE * S, c.height);
+  }
+  // Las líneas pintadas son pintura, no hierba: reflejan distinto.
+  // Se aprovecha el mismo trazo grueso para que se note el relieve.
+  for (let i = 0; i < 400; i++) {
+    const x = Math.random() * c.width, y = Math.random() * c.height;
+    const r = (2 + Math.random() * 9) * S;
+    const grd = g.createRadialGradient(x, y, 0, x, y, r);
+    const claro = Math.random() < 0.5;
+    grd.addColorStop(0, claro ? 'rgba(255,255,255,.13)' : 'rgba(0,0,0,.13)');
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = grd;
+    g.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  return tex;                                // sin colorSpace: es un mapa de datos
+}
+
 const campo = new THREE.Group();
 escena.add(campo);
 
-const matCesped = new THREE.MeshStandardMaterial({ map: texturaCesped(), roughness: 0.94, metalness: 0 });
+const matCesped = new THREE.MeshStandardMaterial({
+  map: texturaCesped(),
+  roughnessMap: texturaRugosidad(),
+  roughness: 1, metalness: 0,               // la rugosidad la manda el mapa
+  envMapIntensity: 1.15,                    // el brillo de la franja sale del entorno
+});
 const cesped = new THREE.Mesh(new THREE.PlaneGeometry(M.LOSA_L, M.LOSA_A), matCesped);
 cesped.rotation.x = -Math.PI / 2;
 cesped.position.y = NIVEL;
@@ -14345,11 +14424,27 @@ async function ponerEscenario(id, ms = 700) {
     try {
       const gltf = await new GLTFLoader().loadAsync(def.glb);
       estadio = gltf.scene;
-      const mat = new THREE.MeshStandardMaterial({
-        color: 0x9aa096, roughness: 0.93, metalness: 0.04, flatShading: true,
-        side: THREE.DoubleSide,
+      // Los ficheros del modelo NO traen colores: el .mtl lleva los diez colores
+      // de alambre de 3ds Max y el .dae un beige plano. El conversor reparte las
+      // caras en cuatro piezas por su geometría, y el color se pone aquí, que es
+      // donde se puede retocar sin volver a convertir nada.
+      const PALETA = {
+        grada:      { color: 0x2C4A96, roughness: 0.86, metalness: 0.02 },  // azul del Blackburn
+        cubierta:   { color: 0xA2A9AC, roughness: 0.55, metalness: 0.35 },  // chapa
+        estructura: { color: 0xDCDFD8, roughness: 0.92, metalness: 0.02 },  // hormigón claro
+        suelo:      { color: 0x3A3F37, roughness: 0.95, metalness: 0.00 },
+      };
+      const mats = {};
+      for (const [nombre, cfg] of Object.entries(PALETA)) {
+        mats[nombre] = new THREE.MeshStandardMaterial({
+          ...cfg, flatShading: true, side: THREE.DoubleSide,
+        });
+      }
+      estadio.traverse(o => {
+        if (!o.isMesh) return;
+        o.material = mats[o.material && o.material.name] || mats.estructura;
+        o.frustumCulled = false;
       });
-      estadio.traverse(o => { if (o.isMesh) { o.material = mat; o.frustumCulled = false; } });
       // El GLB sale con el suelo en su y=0: se baja 2 cm bajo el césped para
       // que el nuestro gane la profundidad y se vea por encima.
       estadio.position.y = NIVEL - 0.02;

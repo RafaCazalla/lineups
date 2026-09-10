@@ -210,6 +210,29 @@ apoya. Y **el encuadre cambia de caja** — con el estadio puesto hay que encuad
 estadio, no solo el césped —, así que `esquinasEncuadre` pasa a las ocho esquinas del
 modelo y los puntos de vista se recalculan solos.
 
+### Los colores no vienen en los ficheros
+
+Merece la pena decirlo porque parece que sí: **ninguno de los nueve formatos trae los
+colores del estadio.** El `.mtl` y el `.wrl` llevan los diez colores de alambre del visor
+de 3ds Max —rojo, magenta, turquesa—, que se asignan por objeto y cruzan el estadio
+entero, así que no separan ni una pieza; el `.dae` pone todo en un beige plano; y no hay
+ni una textura.
+
+Así que la pieza se deduce de la **geometría**, en `pieza_de()`: altura de la cara,
+cuánto está tumbada, y —la que de verdad decide— **si mira hacia el campo o hacia
+fuera**. Un graderío escalonado alterna huella tumbada y contrahuella vertical; tratar la
+contrahuella como muro dejaba la grada a rayas azules y blancas. Las dos miran al campo,
+y eso es lo que las une.
+
+Salen cuatro piezas —`suelo`, `grada`, `cubierta`, `estructura`— como cuatro primitivas
+sobre el mismo buffer de posiciones, así que el color va por material y no hay que partir
+vértices en las fronteras. **La paleta vive en `index.html`, no en el GLB**: se retoca sin
+volver a convertir nada. Ahora mismo, azul del Blackburn en la grada, chapa gris en la
+cubierta y hormigón claro en la estructura.
+
+El umbral de altura (`--alto-grada`, 22 m por defecto) es lo único que hay que tocar si se
+cambia de estadio: por debajo, las gradas altas se pintan de estructura.
+
 ### De 32 MB de 3ds Max a 577 KB
 
 La carpeta traía el mismo modelo en nueve formatos (`fbx`, `dae`, `obj`, `stl`, `max`,
@@ -240,6 +263,21 @@ Vale la pena dejarlo escrito porque costó una hora: el modelo cargaba bien, se 
 gris claro sobre un fondo gris claro.** Con el estadio puesto, el fondo de la página baja
 de tono (`body.con-estadio`) y el hormigón es más oscuro. Antes de buscar un fallo de
 cámara, comprobar el contraste.
+
+## El césped
+
+Lo que hace que un campo segado se vea segado **no es el color**: es que las franjas
+peinadas hacia la luz brillan y las peinadas al revés no. Por eso los dos verdes son casi
+el mismo y el trabajo lo hace un **mapa de rugosidad** (`roughnessMap`, que lee el canal
+verde) con las franjas alternas. Es la diferencia entre un césped a rayas y un césped.
+
+Encima van tres cosas que delatan a un césped dibujado si faltan:
+
+- **Degradado dentro de cada franja**: la hierba no refleja igual de un borde al otro.
+- **Manchas grandes de tono**, nunca ruido por píxel: el ruido fino en una textura de
+  4096 px hace moiré en cuanto el campo se ve de lejos.
+- **Desgaste**: bocas de gol, puntos de penalti y círculo central, algo más claros y
+  terrosos. Un campo jugado no está impecable.
 
 ## La marca del campo
 

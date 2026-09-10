@@ -163,9 +163,17 @@ validan entre ellas.
 
 - **744 pases entre titulares.** Los pases con suplentes se descartan: los suplentes no
   están en el campo del prototipo.
-- **Cada cinta es una pareja, y su ancho es el total de pases entre los dos**, por la
-  raíz del volumen, porque el ojo compara áreas y no longitudes. Umbral de 3 pases: por
-  debajo, la maraña tapa la señal.
+- **El umbral es relativo a cada equipo, no absoluto.** El Inter dio 452 pases entre
+  titulares y el Madrid 292: con un mínimo fijo, uno salía con 45 cintas y el otro con 32,
+  y el que más pasa parecía un ovillo justo por eso. Con el **25 % de su propia pareja más
+  fuerte**, los dos se quedan en unas veinte cintas que recogen el 70 % de sus pases.
+  Once nodos admiten 55 parejas: dibujarlas todas no es una red, es una maraña.
+- **Cada cinta es una pareja, y su ancho es el total de pases entre los dos.** El ancho y
+  la opacidad crecen los dos con el volumen: una conexión floja tiene que ser fina **y**
+  tenue, o veinte cintas acaban pesando lo mismo.
+- **Las cintas no llegan al jugador: se paran a 2,4 m.** Si mueren en el centro del nodo,
+  los jugadores desaparecen bajo el nudo y la red deja de leerse. Es el cambio que más se
+  nota de todos.
 - **El sentido no se dibuja.** Una cinta que se estrecha se lee mal y se presta a leerla
   al revés. La dirección va en la ficha, en «Pases a compañeros», con su número.
 - **Con un jugador elegido, sus cintas mandan y el resto se apagan.** Si no, la red pesa

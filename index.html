@@ -13416,7 +13416,7 @@ const jz = j => (j.y - 0.5) * M.ANCHO;
 
 const RADIO_FICHA = 1.55;
 const ALTO_POSTE  = 2.1;
-const DORSAL_D    = 3.0;                          // diámetro del disco de dorsal
+const DORSAL_D    = 3.6;                          // diámetro del disco de dorsal
 const Y_DORSAL    = ALTO_POSTE + DORSAL_D / 2;
 const Y_ROTULO    = ALTO_POSTE - 0.05;            // el nombre cuelga bajo el dorsal
 const LEVANTA     = 0.4;                          // lo que sube la ficha al elegirla
@@ -13577,7 +13577,14 @@ const enCampo = i => equipoVisible === 'todos' || JUG[i].equipo === equipoVisibl
    Es una malla de dos triángulos por pareja, con color por vértice: una sola
    llamada de dibujo, y el ancho puede variar, cosa que `LineSegments` no
    permite —el grosor de línea lo ignoran casi todas las plataformas—. */
-const UMBRAL_PASES = 3;          // por debajo, la maraña tapa la señal
+/* El umbral es RELATIVO a cada equipo, no absoluto. El Inter dio 452 pases
+   entre titulares y el Madrid 292: con un mínimo fijo, uno sale con 45 cintas
+   y el otro con 32, y el que más pasa parece un ovillo justo por eso. Con el
+   25 % de su propia pareja más fuerte, los dos se quedan en unas veinte cintas
+   que recogen el 70 % de sus pases. Once nodos admiten 55 parejas: dibujarlas
+   todas no es una red, es una maraña. */
+const UMBRAL_REL = 0.25;
+const RECORTE = 2.4;             // metros libres junto a cada ficha
 
 const IDX_JUG = new Map(JUG.map((j, i) => [j.id, i]));
 const PAREJAS = (() => {
@@ -13590,12 +13597,17 @@ const PAREJAS = (() => {
       suma.set(clave, (suma.get(clave) || 0) + n);
     }
   });
-  return [...suma]
-    .map(([clave, n]) => { const [a, b] = clave.split('-').map(Number); return { a, b, n }; })
-    .filter(p => p.n >= UMBRAL_PASES)
-    .sort((x, y) => x.n - y.n);   // las gordas encima
+  const todas = [...suma].map(([clave, n]) => {
+    const [a, b] = clave.split('-').map(Number);
+    return { a, b, n, equipo: JUG[a].equipo };
+  });
+  const tope = {};
+  for (const p of todas) tope[p.equipo] = Math.max(tope[p.equipo] || 1, p.n);
+  return todas
+    .map(p => ({ ...p, rel: p.n / tope[p.equipo] }))
+    .filter(p => p.rel >= UMBRAL_REL)
+    .sort((x, y) => x.rel - y.rel);   // las gordas encima
 })();
-const MAX_PASES = Math.max(1, ...PAREJAS.map(p => p.n));
 
 const geoPases = new THREE.BufferGeometry();
 const pases = new THREE.Mesh(geoPases, new THREE.MeshBasicMaterial({
@@ -13620,13 +13632,18 @@ function rehacerPases() {
     // Las parejas del elegido las pinta el flujo, con sus dos carriles.
     if (conFlujo && (par.a === elegido || par.b === elegido)) continue;
     const A = JUG[par.a], B = JUG[par.b];
-    const ax = jx(A), az = jz(A), bx = jx(B), bz = jz(B);
-    let dx = bx - ax, dz = bz - az;
+    let dx = jx(B) - jx(A), dz = jz(B) - jz(A);
     const largo = Math.hypot(dx, dz) || 1;
     dx /= largo; dz /= largo;
+    // Hueco junto a cada ficha: si las cintas mueren en el centro del jugador,
+    // los nodos desaparecen bajo el nudo y la red deja de leerse.
+    const rec = Math.min(RECORTE, largo * 0.35);
+    const ax = jx(A) + dx * rec, az = jz(A) + dz * rec;
+    const bx = jx(B) - dx * rec, bz = jz(B) - dz * rec;
     const nx = -dz, nz = dx;                       // perpendicular sobre el césped
-    // Ancho por la raíz del volumen: el ojo compara áreas, no longitudes.
-    const w = 0.16 + 0.9 * Math.sqrt(par.n / MAX_PASES);
+    // Ancho y opacidad crecen los dos con el volumen: una conexión floja tiene
+    // que ser fina Y tenue, o veinte cintas acaban pesando lo mismo.
+    const w = 0.13 + 0.72 * Math.pow(par.rel, 0.9);
     const y = NIVEL + 0.04;
     pos.push(ax + nx * w, y, az + nz * w,
              ax - nx * w, y, az - nz * w,
@@ -13638,7 +13655,7 @@ function rehacerPases() {
     _cPase.set(PARTIDO[A.equipo].acento);
     // Fuerte la del elegido y muy tenue el resto: con el mapa de calor debajo,
     // una cinta a media tinta se pierde entre el naranja y el rojo.
-    const alfa = suya ? 0.82 : 0.12;
+    const alfa = suya ? (0.32 + 0.46 * par.rel) : 0.1;
     for (let n = 0; n < 4; n++) col.push(_cPase.r, _cPase.g, _cPase.b, alfa);
     idx.push(v, v + 1, v + 2, v, v + 2, v + 3);
     v += 4;
@@ -13723,10 +13740,13 @@ function rehacerFlujo() {
   let v = 0;
   for (const car of carriles) {
     const A = JUG[car.de], B = JUG[car.a];
-    const ax = jx(A), az = jz(A), bx = jx(B), bz = jz(B);
-    let dx = bx - ax, dz = bz - az;
-    const largo = Math.hypot(dx, dz) || 1;
-    dx /= largo; dz /= largo;
+    let dx = jx(B) - jx(A), dz = jz(B) - jz(A);
+    const bruto = Math.hypot(dx, dz) || 1;
+    dx /= bruto; dz /= bruto;
+    const rec = Math.min(RECORTE, bruto * 0.32);
+    const ax = jx(A) + dx * rec, az = jz(A) + dz * rec;
+    const bx = jx(B) - dx * rec, bz = jz(B) - dz * rec;
+    const largo = Math.max(1, bruto - rec * 2);
     // La perpendicular se toma SIEMPRE en el sentido «desde el elegido», o los
     // dos carriles de una pareja se pondrían en el mismo lado.
     const signo = car.de === elegido ? 1 : -1;

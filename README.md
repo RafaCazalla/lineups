@@ -308,14 +308,33 @@ pintan nada. Se puede forzar con `?movil=1` y `?movil=0` para verlo desde escrit
 Sí siguen funcionando: tocar un jugador, su ficha, el mapa de calor, el mapa de pases,
 el selector de equipo, la posición media y el informe de ojeador.
 
-Dos detalles que costaron:
+Detalles que costaron:
 
 - **La capa de etiquetas tiene que cubrir exactamente lo mismo que el lienzo.** Si el
-  lienzo ocupa el 38 % de alto y la capa sigue a pantalla completa, los nombres salen
+  lienzo ocupa el 44 % de alto y la capa sigue a pantalla completa, los nombres salen
   desplazados respecto a sus fichas.
 - **El aviso de «campo cenital fijo» se coloca por CSS, no moviendo el nodo.** Meterlo
   dentro de la columna con `prepend()` colgaba la página; no llegué a entender por qué,
   y posicionarlo con CSS lo evita sin tocar el DOM.
+- **Las fichas son más grandes en móvil, no más pequeñas.** `DORSAL_D` pasa de 3,6 a
+  6 m: con el campo entero en 44 vh, 3,6 m son 16 px en pantalla y no se leen ni se
+  aciertan con el dedo; 6 m son unos 27 px. A la vez `ALTO_POSTE` baja de 2,1 a 1 m,
+  porque en vista cenital todo lo que el dorsal flote sobre el césped lo separa en
+  pantalla de su propia ficha en los bordes del campo. Por eso la detección de móvil
+  vive **al principio del módulo**, antes del bloque de medidas.
+- **Tocar tiene tolerancia; el ratón, no.** `indiceEn(ev, tolerancia)` primero lanza el
+  rayo y, si falla, coge al jugador más cercano en pantalla dentro de 30 px, usando los
+  `sx`/`sy` que el bucle ya calcula para ocultar rótulos. El dedo tapa lo que señala:
+  exigir el impacto exacto es exigir puntería que no se tiene.
+- **Lo que se abre va arriba de la columna** (`order:-1`), y al abrirlo la columna sube
+  a cero. Detrás de los ajustes, la ficha aparecía por debajo del pliegue y parecía que
+  el toque no había hecho nada.
+- **Cada panel lleva su propia aspa de 38 px.** Las de 26 px no se aciertan. Y las
+  estadísticas del partido necesitaban una aspa nueva: en móvil se abren como hoja
+  inferior y tapan al botón que las abre, así que no había forma de cerrarlas. En
+  escritorio esa aspa está oculta, que allí cierra el mismo botón que abre.
+- **Los rótulos vienen apagados en móvil.** Con veintidós nombres sobre un campo de
+  350 px no se lee ninguno; el dorsal sí, y la ficha da el nombre.
 
 ## Informe de ojeador
 

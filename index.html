@@ -118,6 +118,8 @@ body.con-estadio{
   max-height:calc(100vh - 236px);
 }
 #ajustes{padding:6px; flex:none}
+/* La rueda flotante, el velo y el aspa de los ajustes son solo de móvil. */
+#bt-ajustes, #velo, #ajustes .cerrar{display:none}
 #ajustes .cab{
   width:100%; display:flex; align-items:center; gap:9px; padding:8px 10px;
   border:0; border-radius:9px; background:none; cursor:pointer; font:inherit;
@@ -529,94 +531,144 @@ body.con-estadio{
    no hay una segunda versión que mantener. */
 @media (max-width:820px){
   body.movil{overflow:hidden}
-  /* Fuera el logo: en un teléfono se come el sitio de la cabecera y la deja
-     descentrada, y la marca ya está pintada en el propio césped. */
+
+  /* --- Cabecera: marcador centrado y la rueda a su derecha --------------
+     Fuera el logo de BeSoccer: se comía el sitio de la cabecera y la dejaba
+     descentrada. La marca ya está pintada en el césped, en las dos esquinas. */
   body.movil #marca{display:none}
-  body.movil #cabecera{left:10px; right:10px; width:auto; transform:none}
-  body.movil #escena, body.movil #etiquetas{top:92px; height:44vh; bottom:auto}
+  body.movil #cabecera{left:10px; right:68px; width:auto; transform:none}
+  body.movil #bt-ajustes{
+    display:grid; place-items:center; position:fixed; top:16px; right:10px;
+    width:48px; height:48px; padding:0; border:0; cursor:pointer; z-index:6;
+    color:var(--ink-2);
+  }
+  body.movil #bt-ajustes svg{width:21px; height:21px}
+  body.movil #bt-ajustes[aria-expanded="true"]{background:var(--green); color:#fff}
+
+  /* --- El campo se queda con todo lo que sobra -------------------------- */
+  body.movil #escena, body.movil #etiquetas{top:92px; bottom:0; height:auto}
   /* La capa de etiquetas tiene que cubrir EXACTAMENTE lo mismo que el lienzo,
      o los nombres salen desplazados respecto a las fichas. */
+  /* Con una hoja abierta el campo se encoge a lo que queda por encima, en vez
+     de esconderse debajo: el mapa de calor del jugador que acabas de tocar
+     tiene que seguir viéndose. Al cambiar de tamaño el lienzo, el
+     ResizeObserver vuelve a calcular el encuadre él solo —y al pasar la franja
+     a apaisada, el campo se pone horizontal solo (`giroVertical`)—.
+     La cabecera se retira: esos 92 px son más de un tercio de la franja, y
+     mientras miras la ficha de un jugador el marcador no es lo que importa. */
+  body.movil.con-hoja #escena, body.movil.con-hoja #etiquetas{top:0; bottom:70vh}
+  body.movil.con-hoja #cabecera, body.movil.con-hoja #bt-ajustes{display:none}
+
+  /* --- La columna deja de ser columna -----------------------------------
+     En móvil no hay nada apilado: hay un cajón y unas hojas, todos fijos.
+     #izquierda se queda solo como CONTEXTO DE APILADO que los pone por
+     encima del resto de la página, y por eso no puede comerse los toques. */
   body.movil #izquierda{
-    top:calc(92px + 44vh + 26px); left:10px; right:10px; bottom:64px;
-    width:auto; max-width:none; max-height:none; overflow-y:auto; gap:10px;
+    position:fixed; inset:0; width:auto; max-width:none; max-height:none;
+    display:block; overflow:visible; gap:0; pointer-events:none; z-index:20;
   }
-  /* La ficha se abre ARRIBA de la columna, pegada al campo. Al final de la
-     lista aparecía por debajo del pliegue y parecía que no se había abierto. */
-  body.movil #ficha{order:-1}
-  body.movil #ficha{
-    position:relative; top:auto; right:auto; width:auto; max-height:none;
-    overflow:visible; border-radius:var(--r); flex:none;
+  body.movil #izquierda > *{pointer-events:auto}
+
+  /* --- Velo ------------------------------------------------------------- */
+  body.movil #velo{
+    display:block; position:fixed; inset:0; z-index:15;
+    background:rgba(18,26,18,.34); opacity:0; visibility:hidden;
+    transition:opacity .18s ease, visibility .18s;
   }
-  /* Aspas de 38 px: con 26 no se aciertan con el dedo. */
-  body.movil #ficha .cerrar, body.movil #informe .cerrar{
-    width:38px; height:38px; top:8px; right:8px;
+  body.movil.con-velo #velo{opacity:1; visibility:visible}
+
+  /* --- Ajustes: cajón por la derecha ------------------------------------
+     Entra desde el borde por el que se ha pulsado, que es de donde el usuario
+     espera que salga. Opaco: es una lista de interruptores, no un adorno. */
+  body.movil #ajustes{
+    position:fixed; top:0; right:0; bottom:0; left:auto;
+    width:min(84vw, 330px); margin:0; padding:6px 6px 18px;
+    border-radius:16px 0 0 16px; border-right:0;
+    background:#fff; -webkit-backdrop-filter:none; backdrop-filter:none;
+    box-shadow:-10px 0 34px rgba(56,56,56,.22);
+    overflow-y:auto; overscroll-behavior:contain;
+    transform:translateX(103%); transition:transform .22s ease; z-index:30;
   }
-  body.movil #ficha .cerrar svg, body.movil #informe .cerrar svg{width:15px; height:15px}
-  /* El informe, en cambio, es una HOJA INFERIOR al 70 % de la pantalla. Son
-     siete campos con un área de texto: apilado en la columna obligaba a
-     desplazar toda la página y el teclado dejaba el formulario donde no se
-     veía. Como hoja tiene su propio desplazamiento, deja ver el campo por
-     encima y no se lleva el resto de la interfaz por delante.
-     Se desplaza SOLO el bloque de campos: la cabecera con el nombre y el pie
-     con «Guardar» se quedan fijos, que son lo que hay que tener siempre a
-     mano. */
-  body.movil #informe{
+  body.movil.con-ajustes #ajustes{transform:none}
+  /* Dentro del cajón la cabecera es un TÍTULO, no un plegable: plegar dentro
+     de un cajón que ya se cierra entero no aporta nada. */
+  body.movil #ajustes .cab{pointer-events:none; padding:14px 46px 8px 10px}
+  body.movil #ajustes .cab .flecha{display:none}
+  body.movil #ajustes .cuerpo{display:block}
+
+  /* --- Todo lo que se abre es una hoja al 70 % --------------------------
+     Misma forma para la ficha, el informe y las estadísticas: se entiende una
+     vez y vale para las tres. Opacas, al contrario que el resto de tarjetas:
+     el panel translúcido dejaba pasar el césped por encima del contenido. */
+  body.movil #ficha, body.movil #informe, body.movil #stats{
     position:fixed; left:0; right:0; bottom:0; top:auto; order:0;
     width:auto; height:70vh; max-height:70vh; margin:0;
-    /* Ojo: #izquierda es position:fixed con z-index, o sea un CONTEXTO DE
-       APILADO. Este 12 ordena la hoja dentro de la columna, no contra el
-       resto de la página: ahí sigue valiendo el 5 de la columna. Por eso lo
-       que hay por encima se esconde a mano (el aviso, el botón de stats). */
-    z-index:12;
     border-radius:16px 16px 0 0; border-bottom:0;
-    overflow:hidden;   /* el que desplaza es .campos, no la hoja */
-    padding-top:11px;  /* hueco del asa */
-    /* Opaca, al contrario que el resto de tarjetas: el panel translúcido
-       dejaba pasar el campo y el aviso de debajo por encima de los campos del
-       formulario. Un formulario necesita suelo. */
     background:#fff; -webkit-backdrop-filter:none; backdrop-filter:none;
     box-shadow:0 -10px 34px rgba(56,56,56,.22);
+    overflow:hidden;   /* el que se desplaza es el cuerpo, no la hoja */
+    padding:11px 0 0;  /* hueco del asa */
   }
-  body.movil #informe.abierta{display:flex; flex-direction:column}
+  /* Ojo: #izquierda es position:fixed con z-index, o sea un CONTEXTO DE
+     APILADO. Este 12 ordena la ficha y el informe dentro de la columna; ahí
+     fuera valen los 20 de la columna. Las estadísticas cuelgan del body, así
+     que necesitan su propio número por encima del velo. */
+  body.movil #ficha, body.movil #informe{z-index:12}
+  body.movil #stats{z-index:21}
   /* El asa no arrastra: dice que esto es una hoja y de dónde ha salido. */
-  body.movil #informe::before{
+  body.movil #ficha::before, body.movil #informe::before, body.movil #stats::before{
     content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%);
-    width:38px; height:4px; border-radius:2px; background:var(--hairline);
+    width:38px; height:4px; border-radius:2px; background:var(--hairline); z-index:3;
   }
-  body.movil #informe .top{flex:none}
-  body.movil #informe .campos{
+  body.movil #ficha.abierta, body.movil #informe.abierta, body.movil #stats.abierto{
+    display:flex; flex-direction:column;
+  }
+  /* Cabecera y pie quietos; por el medio, lo único que se desplaza. Si se
+     desplazara la hoja entera, el nombre del jugador y el botón de guardar se
+     perderían justo cuando hacen falta. */
+  body.movil #ficha .top, body.movil #informe .top,
+  body.movil #stats h2, body.movil #stats .sub{flex:none}
+  body.movil #ficha .cuerpo, body.movil #informe .campos, body.movil #stats #s-filas{
     flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
-    padding-bottom:12px;
   }
+  body.movil #informe .campos{padding-bottom:12px}
   body.movil #informe .pie{flex:none; border-top:1px solid var(--hairline)}
   body.movil #informe .estado{flex:none}
-  body.movil #informe .cerrar{top:15px}
+  body.movil #stats{padding:11px 15px 12px}
+  body.movil #stats h2{padding-right:44px}
+  body.movil #stats #s-filas{margin:0 -15px; padding:0 15px}
+  /* Aspas de 38 px: con 26 no se aciertan con el dedo. */
+  body.movil #ficha .cerrar, body.movil #informe .cerrar,
+  body.movil #stats .cerrar, body.movil #ajustes .cerrar{
+    display:grid; place-items:center; position:absolute; top:15px; right:10px;
+    width:38px; height:38px; border:0; border-radius:9px; z-index:4;
+    background:rgba(56,56,56,.07); color:var(--ink-2); cursor:pointer;
+  }
+  body.movil #ajustes .cerrar{top:10px}
+  body.movil #stats .cerrar{top:12px; right:12px}
+  body.movil #ficha .cerrar svg, body.movil #informe .cerrar svg,
+  body.movil #stats .cerrar svg, body.movil #ajustes .cerrar svg{width:15px; height:15px}
+
   body.movil #vistas, body.movil #barra, body.movil #menu,
   body.movil #perf, body.movil #sw-rotar{display:none !important}
   body.movil #escena canvas{touch-action:auto}
-  /* Justo debajo del campo, sobre el fondo de la página: encima del verde no
-     se leía. Y se coloca por CSS, sin mover el nodo de sitio. */
+  /* El rótulo cuelga POR DEBAJO del dorsal. En vista cenital subirlo en metros
+     no lo mueve en pantalla —la altura casi no se proyecta—, así que el
+     desplazamiento tiene que ser en píxeles. */
+  body.movil .rotulo{margin-top:26px; font-size:13.5px; padding:5px 9px 4px}
+
+  /* El aviso baja al pie del campo, y desaparece con cualquier hoja abierta. */
   body.movil #aviso-movil{
-    position:fixed; left:10px; right:10px; top:calc(92px + 44vh + 5px); z-index:6;
-    margin:0; text-align:center; pointer-events:none;
-    font-family:var(--font-cond); font-size:11px; line-height:1.4; color:var(--ink-3);
+    position:fixed; left:12px; right:150px; bottom:16px; z-index:4;
+    margin:0; pointer-events:none;
+    font-family:var(--font-cond); font-size:11px; line-height:1.35; color:var(--ink-3);
   }
   body.movil #bt-stats{bottom:12px; right:12px}
-  /* La ficha ya no es hoja inferior en móvil: el botón de estadísticas sigue
-     haciendo falta con un jugador abierto. */
+  /* La ficha ya no es una tarjeta de la columna: el botón de estadísticas
+     sigue haciendo falta con un jugador abierto. Pero debajo de una hoja
+     sería invisible y aun así pulsable. */
   body.movil.con-ficha #bt-stats{display:flex}
-  /* Pero debajo de la hoja del informe sería invisible y aun así pulsable. */
-  body.movil.con-informe #bt-stats{display:none}
-  /* Y el aviso del campo cenital cae justo donde empieza la hoja. */
-  body.movil.con-informe #aviso-movil{display:none}
-  /* La hoja de estadísticas tapa a su propio botón: lleva aspa. */
-  body.movil #stats h2{padding-right:44px}
-  body.movil #stats .cerrar{
-    display:grid; place-items:center; position:absolute; top:8px; right:8px;
-    width:38px; height:38px; border:0; border-radius:9px;
-    background:rgba(56,56,56,.07); color:var(--ink-2); cursor:pointer;
-  }
-  body.movil #stats .cerrar svg{width:15px; height:15px}
+  body.movil.con-hoja #bt-stats, body.movil.con-hoja #aviso-movil{display:none}
 }
 @media not all and (max-width:820px){ #aviso-movil{display:none} }
 
@@ -664,8 +716,20 @@ body.con-estadio{
   <div id="linea" role="img"></div>
 </header>
 
+<!-- Solo en móvil: la rueda vive al lado de la cabecera y abre los ajustes
+     como cajón lateral. En escritorio los ajustes ya están a la vista. -->
+<button class="hud tarjeta" id="bt-ajustes" aria-expanded="false" aria-controls="ajustes" aria-label="Ajustes">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="3.1"/><path d="M12 2.6v2.1M12 19.3v2.1M21.4 12h-2.1M4.7 12H2.6M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5M18.6 18.6l-1.5-1.5M6.9 6.9 5.4 5.4"/>
+  </svg>
+</button>
+<div id="velo"></div>
+
 <div class="hud" id="izquierda">
 <section class="tarjeta" id="ajustes" data-abierto="true" role="group" aria-label="Ajustes de la escena">
+  <button class="cerrar" id="a-cerrar" title="Cerrar" aria-label="Cerrar los ajustes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
   <button class="cab" id="ajustes-cab" aria-expanded="true" aria-controls="ajustes-cuerpo">
     <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <circle cx="12" cy="12" r="3.1"/><path d="M12 2.6v2.1M12 19.3v2.1M21.4 12h-2.1M4.7 12H2.6M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5M18.6 18.6l-1.5-1.5M6.9 6.9 5.4 5.4"/>
@@ -13707,14 +13771,15 @@ const N = JUG.length;
 const jx = j => (j.x - 0.5) * M.LARGO;
 const jz = j => (j.y - 0.5) * M.ANCHO;
 
-const RADIO_FICHA = 1.55;
+const RADIO_FICHA = esMovil ? 2.1 : 1.55;
 // Vista cenital: todo lo que el dorsal flote por encima del césped lo separa
 // en pantalla de su propia ficha en los bordes del campo. Con el disco más
 // grande, el poste se acorta para que el conjunto quede a la misma altura.
 const ALTO_POSTE  = esMovil ? 1 : 2.1;
 // En móvil el campo se ve entero y pequeño: con 3,6 m el disco sale a 16 px y
-// no se lee. 6 m lo dejan en ~27 px, que es tocable y legible.
-const DORSAL_D    = esMovil ? 6 : 3.6;            // diámetro del disco de dorsal
+// no se lee ni se acierta con el dedo. 7,2 m lo dejan en unos 47 px, y aun así
+// los de una misma línea no llegan a tocarse: se reparten 13 m de campo.
+const DORSAL_D    = esMovil ? 7.2 : 3.6;          // diámetro del disco de dorsal
 const Y_DORSAL    = ALTO_POSTE + DORSAL_D / 2;
 const Y_ROTULO    = ALTO_POSTE - 0.05;            // el nombre cuelga bajo el dorsal
 const LEVANTA     = 0.4;                          // lo que sube la ficha al elegirla
@@ -13841,8 +13906,13 @@ function pintarCalorCampo(j) {
 }
 
 /* --- Anillo de la ficha elegida ------------------------------------------ */
+/* En cenital el anillo tiene que rodear al DORSAL, que es lo que se ve; con
+   el radio de la ficha se quedaba escondido debajo. En escritorio, en cambio,
+   la cámara está inclinada y el anillo se lee como lo que es: una marca en el
+   césped a los pies del jugador. */
 const anillo = new THREE.Mesh(
-  new THREE.RingGeometry(RADIO_FICHA * 1.3, RADIO_FICHA * 1.62, 48),
+  esMovil ? new THREE.RingGeometry(4.3, 5.15, 56)
+          : new THREE.RingGeometry(RADIO_FICHA * 1.3, RADIO_FICHA * 1.62, 48),
   new THREE.MeshBasicMaterial({ color: 0x3B811F, transparent: true, opacity: 0.95, depthWrite: false })
 );
 anillo.geometry.rotateX(-Math.PI / 2);
@@ -14125,9 +14195,16 @@ for (let i = 0; i < N; i++) {
 const geoDorsal = new THREE.BufferGeometry();
 geoDorsal.setAttribute('position', dorsalPos.setUsage(THREE.DynamicDrawUsage));
 geoDorsal.setAttribute('uv', new THREE.BufferAttribute(dorsalUv, 2));
+/* Color RGBA por vértice: la A es lo que se busca. Al elegir a uno en móvil,
+   los otros veintiuno se apagan en vez de desaparecer —siguen diciendo dónde
+   estaban— y así se ve de un vistazo a quién has tocado. La cuarta componente
+   hace falta explícitamente: con tres, three multiplica el color y deja la
+   opacidad quieta. */
+const dorsalCol = new THREE.BufferAttribute(new Float32Array(N * 4 * 4).fill(1), 4);
+geoDorsal.setAttribute('color', dorsalCol.setUsage(THREE.DynamicDrawUsage));
 geoDorsal.setIndex(new THREE.BufferAttribute(dorsalIdx, 1));
 const dorsales = new THREE.Mesh(geoDorsal, new THREE.MeshBasicMaterial({
-  transparent: true, depthWrite: false, side: THREE.DoubleSide,
+  transparent: true, depthWrite: false, side: THREE.DoubleSide, vertexColors: true,
 }));
 dorsales.frustumCulled = false;      // las posiciones cambian cada cuadro
 dorsales.renderOrder = 4;
@@ -14235,7 +14312,7 @@ function ocluirRotulos() {
     const j = JUG[i];
     // El interruptor y el filtro de equipo sí son binarios: la etiqueta no
     // está. Lo que se tapa por delante se apaga con opacidad, no quitándola.
-    const base = verEtiquetas && enCampo(i);
+    const base = hayRotulo(i);
     rotulos[i].visible = base;
     if (base && hayMuro) {
       _dirOcl.subVectors(rotulos[i].position, camara.position);
@@ -14263,6 +14340,16 @@ function ocluirRotulos() {
   for (let i = 0; i < N; i++) {
     const el = JUG[i].el;
     if (!rotulos[i].visible) continue;
+    /* En móvil el único rótulo en pantalla es el del elegido, así que no hay
+       con quién chocar: se salta la prueba entera. Si no, el propio dorsal del
+       jugador —que en móvil es enorme— lo daba por tapado y lo apagaba.
+       Además el rótulo va 34 px más abajo por CSS, y esta prueba mide donde lo
+       proyecta three, no donde acaba estando. */
+    if (esMovil && i === elegido) {
+      tapada[i] = false;
+      el.style.opacity = '1';
+      continue;
+    }
     if (conDorsales && !tapada[i]) {
       const anchoEt = el.offsetWidth, altoEt = el.offsetHeight;
       if (anchoEt) {                         // el primer cuadro aún no mide
@@ -14316,6 +14403,14 @@ const _m = new THREE.Matrix4(), _v = new THREE.Vector3(), _q = new THREE.Quatern
 const colBase = JUG.map(j => new THREE.Color(PARTIDO[j.equipo].fondo));
 const colClaro = colBase.map(c => c.clone().lerp(new THREE.Color(0xffffff), 0.42));
 
+/* Quién enseña el nombre. Vive aparte porque lo deciden DOS sitios —
+   refrescarFichas() al cambiar la selección y ocluirRotulos() en cada cuadro—
+   y el segundo pisaba al primero.
+   En móvil los rótulos vienen apagados, que veintidós nombres sobre un campo
+   de teléfono no se leen; el del jugador que acabas de tocar sí sale: es la
+   respuesta al toque, y dice de quién es la hoja que se acaba de abrir. */
+const hayRotulo = i => (verEtiquetas || (esMovil && i === elegido)) && enCampo(i);
+
 function refrescarFichas() {
   for (let i = 0; i < N; i++) {
     const j = JUG[i];
@@ -14347,7 +14442,7 @@ function refrescarFichas() {
 
     discos.setColorAt(i, i === encima || i === elegido ? colClaro[i] : colBase[i]);
     rotulos[i].position.set(x, NIVEL + Y_ROTULO + sube, z);
-    rotulos[i].visible = verEtiquetas;
+    rotulos[i].visible = hayRotulo(i);
     j.el.classList.toggle('sel', i === elegido);
   }
   discos.instanceMatrix.needsUpdate = true;
@@ -14375,7 +14470,10 @@ function billboardDorsales() {
     const j = JUG[i];
     // Escala 0 colapsa el cuadro a un punto: no se dibuja y el raycaster no
     // puede acertarle, que es justo lo que hace falta.
-    const escala = enCampo(i) ? (i === encima || i === elegido ? 1.14 : 1) * DORSAL_D / 2 : 0;
+    // El elegido crece más en móvil: es la única señal que no depende de
+    // acertar con el color, y ahí no hay ratón que resalte al pasar por encima.
+    const realce = i === elegido ? (esMovil ? 1.3 : 1.14) : i === encima ? 1.14 : 1;
+    const escala = enCampo(i) ? realce * DORSAL_D / 2 : 0;
     centro.set(jx(j), NIVEL + Y_DORSAL + (i === elegido ? LEVANTA : 0), jz(j));
     distancias[i] = centro.distanceToSquared(camara.position);
     const dx = derCam.x * escala, dy = derCam.y * escala, dz = derCam.z * escala;
@@ -14387,6 +14485,18 @@ function billboardDorsales() {
     arr[b + 9] = centro.x - dx + ux; arr[b +10] = centro.y - dy + uy; arr[b +11] = centro.z - dz + uz;
   }
   dorsalPos.needsUpdate = true;
+
+  /* Con alguien elegido, en móvil los demás se apagan. En escritorio no: allí
+     la ficha sale al lado, el rótulo se lee y apagar el campo entero sería
+     ruido. */
+  if (esMovil) {
+    const col = dorsalCol.array;
+    for (let i = 0; i < N; i++) {
+      const a = elegido < 0 || i === elegido ? 1 : 0.34;
+      for (let v = 0; v < 4; v++) col[i * 16 + v * 4 + 3] = a;
+    }
+    dorsalCol.needsUpdate = true;
+  }
 
   orden.sort((a, b) => distancias[b] - distancias[a]);
   for (let n = 0; n < N; n++) {
@@ -14708,21 +14818,47 @@ const secAbierta = {};        // qué secciones deja abiertas el usuario
 
 /* En móvil la ficha entra arriba de la columna (order:-1), pero si el usuario
    había bajado a los ajustes se abriría fuera de la vista. */
-function alColocar() {
-  if (esMovil) document.getElementById('izquierda').scrollTop = 0;
+/* --- Qué hay abierto encima del campo -------------------------------------
+   En móvil la ficha, el informe y las estadísticas son la misma cosa —una hoja
+   al 70 %— y los ajustes son un cajón por la derecha. Dos marcas en el body
+   resumen el estado, y de ellas cuelga por CSS todo lo demás: el velo, que el
+   campo se encoja a lo que queda por encima de la hoja, y qué se esconde.
+
+   Las marcas se calculan aquí, en un sitio, en vez de que cada panel se
+   acuerde de ponerlas y quitarlas: tres paneles por dos marcas son seis
+   ocasiones de dejarse una. */
+function refrescarCapas() {
+  const c = document.body.classList;
+  const hoja = c.contains('con-ficha') || c.contains('con-informe') || c.contains('con-stats');
+  c.toggle('con-hoja', hoja);
+  c.toggle('con-velo', hoja || c.contains('con-ajustes'));
 }
 
-/* El informe se abre y se cierra por aquí y solo por aquí. La marca en el body
-   existe porque en móvil el informe es una HOJA que tapa la esquina inferior:
-   el botón de estadísticas quedaría debajo, invisible pero pulsable. */
+/* Cada panel se abre y se cierra por su función y solo por ahí. */
 function verInforme(abierto) {
   cajaInf.classList.toggle('abierta', abierto);
   document.body.classList.toggle('con-informe', abierto);
+  refrescarCapas();
   if (!abierto || !esMovil) return;
   cajaInf.scrollTop = cajaInf.querySelector('.campos').scrollTop = 0;
   // La hoja se abre en blanco: ningún campo enfocado y ningún teclado.
   const foco = document.activeElement;
   if (foco && cajaInf.contains(foco)) foco.blur();
+}
+
+function verFicha(abierta) {
+  caja.classList.toggle('abierta', abierta);
+  document.body.classList.toggle('con-ficha', abierta);
+  refrescarCapas();
+  if (abierta && esMovil) caja.querySelector('.cuerpo').scrollTop = 0;
+}
+
+/* El cajón de ajustes, solo en móvil: en escritorio los ajustes están a la
+   vista y su cabecera pliega, que es otra cosa. */
+function verCajon(abierto) {
+  document.body.classList.toggle('con-ajustes', abierto);
+  $('bt-ajustes').setAttribute('aria-expanded', String(abierto));
+  refrescarCapas();
 }
 
 function pintarFicha(j) {
@@ -14877,8 +15013,7 @@ function pintarFicha(j) {
     + (PARTIDO.fuentePases && (j.pasesA || []).length
         ? ` Los pases, de la ${PARTIDO.fuentePases.split(' · ')[0].toLowerCase()}, unida por dorsal.`
         : '');
-  caja.classList.add('abierta');
-  alColocar();
+  verFicha(true);
 }
 
 /* --- Estadísticas del partido (reales) -----------------------------------
@@ -14917,6 +15052,8 @@ const btStats = $('bt-stats'), panelStats = $('stats');
 function verStats(abierto) {
   panelStats.classList.toggle('abierto', abierto);
   btStats.setAttribute('aria-expanded', String(abierto));
+  document.body.classList.toggle('con-stats', abierto);
+  refrescarCapas();
 }
 btStats.addEventListener('click', ev => {
   ev.stopPropagation();
@@ -15350,11 +15487,10 @@ function elegir(i) {
   } else {
     // Al soltar la selección se apaga TODO lo del jugador, mapa de calor
     // incluido: si la mancha se queda pintada, ya no dice de quién es.
-    caja.classList.remove('abierta');
+    verFicha(false);
     verInforme(false);
     pintarCalorCampo(null);
   }
-  document.body.classList.toggle('con-ficha', i >= 0);
 }
 
 lienzo.addEventListener('pointermove', ev => {
@@ -15462,10 +15598,33 @@ addEventListener('keydown', e => {
    construidos. */
 if (esMovil) {
   document.body.classList.add('movil');
-  // La ficha pasa a la columna de la izquierda: en móvil todo va apilado
-  // debajo del campo, y así reutiliza el mismo desplazamiento.
-  const col = document.getElementById('izquierda');
-  col.appendChild(caja);
+  /* La ficha entra en #izquierda, que en móvil ya no es una columna: es el
+     contexto de apilado que pone al cajón y a las hojas por encima de todo. */
+  document.getElementById('izquierda').appendChild(caja);
+
+  /* La ficha necesita un cuerpo que se desplace solo, para que su cabecera
+     —nombre, foto y nota— se quede quieta arriba de la hoja. Se envuelve una
+     vez aquí y no en pintarFicha(), que reescribe #f-secciones en cada
+     jugador y se llevaría por delante lo que hubiera dentro. */
+  const cuerpo = document.createElement('div');
+  cuerpo.className = 'cuerpo';
+  caja.appendChild(cuerpo);
+  cuerpo.append($('f-secciones'), $('f-calor-caja'), $('f-muestra'));
+
+  // La rueda de al lado de la cabecera abre y cierra el cajón.
+  $('bt-ajustes').addEventListener('click', () => {
+    const abrir = !document.body.classList.contains('con-ajustes');
+    // Con una hoja abierta el cajón se apilaría encima de ella sin que se vea
+    // de dónde sale. Una cosa cada vez.
+    if (abrir) { elegir(-1); verStats(false); }
+    verCajon(abrir);
+  });
+  $('a-cerrar').addEventListener('click', () => verCajon(false));
+  // El velo es la salida de siempre: tocar fuera cierra lo que haya.
+  $('velo').addEventListener('click', () => {
+    verCajon(false); verStats(false); elegir(-1);
+  });
+
   controles.enabled = false;
   controles.enableRotate = controles.enableZoom = controles.enablePan = false;
   controles.autoRotate = false;

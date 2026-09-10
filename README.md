@@ -336,6 +336,62 @@ Detalles que costaron:
 - **Los rótulos vienen apagados en móvil.** Con veintidós nombres sobre un campo de
   350 px no se lee ninguno; el dorsal sí, y la ficha da el nombre.
 
+### La forma del móvil: campo entero, cajón y hojas
+
+Tres piezas y ya está:
+
+- **El campo se queda con toda la pantalla**, y en vertical: la vista táctica ya sabía
+  girarse cuando el lienzo es más alto que ancho (`giroVertical`), así que un teléfono en
+  retrato enseña el campo de portería a portería, que es como se ven las alineaciones en
+  cualquier app de fútbol.
+- **Los ajustes son un cajón por la derecha.** La rueda va al lado de la cabecera del
+  partido y el cajón entra por el borde que has pulsado, con velo detrás. Dentro, la
+  cabecera «Ajustes» es un título y no un plegable: plegar secciones dentro de un cajón
+  que se cierra entero no aporta nada.
+- **Todo lo que se abre es una hoja inferior al 70 %**: la ficha del jugador, el informe
+  y las estadísticas del partido. Misma forma para las tres, así se entiende una vez.
+
+Lo que costó de esto:
+
+- **`#izquierda` deja de ser una columna.** En móvil no hay nada apilado, así que se
+  queda solo como el **contexto de apilado** que pone al cajón y a las hojas por encima
+  del resto: `position:fixed; inset:0` con `pointer-events:none`, y `auto` en sus hijos.
+  Sin lo segundo se comería todos los toques del campo.
+- **Con una hoja abierta el campo se encoge a lo que queda por encima**, en vez de
+  esconderse debajo: el mapa de calor del jugador que acabas de tocar tiene que seguir
+  viéndose. Basta con mover `bottom` a `70vh`; el `ResizeObserver` recalcula el encuadre
+  y, al pasar la franja a apaisada, el campo se pone horizontal él solo. **La cabecera se
+  retira** mientras tanto: esos 92 px son más de un tercio de la franja, y con una franja
+  de 166 px el campo no se veía —con 232 px sí—.
+- **Dos marcas en el `body` lo gobiernan todo**, `con-hoja` y `con-velo`, y las calcula
+  `refrescarCapas()` en un solo sitio. Tres paneles por dos marcas son seis ocasiones de
+  dejarse una.
+
+### Las fichas, en móvil, son otras
+
+Lo que en escritorio se resuelve con el ratón —pasar por encima, ver el rótulo— aquí no
+existe, así que la selección tiene que verse sola:
+
+- **El dorsal mide 7,2 m** en vez de 3,6 (unos 47 px con el campo entero). Los de una
+  misma línea siguen sin tocarse: se reparten 13 m de campo. La ficha del césped sube de
+  1,55 a 2,1 m de radio.
+- **Al elegir a uno, los otros veintiuno se apagan** a opacidad 0,34. Para eso el dorsal
+  necesita **color RGBA por vértice** (`vertexColors`, atributo de 4 componentes: con
+  tres, three multiplica el color y deja la opacidad quieta). No desaparecen —siguen
+  diciendo dónde estaban—, pero no compiten. En escritorio no se hace: allí la ficha sale
+  al lado y apagar el campo entero sería ruido.
+- **El elegido crece un 30 %** (un 14 % en escritorio, donde además hay hover).
+- **El anillo verde rodea al dorsal, no a la ficha.** En cenital, con el radio de la
+  ficha se quedaba escondido debajo del propio dorsal.
+- **Sale su nombre.** Los rótulos vienen apagados en móvil —veintidós nombres no se
+  leen—, pero el del jugador que acabas de tocar aparece: es la respuesta al toque y dice
+  de quién es la hoja que se ha abierto. Dos detalles: la regla vive en `hayRotulo()`
+  porque la deciden **dos** sitios y `ocluirRotulos()`, que corre en cada cuadro, pisaba
+  lo que escribía `refrescarFichas()`; y ese rótulo **se salta la prueba de oclusión**,
+  porque no hay ningún otro en pantalla con el que chocar y su propio dorsal —enorme en
+  móvil— lo daba por tapado. Cuelga 26 px por debajo del dorsal, en píxeles y no en
+  metros: en cenital la altura casi no se proyecta.
+
 ### El informe, en móvil, es una hoja
 
 La ficha se apila en la columna, pero el **informe de ojeador no**: en móvil se abre como

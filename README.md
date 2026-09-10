@@ -25,6 +25,7 @@ escudos y los retratos de `cdn.resfu.com`.
 | `?vista=` | `completo` · `local` · `visita` · `tactica` · `ras` |
 | `?jugador=` | `l10` (local, dorsal 10) · `v9` (visitante, dorsal 9) |
 | `?equipo=` | `todos` · `local` · `visitante` |
+| `?estadio=1` | arranca dentro de Ewood Park en vez del campo suelto |
 | `?etiquetas=0` `?dorsales=0` `?pases=1` `?media=1` `?stats=1` | estado inicial de los paneles |
 | Combinación que mejor se lee | `?equipo=visitante&media=1&pases=1&vista=tactica` |
 | `?debug` | fps, llamadas de dibujo y triángulos (también con la tecla **D**) |
@@ -168,7 +169,15 @@ validan entre ellas.
 - **El sentido no se dibuja.** Una cinta que se estrecha se lee mal y se presta a leerla
   al revés. La dirección va en la ficha, en «Pases a compañeros», con su número.
 - **Con un jugador elegido, sus cintas mandan y el resto se apagan.** Si no, la red pesa
-  lo mismo entera y no se ve de quién es cada pase.
+  lo mismo entera y no se ve de quién es cada pase. Y sus parejas dejan de ser una cinta
+  sin sentido: pasan a **dos carriles, ida y vuelta**, con un pulso que los recorre en la
+  dirección del pase. La matriz es dirigida, así que eso no es adorno: es el dato que la
+  cinta única no puede enseñar.
+- **El pulso va en blanco y aditivo, no en el color del equipo.** El negro del Inter,
+  sumado, no ilumina nada. Son dos mallas sobre la misma geometría: la base lleva el
+  color y el pulso la luz.
+- **Con `prefers-reduced-motion` queda el carril y se va el pulso.** La información está
+  en el ancho y en el sentido, no en la animación.
 - Es una malla de dos triángulos por pareja con color por vértice: **una llamada de
   dibujo**, y el ancho puede variar. `LineSegments` no sirve: el grosor de línea lo
   ignoran casi todas las plataformas.
@@ -183,6 +192,54 @@ uno, es una red de pases legible. Esa es la combinación que enseña algo.
 la API no los da. Lo que no esté en la tabla sale en gris neutro, no en un color falso.
 Los colores de las líneas de pase y de las barras salen de la paleta validada, no de la
 camiseta: tienen que distinguirse sobre césped y bajo daltonismo.
+
+## El escenario: campo suelto o estadio
+
+El engranaje de la barra inferior abre un menú con dos opciones:
+
+- **Por defecto** — el campo suelto generado por código. Pesa 0 y siempre está.
+- **Ewood Park** — el estadio, un GLB de 577 KB que **solo se descarga al elegirlo**.
+  Meterlo en el arranque sería pagarlo siempre por una opción que casi nadie va a tocar.
+
+**No es Upton Park.** El modelo de la carpeta trae un grupo llamado `jack_walker_stan`:
+la Jack Walker Stand es de **Ewood Park (Blackburn Rovers)**. El nombre del menú dice lo
+que el modelo es.
+
+Dentro del estadio se apagan el zócalo y la sombra de contacto: ahí el campo no flota, se
+apoya. Y **el encuadre cambia de caja** — con el estadio puesto hay que encuadrar el
+estadio, no solo el césped —, así que `esquinasEncuadre` pasa a las ocho esquinas del
+modelo y los puntos de vista se recalculan solos.
+
+### De 32 MB de 3ds Max a 577 KB
+
+La carpeta traía el mismo modelo en nueve formatos (`fbx`, `dae`, `obj`, `stl`, `max`,
+`skp`…). En el repositorio **no va ninguno**: está en `.gitignore`. Lo que se sube es el
+GLB que sale de `tools/obj_a_glb.py`, que no tiene dependencias:
+
+```bash
+python3 tools/obj_a_glb.py "campo 3d/3d-model.obj" -o assets/estadio.glb
+```
+
+- **Se tira el `.mtl`.** Son diez colores de alambre de 3ds Max —rojo, magenta, cian—
+  que no significan nada. El estadio se pinta con un material propio.
+- **No se guardan normales.** El material va con `flatShading`, que las calcula en el
+  fragmento, así que sobran: eso quita un tercio del fichero.
+- **Índices de 16 bits**, que caben porque el modelo tiene 24.685 vértices.
+- Se hornea la conversión de unidades (milímetros a metros), el suelo a `y = 0` y un giro
+  de 90° para que el lado largo caiga sobre el eje x, como nuestro campo. El suelo no
+  estaba en cero: se detecta como la altura con más vértices, que en un estadio es el
+  terreno.
+
+Resultado: 24.685 vértices y 48.916 triángulos en 577 KB, y el césped nuestro encaja
+dentro de las gradas sin tocar ni la escala.
+
+### El estadio estaba y no se veía
+
+Vale la pena dejarlo escrito porque costó una hora: el modelo cargaba bien, se dibujaba
+—se veía en el contador de llamadas y de triángulos— y la pantalla salía vacía. **Era
+gris claro sobre un fondo gris claro.** Con el estadio puesto, el fondo de la página baja
+de tono (`body.con-estadio`) y el hormigón es más oscuro. Antes de buscar un fallo de
+cámara, comprobar el contraste.
 
 ## La marca del campo
 
@@ -286,7 +343,7 @@ Cambiar una medida en `M` cambia el campo entero: las líneas se dibujan de ahí
 | Clic en jugador: se eleva, anillo y ficha | ✅ probado con eventos sintéticos |
 | Etiquetas legibles a cualquier ángulo, nunca del revés | ✅ HTML, ordenadas por profundidad |
 | `InstancedMesh` para los 22 discos y los 22 postes | ✅ |
-| 60 fps y menos de 60 llamadas de dibujo | ✅ **19 llamadas**, 7,6k triángulos |
+| 60 fps y menos de 60 llamadas de dibujo | ✅ **19 llamadas** con el campo suelto, 27 con estadio, mapa de calor y flujo a la vez |
 | Sin ningún binario de modelo en el repo | ✅ |
 | Funciona con el dedo | 🟡 puesto y con eventos de puntero; **sin probar en un móvil real** |
 
@@ -298,6 +355,8 @@ Cambiar una medida en `M` cambia el campo entero: las líneas se dibujan de ahí
 - **El sentido de los pases sobre el campo.** El dato está (la matriz es dirigida) y en la
   ficha se ve; en el campo haría falta algo que se lea sin explicación, tipo dos cintas
   paralelas, no una que se estrecha.
+- **El estadio con más de un material.** Ahora va todo del mismo hormigón; separar grada,
+  cubierta y torres de luz es cuestión de conservar los grupos del OBJ al convertir.
 - **El logo oficial en vectorial.** La marca del césped está dibujada a mano con las
   proporciones del logo; con el SVG o el PNG de marca queda idéntica.
 - **Competición y jornada**: no vienen en estas dos peticiones. La cabecera lleva

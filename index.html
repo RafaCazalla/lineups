@@ -51,6 +51,12 @@ body{
   background-image:radial-gradient(120% 90% at 50% 38%, #F8F9F6 0%, #EDEFEA 46%, #E2E5DF 100%);
 }
 
+/* Con el estadio puesto el fondo baja de tono: un edificio gris claro sobre un
+   fondo gris claro no recorta, y parecía que no se había cargado nada. */
+body.con-estadio{
+  background:#B9BEB4;
+  background-image:radial-gradient(120% 90% at 50% 34%, #D5D9CF 0%, #C2C7BC 48%, #AAB0A4 100%);
+}
 #escena{position:fixed; inset:0}
 #escena canvas{display:block; touch-action:none}
 /* Capa de etiquetas HTML (CSS2DRenderer). Los nombres van aquí, no en textura:
@@ -339,6 +345,32 @@ body{
 }
 #barra .sep{width:1px; height:24px; background:var(--hairline); margin:0 4px}
 
+/* Menú de ajustes, sobre la barra flotante */
+#menu{bottom:78px; left:50%; transform:translateX(-50%); width:250px; padding:8px; display:none}
+#menu.abierto{display:block}
+#menu h3{
+  font-family:var(--font-cond); font-weight:600; font-size:11.5px; letter-spacing:.4px;
+  text-transform:uppercase; color:var(--ink-3); margin:4px 0 5px 10px;
+}
+#menu button.op{
+  width:100%; display:flex; align-items:center; gap:9px; padding:9px 10px; border:0;
+  border-radius:9px; background:none; cursor:pointer; font:inherit; font-size:13.5px;
+  color:var(--ink); text-align:left;
+}
+#menu button.op:hover{background:rgba(56,56,56,.05)}
+#menu button.op:focus-visible{outline:2px solid var(--green); outline-offset:1px}
+#menu button.op .marca{
+  width:16px; height:16px; flex:none; border-radius:50%; border:2px solid var(--hairline);
+  display:grid; place-items:center;
+}
+#menu button.op[aria-checked="true"] .marca{border-color:var(--green)}
+#menu button.op[aria-checked="true"] .marca::after{
+  content:""; width:8px; height:8px; border-radius:50%; background:var(--green);
+}
+#menu button.op .txt{flex:1; min-width:0}
+#menu button.op .txt small{display:block; font-size:11px; color:var(--ink-3); line-height:1.35}
+#menu .aviso{margin:6px 10px 2px; font-size:11px; line-height:1.45; color:var(--live)}
+
 /* Contador de rendimiento (tecla D, o ?debug). Sobre la barra flotante, para
    dejar libre la esquina del botón de estadísticas. */
 #perf{
@@ -499,6 +531,9 @@ body{
   </button>
   <span class="pista">Arrastra para orbitar</span>
   <span class="sep" aria-hidden="true"></span>
+  <button class="bt" id="bt-ajustes" title="Ajustes" aria-label="Ajustes" aria-expanded="false" aria-controls="menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.1"/><path d="M12 2.6v2.1M12 19.3v2.1M21.4 12h-2.1M4.7 12H2.6M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5M18.6 18.6l-1.5-1.5M6.9 6.9 5.4 5.4"/></svg>
+  </button>
   <button class="bt" id="bt-pantalla" title="Pantalla completa" aria-label="Pantalla completa">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
   </button>
@@ -523,6 +558,12 @@ body{
   <p class="calor" id="f-calor-caja"><span id="f-calor-tit"></span></p>
   <p class="muestra" id="f-muestra"></p>
 </aside>
+
+<div class="hud tarjeta" id="menu" role="group" aria-label="Ajustes">
+  <h3>Campo</h3>
+  <div id="menu-campos"></div>
+  <p class="aviso" id="menu-aviso" hidden></p>
+</div>
 
 <button class="hud tarjeta" id="bt-stats" aria-expanded="false" aria-controls="stats">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -553,6 +594,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 /* ===========================================================================
    1 · MEDIDAS
@@ -626,7 +668,7 @@ const PARTIDO = {
   "tactica": "3-5-2",
   "nota": 7.2,
   "edadMedia": 27.6,
-  "acento": "#7756D0",
+  "acento": "#0F1116",
   "fondo": "#1C2E6B",
   "tinta": "#FFFFFF",
   "borde": "#48588F"
@@ -13436,6 +13478,7 @@ jugadores.add(anillo);
    porque las líneas de pase se construyen en el arranque y ya lo necesitan.
    Amontonados, los 22 en posición media real no se leen; de uno en uno, sí. */
 // Estado de la escena, todo junto y antes de lo que lo consulta al construirse.
+const sinMovimiento = matchMedia('(prefers-reduced-motion: reduce)');
 let elegido = -1, encima = -1;
 let verDorsales = true, verPases = false, verEtiquetas = true;
 // animPos vive aquí porque rehacerPases() consulta si hay animación en curso.
@@ -13492,8 +13535,11 @@ const _cPase = new THREE.Color();
 function rehacerPases() {
   const pos = [], col = [], idx = [];
   let v = 0;
+  const conFlujo = hayFlujo();
   for (const par of PAREJAS) {
     if (!enCampo(par.a) || !enCampo(par.b)) continue;
+    // Las parejas del elegido las pinta el flujo, con sus dos carriles.
+    if (conFlujo && (par.a === elegido || par.b === elegido)) continue;
     const A = JUG[par.a], B = JUG[par.b];
     const ax = jx(A), az = jz(A), bx = jx(B), bz = jz(B);
     let dx = bx - ax, dz = bz - az;
@@ -13523,7 +13569,117 @@ function rehacerPases() {
   geoPases.setIndex(idx);
   geoPases.computeBoundingSphere();
   pases.visible = verPases && !animPos && idx.length > 0;
+  rehacerFlujo();
 }
+/* --- Flujo de pases del elegido ------------------------------------------
+   Al elegir a un jugador, sus pases dejan de ser una cinta sin sentido y pasan
+   a dos carriles por compañero —uno de ida y otro de vuelta, como una carretera—
+   con un pulso que los recorre en la dirección del pase. La matriz de Opta es
+   dirigida, así que esto no es adorno: es el dato que la cinta única no puede
+   enseñar.
+
+   Dos mallas sobre la MISMA geometría: la base lleva el color del equipo, y el
+   pulso va en blanco y aditivo, que es lo que hace que parezca luz viajando.
+   El aditivo es también la razón de que el pulso no lleve el color del equipo:
+   el negro del Inter, sumado, no ilumina nada. */
+const LARGO_PULSO = 14;          // metros que mide un ciclo del pulso
+
+function texturaFlujo() {
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 1;
+  const g = c.getContext('2d');
+  const grd = g.createLinearGradient(0, 0, 256, 0);
+  grd.addColorStop(0.00, 'rgba(255,255,255,0)');
+  grd.addColorStop(0.62, 'rgba(255,255,255,0)');
+  grd.addColorStop(0.86, 'rgba(255,255,255,.38)');
+  grd.addColorStop(0.99, 'rgba(255,255,255,1)');
+  grd.addColorStop(1.00, 'rgba(255,255,255,0)');
+  g.fillStyle = grd; g.fillRect(0, 0, 256, 1);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+const texFlujo = texturaFlujo();
+const geoFlujo = new THREE.BufferGeometry();
+const flujoBase = new THREE.Mesh(geoFlujo, new THREE.MeshBasicMaterial({
+  vertexColors: true, transparent: true, depthWrite: false, side: THREE.DoubleSide,
+}));
+const flujoPulso = new THREE.Mesh(geoFlujo, new THREE.MeshBasicMaterial({
+  map: texFlujo, transparent: true, depthWrite: false, side: THREE.DoubleSide,
+  blending: THREE.AdditiveBlending, color: 0xffffff,
+}));
+flujoBase.renderOrder = 2;
+flujoPulso.renderOrder = 3;
+flujoBase.frustumCulled = flujoPulso.frustumCulled = false;
+flujoBase.visible = flujoPulso.visible = false;
+jugadores.add(flujoBase, flujoPulso);
+
+// Hay flujo cuando el mapa está puesto y hay alguien elegido y en el campo.
+const hayFlujo = () => verPases && elegido >= 0 && enCampo(elegido);
+
+function rehacerFlujo() {
+  if (!hayFlujo()) {
+    flujoBase.visible = flujoPulso.visible = false;
+    return;
+  }
+  const yo = JUG[elegido];
+  // Cada pareja aporta dos carriles: lo que sale y lo que entra.
+  const carriles = [];
+  const sale = new Map((yo.pasesA || []).map(([id, n]) => [id, n]));
+  const entra = new Map();
+  for (const o of JUG) {
+    for (const [id, n] of o.pasesA || []) if (id === yo.id) entra.set(o.id, n);
+  }
+  for (const id of new Set([...sale.keys(), ...entra.keys()])) {
+    const k = IDX_JUG.get(id);
+    if (k === undefined || !enCampo(k)) continue;
+    if (sale.get(id)) carriles.push({ de: elegido, a: k, n: sale.get(id), lado: 1 });
+    if (entra.get(id)) carriles.push({ de: k, a: elegido, n: entra.get(id), lado: -1 });
+  }
+  const maxN = Math.max(1, ...carriles.map(c => c.n));
+
+  const pos = [], col = [], uv = [], idx = [];
+  const c = new THREE.Color(PARTIDO[yo.equipo].acento);
+  let v = 0;
+  for (const car of carriles) {
+    const A = JUG[car.de], B = JUG[car.a];
+    const ax = jx(A), az = jz(A), bx = jx(B), bz = jz(B);
+    let dx = bx - ax, dz = bz - az;
+    const largo = Math.hypot(dx, dz) || 1;
+    dx /= largo; dz /= largo;
+    // La perpendicular se toma SIEMPRE en el sentido «desde el elegido», o los
+    // dos carriles de una pareja se pondrían en el mismo lado.
+    const signo = car.de === elegido ? 1 : -1;
+    const nx = -dz * signo, nz = dx * signo;
+    const w = 0.11 + 0.6 * Math.sqrt(car.n / maxN);
+    const sep = (w + 0.13) * car.lado * signo;
+    const y = NIVEL + 0.045;
+    const cxA = ax + nx * sep, czA = az + nz * sep;
+    const cxB = bx + nx * sep, czB = bz + nz * sep;
+    pos.push(cxA + nx * w, y, czA + nz * w,
+             cxA - nx * w, y, czA - nz * w,
+             cxB - nx * w, y, czB - nz * w,
+             cxB + nx * w, y, czB + nz * w);
+    // u avanza con los metros recorridos, así el pulso va a la misma velocidad
+    // en una cinta corta y en una larga.
+    const u1 = largo / LARGO_PULSO;
+    uv.push(0, 0, 0, 1, u1, 1, u1, 0);
+    for (let n = 0; n < 4; n++) col.push(c.r, c.g, c.b, 0.72);
+    idx.push(v, v + 1, v + 2, v, v + 2, v + 3);
+    v += 4;
+  }
+  geoFlujo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geoFlujo.setAttribute('color', new THREE.Float32BufferAttribute(col, 4));
+  geoFlujo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  geoFlujo.setIndex(idx);
+  geoFlujo.computeBoundingSphere();
+  flujoBase.visible = idx.length > 0;
+  // Con movimiento reducido queda el carril, sin el pulso: la información está
+  // en el ancho y en el sentido, no en la animación.
+  flujoPulso.visible = flujoBase.visible && !sinMovimiento.matches;
+}
+
 rehacerPases();
 
 /* --- Disco del dorsal: atlas de texturas y 22 cuadros en una sola malla --- */
@@ -13726,10 +13882,12 @@ controles.addEventListener('change', () => controles.target.clamp(CORREA_MIN, CO
    La distancia no se escribe a mano: se calcula para que la losa entera quepa
    en el frustum. Así el encuadre es correcto en 16:9, en un portátil y en un
    móvil en vertical, que es donde una distancia fija siempre se queda corta. */
-const ESQUINAS = [];
+const ESQUINAS_CAMPO = [];
 for (const x of [-M.LOSA_L / 2, M.LOSA_L / 2])
   for (const y of [0, NIVEL + 3])
-    for (const z of [-M.LOSA_A / 2, M.LOSA_A / 2]) ESQUINAS.push(new THREE.Vector3(x, y, z));
+    for (const z of [-M.LOSA_A / 2, M.LOSA_A / 2]) ESQUINAS_CAMPO.push(new THREE.Vector3(x, y, z));
+// Con el estadio puesto hay que encuadrar el estadio, no solo el césped.
+let esquinasEncuadre = ESQUINAS_CAMPO;
 
 function distanciaEncuadre(dir, objetivo, margen) {
   const tanV = Math.tan(THREE.MathUtils.degToRad(camara.fov) / 2);
@@ -13741,7 +13899,7 @@ function distanciaEncuadre(dir, objetivo, margen) {
   const arriba = new THREE.Vector3().crossVectors(derecha, frente).normalize();
   let d = controles.minDistance;
   const v = new THREE.Vector3();
-  for (const p of ESQUINAS) {
+  for (const p of esquinasEncuadre) {
     v.copy(p).sub(objetivo);
     const prof = v.dot(frente);
     d = Math.max(d, Math.abs(v.dot(derecha)) / tanH - prof, Math.abs(v.dot(arriba)) / tanV - prof);
@@ -13782,7 +13940,6 @@ function posicionDe(vista) {
   return { pos: objetivo.clone().add(dir.multiplyScalar(d)), obj: objetivo };
 }
 
-const sinMovimiento = matchMedia('(prefers-reduced-motion: reduce)');
 const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 let tween = null;
@@ -14152,6 +14309,111 @@ function pintarFicha(j) {
   caja.classList.add('abierta');
 }
 
+/* --- Escenario: campo suelto o estadio -----------------------------------
+   El campo por defecto es el generado por código, que pesa 0 y siempre está.
+   El estadio es un GLB de 577 KB y **solo se descarga si se elige**: meterlo
+   en el arranque sería pagarlo siempre por una opción que casi nadie toca. */
+const ESCENARIOS = [
+  { id: 'defecto', nombre: 'Por defecto', pie: 'Campo suelto, generado por código' },
+  { id: 'ewood', nombre: 'Ewood Park', pie: 'Modelo del estadio · 577 KB al elegirlo',
+    glb: 'assets/estadio.glb' },
+];
+let escenario = 'defecto', estadio = null, cargando = false;
+
+function esquinasDe(obj) {
+  const c = new THREE.Box3().setFromObject(obj);
+  const e = [];
+  for (const x of [c.min.x, c.max.x])
+    for (const y of [c.min.y, c.max.y])
+      for (const z of [c.min.z, c.max.z]) e.push(new THREE.Vector3(x, y, z));
+  return e;
+}
+
+function avisoMenu(txt) {
+  const a = $('menu-aviso');
+  a.textContent = txt || '';
+  a.hidden = !txt;
+}
+
+async function ponerEscenario(id, ms = 700) {
+  const def = ESCENARIOS.find(e => e.id === id);
+  if (!def || cargando) return;
+  if (def.glb && !estadio) {
+    cargando = true;
+    avisoMenu('Cargando el estadio…');
+    pintarMenu();
+    try {
+      const gltf = await new GLTFLoader().loadAsync(def.glb);
+      estadio = gltf.scene;
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0x9aa096, roughness: 0.93, metalness: 0.04, flatShading: true,
+        side: THREE.DoubleSide,
+      });
+      estadio.traverse(o => { if (o.isMesh) { o.material = mat; o.frustumCulled = false; } });
+      // El GLB sale con el suelo en su y=0: se baja 2 cm bajo el césped para
+      // que el nuestro gane la profundidad y se vea por encima.
+      estadio.position.y = NIVEL - 0.02;
+      escena.add(estadio);
+      avisoMenu('');
+    } catch (e) {
+      avisoMenu('No se pudo cargar el estadio. Con doble clic (file://) el navegador '
+              + 'bloquea la descarga: hace falta servir la carpeta.');
+      cargando = false;
+      pintarMenu();
+      return;
+    }
+    cargando = false;
+  }
+  escenario = id;
+  const dentro = !!def.glb;
+  if (estadio) estadio.visible = dentro;
+  // Dentro de un estadio el campo no flota: sobran el zócalo y la sombra.
+  zocalo.visible = !dentro;
+  sombra.visible = !dentro;
+  document.body.classList.toggle('con-estadio', dentro);
+  esquinasEncuadre = dentro && estadio ? esquinasDe(estadio) : ESQUINAS_CAMPO;
+  pintarMenu();
+  // Al llegar por URL no hay nada de donde venir: se encuadra de golpe.
+  irA(vistaActiva || VISTAS[0], ms);
+}
+
+const cajaMenu = $('menu-campos');
+const botonesEsc = ESCENARIOS.map(e => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'op';
+  b.setAttribute('role', 'radio');
+  b.innerHTML = '<span class="marca" aria-hidden="true"></span>'
+    + `<span class="txt">${e.nombre}<small></small></span>`;
+  b.querySelector('small').textContent = e.pie;
+  b.addEventListener('click', () => ponerEscenario(e.id));
+  cajaMenu.appendChild(b);
+  return b;
+});
+function pintarMenu() {
+  ESCENARIOS.forEach((e, n) => {
+    botonesEsc[n].setAttribute('aria-checked', String(e.id === escenario));
+    botonesEsc[n].disabled = cargando;
+  });
+}
+pintarMenu();
+
+const btAjustes = $('bt-ajustes'), panelMenu = $('menu');
+function verMenu(abierto) {
+  panelMenu.classList.toggle('abierto', abierto);
+  btAjustes.setAttribute('aria-expanded', String(abierto));
+}
+btAjustes.addEventListener('click', ev => {
+  ev.stopPropagation();
+  verMenu(!panelMenu.classList.contains('abierto'));
+});
+// Se cierra al tocar fuera o con Escape, como cualquier menú.
+addEventListener('pointerdown', ev => {
+  if (panelMenu.classList.contains('abierto') && !panelMenu.contains(ev.target)) verMenu(false);
+});
+addEventListener('keydown', ev => { if (ev.key === 'Escape') verMenu(false); });
+if (new URLSearchParams(location.search).get('estadio') === '1') ponerEscenario('ewood', 0);
+
 /* --- Selector de equipo --------------------------------------------------
    Tres opciones excluyentes. Va aquí, y no en las pastillas de arriba, porque
    esas mueven la cámara y esto cambia lo que hay en el campo: mezclarlas haría
@@ -14213,7 +14475,7 @@ function elegir(i) {
   if (i === elegido) return;
   elegido = i;
   refrescarFichas();
-  if (verPases) rehacerPases();
+  if (verPases) rehacerPases(); else rehacerFlujo();
   if (i >= 0) {
     pintarFicha(JUG[i]);
   } else {
@@ -14335,11 +14597,15 @@ redimensionar();
 const pedida = new URLSearchParams(location.search).get('vista');
 irA(VISTAS.find(v => v.id === pedida) ?? VISTAS[0], 0);
 
-let cuadros = 0, t0 = performance.now(), primerCuadro = true;
+let cuadros = 0, t0 = performance.now(), anterior = t0, primerCuadro = true;
 renderer.setAnimationLoop(() => {
   const ahora = performance.now();
   avanzarTween(ahora);
   avanzarPosiciones(ahora);
+  // El pulso corre hacia el receptor: u crece del pasador al que recibe, así
+  // que el desplazamiento tiene que ir a menos.
+  if (flujoPulso.visible) texFlujo.offset.x -= (ahora - anterior) / 1000 * 0.55;
+  anterior = ahora;
   if (controles.enabled) controles.update();
   billboardDorsales();
   renderer.render(escena, camara);

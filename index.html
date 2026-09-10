@@ -14560,8 +14560,36 @@ function pintarFicha(j) {
    en el arranque sería pagarlo siempre por una opción que casi nadie toca. */
 const ESCENARIOS = [
   { id: 'defecto', nombre: 'Por defecto', pie: 'Campo suelto, generado por código' },
-  { id: 'ewood', nombre: 'Ewood Park', pie: 'Modelo del estadio · 577 KB al elegirlo',
-    glb: 'assets/estadio.glb' },
+  { id: 'ewood', nombre: 'Ewood Park', pie: 'Blackburn Rovers · 577 KB al elegirlo',
+    glb: 'assets/estadio.glb',
+    // Los ficheros de este modelo no traen color: el conversor reparte las
+    // caras en cuatro piezas por su geometría y el color se pone aquí.
+    paleta: {
+      grada:      { color: 0x2C4A96, roughness: 0.86, metalness: 0.02 },
+      cubierta:   { color: 0xA2A9AC, roughness: 0.55, metalness: 0.35 },
+      estructura: { color: 0xDCDFD8, roughness: 0.92, metalness: 0.02 },
+      suelo:      { color: 0x3A3F37, roughness: 0.95, metalness: 0.00 },
+    } },
+  { id: 'tanger', nombre: 'Ibn Batouta', pie: 'Tánger · 3,5 MB al elegirlo',
+    glb: 'assets/tanger.glb',
+    // Este sí trae materiales con nombre, pero casi todos en el gris por
+    // defecto de Blender porque su color venía de texturas que no se cargan.
+    // Se repintan por nombre los que pesan; el resto se queda como viene.
+    paleta: {
+      Cement:                 { color: 0xBAB5A8, roughness: 0.94 },
+      Concret:                { color: 0xAFAA9D, roughness: 0.94 },
+      Wall:                   { color: 0xC6C1B4, roughness: 0.92 },
+      Aliminuim:              { color: 0xB7BCC0, roughness: 0.45, metalness: 0.45 },
+      Metal_Corrogated_Shiny: { color: 0x9AA3A8, roughness: 0.4, metalness: 0.55 },
+      IronGray:               { color: 0x7E848A, roughness: 0.5, metalness: 0.4 },
+      Couro_Azul:             { color: 0x24357A, roughness: 0.85 },
+      Couro_branco:           { color: 0xE8E6E0, roughness: 0.85 },
+      RooFStrecture:          { color: 0xAFB4B6, roughness: 0.5, metalness: 0.4 },
+      Glass:                  { color: 0x8FA6AE, roughness: 0.25, metalness: 0.2 },
+    },
+    // El modelo lleva una explanada enorme alrededor: encuadrar el conjunto
+    // dejaría el campo del tamaño de un sello. Se encuadra el cuenco.
+    encuadre: [128, 42, 112] },
 ];
 let escenario = 'defecto', estadio = null, cargando = false;
 
@@ -14590,25 +14618,24 @@ async function ponerEscenario(id, ms = 700) {
     try {
       const gltf = await new GLTFLoader().loadAsync(def.glb);
       estadio = gltf.scene;
-      // Los ficheros del modelo NO traen colores: el .mtl lleva los diez colores
-      // de alambre de 3ds Max y el .dae un beige plano. El conversor reparte las
-      // caras en cuatro piezas por su geometría, y el color se pone aquí, que es
-      // donde se puede retocar sin volver a convertir nada.
-      const PALETA = {
-        grada:      { color: 0x2C4A96, roughness: 0.86, metalness: 0.02 },  // azul del Blackburn
-        cubierta:   { color: 0xA2A9AC, roughness: 0.55, metalness: 0.35 },  // chapa
-        estructura: { color: 0xDCDFD8, roughness: 0.92, metalness: 0.02 },  // hormigón claro
-        suelo:      { color: 0x3A3F37, roughness: 0.95, metalness: 0.00 },
-      };
       const mats = {};
-      for (const [nombre, cfg] of Object.entries(PALETA)) {
+      for (const [nombre, cfg] of Object.entries(def.paleta || {})) {
         mats[nombre] = new THREE.MeshStandardMaterial({
-          ...cfg, flatShading: true, side: THREE.DoubleSide,
+          metalness: 0.03, ...cfg, flatShading: true, side: THREE.DoubleSide,
         });
       }
       estadio.traverse(o => {
         if (!o.isMesh) return;
-        o.material = mats[o.material && o.material.name] || mats.estructura;
+        const nom = o.material && o.material.name;
+        if (mats[nom]) {
+          o.material = mats[nom];
+        } else {
+          // Sin entrada en la paleta se respeta el color que trae el GLB, pero
+          // con sombreado plano, que es lo que da forma sin normales.
+          o.material.flatShading = true;
+          o.material.side = THREE.DoubleSide;
+          o.material.needsUpdate = true;
+        }
         o.frustumCulled = false;
       });
       // El GLB sale con el suelo en su y=0: se baja 2 cm bajo el césped para
@@ -14632,7 +14659,16 @@ async function ponerEscenario(id, ms = 700) {
   zocalo.visible = !dentro;
   sombra.visible = !dentro;
   document.body.classList.toggle('con-estadio', dentro);
-  esquinasEncuadre = dentro && estadio ? esquinasDe(estadio) : ESQUINAS_CAMPO;
+  if (!dentro || !estadio) {
+    esquinasEncuadre = ESQUINAS_CAMPO;
+  } else if (def.encuadre) {
+    const [ex, ey, ez] = def.encuadre;
+    esquinasEncuadre = [];
+    for (const x of [-ex, ex]) for (const y of [0, ey]) for (const z of [-ez, ez])
+      esquinasEncuadre.push(new THREE.Vector3(x, NIVEL + y, z));
+  } else {
+    esquinasEncuadre = esquinasDe(estadio);
+  }
   pintarMenu();
   // Al llegar por URL no hay nada de donde venir: se encuadra de golpe.
   irA(vistaActiva || VISTAS[0], ms);
@@ -14673,7 +14709,12 @@ addEventListener('pointerdown', ev => {
   if (panelMenu.classList.contains('abierto') && !panelMenu.contains(ev.target)) verMenu(false);
 });
 addEventListener('keydown', ev => { if (ev.key === 'Escape') verMenu(false); });
-if (new URLSearchParams(location.search).get('estadio') === '1') ponerEscenario('ewood', 0);
+// ?estadio=ewood | tanger  (y =1 sigue valiendo, que es como estaba enlazado)
+const estadioPedido = new URLSearchParams(location.search).get('estadio');
+if (estadioPedido) {
+  const id = estadioPedido === '1' ? 'ewood' : estadioPedido;
+  if (ESCENARIOS.some(e => e.id === id)) ponerEscenario(id, 0);
+}
 
 /* --- Selector de equipo --------------------------------------------------
    Tres opciones excluyentes. Va aquí, y no en las pastillas de arriba, porque

@@ -1,6 +1,7 @@
 .DS_Store
 .vercel
-# 32 MB de formatos de 3ds Max: en el repo va solo el GLB que sale de ellos
+# Fuentes pesadas de los modelos: en el repo va solo el GLB que sale de ellas
 campo 3d/
+tanger 3d/
 3d-model*.zip
 3d-model.*

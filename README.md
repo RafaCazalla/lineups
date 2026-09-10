@@ -205,11 +205,17 @@ camiseta: tienen que distinguirse sobre césped y bajo daltonismo.
 
 ## El escenario: campo suelto o estadio
 
-El engranaje de la barra inferior abre un menú con dos opciones:
+El engranaje de la barra inferior abre un menú con tres opciones:
 
 - **Por defecto** — el campo suelto generado por código. Pesa 0 y siempre está.
-- **Ewood Park** — el estadio, un GLB de 577 KB que **solo se descarga al elegirlo**.
-  Meterlo en el arranque sería pagarlo siempre por una opción que casi nadie va a tocar.
+- **Ewood Park** (Blackburn Rovers) — GLB de 577 KB.
+- **Ibn Batouta** (Tánger) — GLB de 3,5 MB.
+
+Los dos estadios **solo se descargan al elegirlos**. Meterlos en el arranque sería
+pagarlos siempre por una opción que casi nadie va a tocar.
+
+Cada escenario lleva su **paleta por nombre de material** y, si hace falta, su propia
+caja de encuadre. Lo que no esté en la paleta se queda con el color que trae el GLB.
 
 **No es Upton Park.** El modelo de la carpeta trae un grupo llamado `jack_walker_stan`:
 la Jack Walker Stand es de **Ewood Park (Blackburn Rovers)**. El nombre del menú dice lo
@@ -288,6 +294,39 @@ Encima van tres cosas que delatan a un césped dibujado si faltan:
   4096 px hace moiré en cuanto el campo se ve de lejos.
 - **Desgaste**: bocas de gol, puntos de penalti y círculo central, algo más claros y
   terrosos. Un campo jugado no está impecable.
+
+## Leer un .blend sin Blender
+
+El modelo de Tánger venía en dos RAR: uno con un `.blend` de 54 MB y otro con texturas.
+En este Mac no hay Blender ni forma de instalarlo, así que **`tools/blend.py` lee el
+fichero directamente**. Se puede porque un `.blend` es autodescriptivo: lleva dentro, en
+el bloque `DNA1`, la definición de todas sus estructuras, y con eso se resuelven los
+punteros y se sacan objetos, mallas, polígonos y materiales. Probado con Blender 2.79.
+
+Una trampa que cuesta encontrar: dentro de `DNA1`, los bloques `NAME` y `TYPE` llevan un
+contador delante, pero **`TLEN` no** —usa el de `TYPE`—. Leerlo como si lo tuviera
+desplaza cuatro bytes todo lo que viene detrás y el fichero deja de tener sentido.
+
+`tools/blend_a_glb.py` lo convierte a GLB, y hace por el camino lo que hacía falta:
+
+- **Ejes de Blender (Z arriba) a los de three.js (Y arriba).**
+- **Suelda vértices repetidos.** En este modelo bajó de 688.267 a 128.371.
+- **Compacta.** Al descartar piezas quedan vértices que ya no usa ningún triángulo, y
+  ocupan 12 bytes cada uno: sin compactar, quitar los asientos solo bajaba de 9,5 a
+  9,5 MB; con compactación, a 3,5.
+- **Endereza solo.** El modelo venía girado 51°; el ángulo se busca probando: el que
+  deja la caja en planta más pequeña es el que alinea el óvalo con los ejes.
+- **Calcula la escala él.** Mide el hueco interior del cuenco y lo escala para que
+  nuestro campo quepa. Las unidades del fichero no eran metros: el hueco medía 94.
+- **Una primitiva por material**, para poder colorear cada pieza.
+
+Tres cosas que hubo que averiguar mirando la geometría, porque el fichero no las dice:
+
+| | |
+|---|---|
+| El césped del modelo no está a cero | Está a **14,5 m**: el material `marking` (las líneas del campo) delata la altura. `--baja 14.5` |
+| Hay geometría suelta | `Plane.008` medía 522 m de largo, fuera del estadio. `--sin-objetos` |
+| Los asientos son el 62 % de todo | 340.000 de 516.000 triángulos, y su color venía de `seats.png`, no del material: sin textura habrían salido grises igual. Se descartan y quedan las gradas debajo |
 
 ## La marca del campo
 

@@ -336,6 +336,33 @@ Detalles que costaron:
 - **Los rótulos vienen apagados en móvil.** Con veintidós nombres sobre un campo de
   350 px no se lee ninguno; el dorsal sí, y la ficha da el nombre.
 
+### El informe, en móvil, es una hoja
+
+La ficha se apila en la columna, pero el **informe de ojeador no**: en móvil se abre como
+**hoja inferior al 70 % de la pantalla**. Son siete campos y un área de texto; apilado en
+la columna obligaba a desplazar la página entera y el teclado dejaba el formulario donde
+no se veía.
+
+- **Se desplaza solo el bloque de campos.** La hoja es `flex` en columna con
+  `overflow:hidden`: la cabecera con el nombre y el pie con «Guardar» se quedan quietos,
+  que son justo lo que hay que tener siempre a mano. Si desplazara la hoja entera, el
+  botón de guardar se perdería por abajo.
+- **Es opaca, al contrario que el resto de tarjetas.** El panel translúcido con `blur`
+  dejaba pasar el césped y el aviso de debajo por encima de los campos. Un formulario
+  necesita suelo.
+- **`#izquierda` es un contexto de apilado** (`position:fixed` con `z-index`), así que el
+  `z-index:12` de la hoja ordena dentro de la columna y **no** contra el resto de la
+  página: fuera sigue valiendo el 5 de la columna. Por eso lo que quedaría por encima se
+  esconde a mano con la clase `con-informe` en el `body` —el botón de estadísticas y el
+  aviso del campo cenital—, en vez de subir números.
+- **El teclado no encoge el layout, encoge la ventana visual.** Sin escuchar a
+  `visualViewport`, al tocar el área de texto la hoja se queda anclada al fondo de la
+  página, o sea debajo del teclado, y se escribe a ciegas. El alto y el `bottom` de la
+  hoja se recalculan con `resize` y `scroll` de la ventana visual.
+- **El informe se abre y se cierra por `verInforme()` y solo por ahí.** Había cuatro
+  sitios tocando la clase a mano; con una hoja que además marca el `body`, cuatro sitios
+  son cuatro formas de dejarlo a medias.
+
 ## Informe de ojeador
 
 El interruptor «Realizar informe» añade, al pulsar un jugador, un formulario para

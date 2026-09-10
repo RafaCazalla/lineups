@@ -536,9 +536,9 @@ body.con-estadio{
     top:calc(92px + 44vh + 26px); left:10px; right:10px; bottom:64px;
     width:auto; max-width:none; max-height:none; overflow-y:auto; gap:10px;
   }
-  /* Lo que se abre va ARRIBA de la columna, pegado al campo. Al final de la
+  /* La ficha se abre ARRIBA de la columna, pegada al campo. Al final de la
      lista aparecía por debajo del pliegue y parecía que no se había abierto. */
-  body.movil #ficha, body.movil #informe{order:-1}
+  body.movil #ficha{order:-1}
   body.movil #ficha{
     position:relative; top:auto; right:auto; width:auto; max-height:none;
     overflow:visible; border-radius:var(--r); flex:none;
@@ -548,7 +548,45 @@ body.con-estadio{
     width:38px; height:38px; top:8px; right:8px;
   }
   body.movil #ficha .cerrar svg, body.movil #informe .cerrar svg{width:15px; height:15px}
-  body.movil #informe{max-height:none; flex:none}
+  /* El informe, en cambio, es una HOJA INFERIOR al 70 % de la pantalla. Son
+     siete campos con un área de texto: apilado en la columna obligaba a
+     desplazar toda la página y el teclado dejaba el formulario donde no se
+     veía. Como hoja tiene su propio desplazamiento, deja ver el campo por
+     encima y no se lleva el resto de la interfaz por delante.
+     Se desplaza SOLO el bloque de campos: la cabecera con el nombre y el pie
+     con «Guardar» se quedan fijos, que son lo que hay que tener siempre a
+     mano. */
+  body.movil #informe{
+    position:fixed; left:0; right:0; bottom:0; top:auto; order:0;
+    width:auto; height:70vh; max-height:70vh; margin:0;
+    /* Ojo: #izquierda es position:fixed con z-index, o sea un CONTEXTO DE
+       APILADO. Este 12 ordena la hoja dentro de la columna, no contra el
+       resto de la página: ahí sigue valiendo el 5 de la columna. Por eso lo
+       que hay por encima se esconde a mano (el aviso, el botón de stats). */
+    z-index:12;
+    border-radius:16px 16px 0 0; border-bottom:0;
+    overflow:hidden;   /* el que desplaza es .campos, no la hoja */
+    padding-top:11px;  /* hueco del asa */
+    /* Opaca, al contrario que el resto de tarjetas: el panel translúcido
+       dejaba pasar el campo y el aviso de debajo por encima de los campos del
+       formulario. Un formulario necesita suelo. */
+    background:#fff; -webkit-backdrop-filter:none; backdrop-filter:none;
+    box-shadow:0 -10px 34px rgba(56,56,56,.22);
+  }
+  body.movil #informe.abierta{display:flex; flex-direction:column}
+  /* El asa no arrastra: dice que esto es una hoja y de dónde ha salido. */
+  body.movil #informe::before{
+    content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%);
+    width:38px; height:4px; border-radius:2px; background:var(--hairline);
+  }
+  body.movil #informe .top{flex:none}
+  body.movil #informe .campos{
+    flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+    padding-bottom:12px;
+  }
+  body.movil #informe .pie{flex:none; border-top:1px solid var(--hairline)}
+  body.movil #informe .estado{flex:none}
+  body.movil #informe .cerrar{top:15px}
   body.movil #vistas, body.movil #barra, body.movil #menu,
   body.movil #perf, body.movil #sw-rotar{display:none !important}
   body.movil #escena canvas{touch-action:auto}
@@ -563,6 +601,10 @@ body.con-estadio{
   /* La ficha ya no es hoja inferior en móvil: el botón de estadísticas sigue
      haciendo falta con un jugador abierto. */
   body.movil.con-ficha #bt-stats{display:flex}
+  /* Pero debajo de la hoja del informe sería invisible y aun así pulsable. */
+  body.movil.con-informe #bt-stats{display:none}
+  /* Y el aviso del campo cenital cae justo donde empieza la hoja. */
+  body.movil.con-informe #aviso-movil{display:none}
   /* La hoja de estadísticas tapa a su propio botón: lleva aspa. */
   body.movil #stats h2{padding-right:44px}
   body.movil #stats .cerrar{
@@ -14660,10 +14702,19 @@ const TIPO_TARJETA = { '5': ['#E9B12C', 'Amarilla'], '6': ['#BD2F42', 'Roja'], '
 const NOMBRE_TIRO = { goal: 'Gol', post: 'Al palo', miss: 'Fuera', save: 'Parado', block: 'Bloqueado' };
 const secAbierta = {};        // qué secciones deja abiertas el usuario
 
-/* En móvil la ficha y el informe entran arriba de la columna (order:-1), pero
-   si el usuario había bajado a los ajustes se abrirían fuera de la vista. */
+/* En móvil la ficha entra arriba de la columna (order:-1), pero si el usuario
+   había bajado a los ajustes se abriría fuera de la vista. */
 function alColocar() {
   if (esMovil) document.getElementById('izquierda').scrollTop = 0;
+}
+
+/* El informe se abre y se cierra por aquí y solo por aquí. La marca en el body
+   existe porque en móvil el informe es una HOJA que tapa la esquina inferior:
+   el botón de estadísticas quedaría debajo, invisible pero pulsable. */
+function verInforme(abierto) {
+  cajaInf.classList.toggle('abierta', abierto);
+  document.body.classList.toggle('con-informe', abierto);
+  if (abierto && esMovil) cajaInf.scrollTop = cajaInf.querySelector('.campos').scrollTop = 0;
 }
 
 function pintarFicha(j) {
@@ -14937,8 +14988,7 @@ function pintarInforme(j) {
     ? `Guardado el <b>${new Date(g.fecha).toLocaleString('es-ES')}</b>. `
       + `${Object.keys(informes).length} informes en este navegador.`
     : 'Sin guardar. Los informes se quedan en este navegador; «Exportar» los copia en JSON.';
-  cajaInf.classList.add('abierta');
-  alColocar();
+  verInforme(true);
 }
 
 function guardarInforme() {
@@ -14996,7 +15046,7 @@ palanca('sw-informe', false, v => {
   // Al encender con alguien ya elegido, el informe aparece sin tener que
   // volver a pulsarlo.
   if (elegido >= 0) {
-    if (v) pintarInforme(JUG[elegido]); else cajaInf.classList.remove('abierta');
+    if (v) pintarInforme(JUG[elegido]); else verInforme(false);
   }
 });
 
@@ -15288,12 +15338,12 @@ function elegir(i) {
     // no la sustituye. Son dos cosas distintas del mismo jugador y se miran a
     // la vez —se valora mirando los números—.
     pintarFicha(JUG[i]);
-    if (modoInforme) pintarInforme(JUG[i]); else cajaInf.classList.remove('abierta');
+    if (modoInforme) pintarInforme(JUG[i]); else verInforme(false);
   } else {
     // Al soltar la selección se apaga TODO lo del jugador, mapa de calor
     // incluido: si la mancha se queda pintada, ya no dice de quién es.
     caja.classList.remove('abierta');
-    cajaInf.classList.remove('abierta');
+    verInforme(false);
     pintarCalorCampo(null);
   }
   document.body.classList.toggle('con-ficha', i >= 0);
@@ -15403,6 +15453,21 @@ if (esMovil) {
   controles.enabled = false;
   controles.enableRotate = controles.enableZoom = controles.enablePan = false;
   controles.autoRotate = false;
+
+  /* El teclado NO encoge el layout: encoge la ventana visual. Sin esto, al
+     tocar el área de texto la hoja del informe se queda anclada al fondo de
+     la página, o sea debajo del teclado, y se escribe a ciegas. */
+  const vv = window.visualViewport;
+  if (vv) {
+    const ajustar = () => {
+      const tapado = Math.max(0, innerHeight - vv.height - vv.offsetTop);
+      cajaInf.style.bottom = tapado + 'px';
+      cajaInf.style.height = Math.min(innerHeight * 0.7, vv.height - 12) + 'px';
+    };
+    vv.addEventListener('resize', ajustar);
+    vv.addEventListener('scroll', ajustar);
+    ajustar();
+  }
 }
 
 function redimensionar() {

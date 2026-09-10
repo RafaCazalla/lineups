@@ -529,6 +529,10 @@ body.con-estadio{
    no hay una segunda versión que mantener. */
 @media (max-width:820px){
   body.movil{overflow:hidden}
+  /* Fuera el logo: en un teléfono se come el sitio de la cabecera y la deja
+     descentrada, y la marca ya está pintada en el propio césped. */
+  body.movil #marca{display:none}
+  body.movil #cabecera{left:10px; right:10px; width:auto; transform:none}
   body.movil #escena, body.movil #etiquetas{top:92px; height:44vh; bottom:auto}
   /* La capa de etiquetas tiene que cubrir EXACTAMENTE lo mismo que el lienzo,
      o los nombres salen desplazados respecto a las fichas. */
@@ -14714,7 +14718,11 @@ function alColocar() {
 function verInforme(abierto) {
   cajaInf.classList.toggle('abierta', abierto);
   document.body.classList.toggle('con-informe', abierto);
-  if (abierto && esMovil) cajaInf.scrollTop = cajaInf.querySelector('.campos').scrollTop = 0;
+  if (!abierto || !esMovil) return;
+  cajaInf.scrollTop = cajaInf.querySelector('.campos').scrollTop = 0;
+  // La hoja se abre en blanco: ningún campo enfocado y ningún teclado.
+  const foco = document.activeElement;
+  if (foco && cajaInf.contains(foco)) foco.blur();
 }
 
 function pintarFicha(j) {
@@ -15369,6 +15377,14 @@ lienzo.addEventListener('pointerup', ev => {
   const i = indiceEn(ev, ev.pointerType === 'touch' || esMovil ? TOLERANCIA_TOQUE : 0);
   elegir(i === elegido ? -1 : i);
 });
+/* Un toque en el lienzo NO tiene que dejar detrás los eventos de ratón que el
+   navegador sintetiza por compatibilidad. Con el informe abierto la hoja
+   aparece justo debajo del dedo, y ese mousedown fantasma caía sobre el primer
+   campo del formulario: el dorsal se enfocaba solo y saltaba el teclado.
+   `preventDefault()` en touchend es lo que corta la cadena entera —mousedown,
+   mouseup y click—, y aquí no se pierde nada: la selección va por eventos de
+   puntero y el lienzo no se desplaza. */
+if (esMovil) lienzo.addEventListener('touchend', ev => ev.preventDefault());
 $('f-cerrar').addEventListener('click', () => elegir(-1));
 
 // Vía de teclado: sin esto la selección no existe para quien no usa ratón.

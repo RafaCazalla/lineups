@@ -362,6 +362,18 @@ no se veía.
 - **El informe se abre y se cierra por `verInforme()` y solo por ahí.** Había cuatro
   sitios tocando la clase a mano; con una hoja que además marca el `body`, cuatro sitios
   son cuatro formas de dejarlo a medias.
+- **El lienzo se come sus eventos de ratón sintetizados** (`preventDefault()` en
+  `touchend`, solo en móvil). Tras un toque, el navegador emite por compatibilidad
+  `mousedown`, `mouseup` y `click` en las mismas coordenadas —y para entonces la hoja ya
+  ha aparecido **debajo del dedo**—. Ese `mousedown` fantasma caía sobre el primer campo
+  del formulario: el dorsal se enfocaba solo y saltaba el teclado nada más abrir el
+  informe. No se pierde nada al cortarlo: la selección va por eventos de puntero y el
+  lienzo no se desplaza. Y de paso protege también al aspa de la ficha, que aparece en
+  el mismo sitio.
+
+Y una cosa que se quita: **en móvil no hay logo de BeSoccer**. Se comía el sitio de la
+cabecera del partido y la dejaba descentrada; la marca ya está pintada en el césped, en
+las dos esquinas.
 
 ## Informe de ojeador
 

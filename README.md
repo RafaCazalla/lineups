@@ -292,6 +292,31 @@ gris claro sobre un fondo gris claro.** Con el estadio puesto, el fondo de la p�
 de tono (`body.con-estadio`) y el hormigón es más oscuro. Antes de buscar un fallo de
 cámara, comprobar el contraste.
 
+## En móvil, campo quieto
+
+Por debajo de **820 px** la página cambia de forma: el campo se queda arriba, pequeño y
+**cenital fijo**, y todo lo demás va apilado debajo en una columna que se desplaza.
+Orbitar con el pulgar sobre una pantalla de cinco pulgadas es peor que ver el campo de
+una vez, así que ahí el 3D no aporta y se quita.
+
+**No es otra versión de la página**: es la misma escena con `OrbitControls` desactivado
+y la cámara fijada en cenital. Mantener dos versiones de esto sería garantizar que una
+de las dos se queda vieja. Lo único que cambia es CSS y qué se esconde: puntos de vista,
+barra flotante, menú de estadios y el interruptor de auto-rotar, que sin cámara no
+pintan nada. Se puede forzar con `?movil=1` y `?movil=0` para verlo desde escritorio.
+
+Sí siguen funcionando: tocar un jugador, su ficha, el mapa de calor, el mapa de pases,
+el selector de equipo, la posición media y el informe de ojeador.
+
+Dos detalles que costaron:
+
+- **La capa de etiquetas tiene que cubrir exactamente lo mismo que el lienzo.** Si el
+  lienzo ocupa el 38 % de alto y la capa sigue a pantalla completa, los nombres salen
+  desplazados respecto a sus fichas.
+- **El aviso de «campo cenital fijo» se coloca por CSS, no moviendo el nodo.** Meterlo
+  dentro de la columna con `prepend()` colgaba la página; no llegué a entender por qué,
+  y posicionarlo con CSS lo evita sin tocar el DOM.
+
 ## Informe de ojeador
 
 El interruptor «Realizar informe» añade, al pulsar un jugador, un formulario para

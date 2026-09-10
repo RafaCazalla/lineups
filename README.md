@@ -26,6 +26,7 @@ escudos y los retratos de `cdn.resfu.com`.
 | `?jugador=` | `l10` (local, dorsal 10) · `v9` (visitante, dorsal 9) |
 | `?equipo=` | `todos` · `local` · `visitante` |
 | `?etiquetas=0` `?dorsales=0` `?pases=1` `?media=1` `?stats=1` | estado inicial de los paneles |
+| Combinación que mejor se lee | `?equipo=visitante&media=1&pases=1&vista=tactica` |
 | `?debug` | fps, llamadas de dibujo y triángulos (también con la tecla **D**) |
 
 Ejemplo: `index.html?vista=tactica&pases=1&etiquetas=0` deja la forma de los dos equipos.
@@ -51,6 +52,7 @@ aplican; el `noindex` lo lleva el propio HTML en una `<meta>`.
 ```bash
 export BESOCCER_KEY=...                       # la clave NO vive en el repositorio
 python3 tools/besoccer_datos.py 208696 --year 2027 \
+        --pases data/passmatrix-208696.xml \
         -o data/partido-208696.json --inline index.html
 ```
 
@@ -59,7 +61,8 @@ python3 tools/besoccer_datos.py 208696 --year 2027 \
 nombre que contuviera `</script` tumbaría la página. **No pegues el JSON a mano.**
 
 Tres peticiones: `match_lineups`, `match_events_stats` y **`playerStats`, una por
-jugador** (22 más). `--sin-stats` las salta si solo hace falta la alineación.
+jugador** (22 más). `--sin-stats` las salta si solo hace falta la alineación. Y `--pases`,
+que no es una petición: lee un `passMatrix` de Opta de un fichero.
 
 Y tres reglas:
 
@@ -148,9 +151,33 @@ extremo derecho local (Brahim, 0,28) y el carrilero izquierdo visitante (Carlos 
 0,21) caen en la misma banda, que es el duelo que tiene que haber. Sin ese cruce, un
 carrilero acaba en la banda equivocada y nadie lo nota.
 
-**Las «líneas de pase» no son pases.** Es un grafo de proximidad: cada jugador con sus
-tres compañeros más cercanos, hasta 26 m. Dibuja la forma del equipo. Con datos reales de
-pases se sustituye `lineasDePase()` y nada más.
+### El mapa de pases
+
+Sale de un **`passMatrix` de Opta** (`data/passmatrix-208696.xml`), que es una fuente
+distinta de la API de BeSoccer. Se unen por **(equipo, dorsal)**, lo único que tienen en
+común: los identificadores de jugador de las dos no se parecen en nada. Casan los 22
+titulares, y las posiciones medias de Opta coinciden con los centroides de los mapas de
+calor de BeSoccer (Cucurella 44,8/83,5 frente a 43,5/81,9), así que las dos fuentes se
+validan entre ellas.
+
+- **744 pases entre titulares.** Los pases con suplentes se descartan: los suplentes no
+  están en el campo del prototipo.
+- **Cada cinta es una pareja, y su ancho es el total de pases entre los dos**, por la
+  raíz del volumen, porque el ojo compara áreas y no longitudes. Umbral de 3 pases: por
+  debajo, la maraña tapa la señal.
+- **El sentido no se dibuja.** Una cinta que se estrecha se lee mal y se presta a leerla
+  al revés. La dirección va en la ficha, en «Pases a compañeros», con su número.
+- **Con un jugador elegido, sus cintas mandan y el resto se apagan.** Si no, la red pesa
+  lo mismo entera y no se ve de quién es cada pase.
+- Es una malla de dos triángulos por pareja con color por vértice: **una llamada de
+  dibujo**, y el ancho puede variar. `LineSegments` no sirve: el grosor de línea lo
+  ignoran casi todas las plataformas.
+- Va con `side: DoubleSide` a propósito: el bobinado de estos cuadros deja la normal
+  hacia abajo, y con `FrontSide` el mapa entero desaparece al mirar el campo desde
+  arriba, que es de donde se mira siempre.
+
+Con los dos equipos y todos a la vez es una maraña; con el selector de equipo puesto en
+uno, es una red de pases legible. Esa es la combinación que enseña algo.
 
 **Los colores de equipación se ponen a mano** en `EQUIPACIONES`, por id de equipo, porque
 la API no los da. Lo que no esté en la tabla sale en gris neutro, no en un color falso.
@@ -268,6 +295,9 @@ Cambiar una medida en `M` cambia el campo entero: las líneas se dibujan de ahí
 - **El mapa de tiros sobre el campo 3D.** Los datos ya están incrustados (51 tiros con
   coordenada de origen y xG); en la ficha salen como lista, pero no dibujados. El mapa de
   calor ya está sobre el césped, así que la capa y la rampa se reutilizan.
+- **El sentido de los pases sobre el campo.** El dato está (la matriz es dirigida) y en la
+  ficha se ve; en el campo haría falta algo que se lea sin explicación, tipo dos cintas
+  paralelas, no una que se estrecha.
 - **El logo oficial en vectorial.** La marca del césped está dibujada a mano con las
   proporciones del logo; con el SVG o el PNG de marca queda idéntica.
 - **Competición y jornada**: no vienen en estas dos peticiones. La cabecera lleva

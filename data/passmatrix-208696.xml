@@ -1,0 +1,369 @@
+This XML file does not appear to have any style information associated with it. The document tree is shown below.
+<passMatrix>
+<matchInfo id="58675sqlr3a9h0ce3oliqeuxg" coverageLevel="13" date="2026-09-08Z" time="19:00:00Z" localDate="2026-09-08" localTime="21:00:00" week="1" numberOfPeriods="2" periodLength="45" var="1" lastUpdated="2026-09-08T23:25:41Z">
+<description>Real Madrid vs Internazionale</description>
+<sport id="289u5typ3vp4ifwh5thalohmq">Soccer</sport>
+<ruleset id="79plas4983031idr6vw83nuel">Men</ruleset>
+<competition id="4oogyu6o156iphvdvphwpck10" name="UEFA Champions League" knownName="UEFA Champions League" competitionCode="UCL" competitionFormat="International cup">
+<country id="7yiwjcnhat6jo3f901h266cwl">Europe</country>
+</competition>
+<tournamentCalendar id="99jev9kv55deht65t6myggxlg" startDate="2026-07-07Z" endDate="2027-06-05Z" includesStandings="yes">2026/2027</tournamentCalendar>
+<stage id="9boesu2yacr196bmv73jpkzkk" formatId="7grbtgsvfojgozthkih4rezh0" startDate="2026-09-08Z" endDate="2027-01-27Z">League Stage</stage>
+<contestants>
+<contestant id="3kq9cckrnlogidldtdie2fkbl" name="Real Madrid" shortName="Real Madrid" officialName="Real Madrid CF" code="RMA" position="home" optaShortName="Real Madrid" optaOfficialName="Real Madrid Club de Fútbol" optaSymId="RMA">
+<country id="49ih1pwv3ahshdf8uzrimi54c">Spain</country>
+</contestant>
+<contestant id="3vo5mpj7catp66nrwwqiuhuup" name="Internazionale" shortName="Inter" officialName="FC Internazionale Milano" code="INT" position="away" optaShortName="Inter" optaOfficialName="FC Internazionale Milano" optaSymId="INT">
+<country id="25f2cmb2r8mk5rj92tzer6kvv">Italy</country>
+</contestant>
+</contestants>
+<venue id="7o6sbdki1c1b3f54ga3xj5abb" neutral="no" longName="Estadio Bernabéu" latitude="40.453068279" longitude="-3.688353896">Estadio Bernabéu</venue>
+</matchInfo>
+<liveData>
+<matchDetails periodId="14" matchStatus="Played" winner="home" matchLengthMin="95" matchLengthSec="8">
+<periods>
+<period id="1" start="2026-09-08T19:03:41Z" end="2026-09-08T19:50:00Z" lengthMin="46" lengthSec="19" announcedInjuryTime="60"/>
+<period id="2" start="2026-09-08T20:06:11Z" end="2026-09-08T20:55:00Z" lengthMin="48" lengthSec="49" announcedInjuryTime="180"/>
+</periods>
+<scores>
+<ht home="2" away="0"/>
+<ft home="2" away="1"/>
+<total home="2" away="1"/>
+</scores>
+</matchDetails>
+<lineUp contestantId="3kq9cckrnlogidldtdie2fkbl">
+<player playerId="6crmq7vzqts58wg196q48sc7p" firstName="Thibaut Nicolas Marc" lastName="Courtois" shortFirstName="Thibaut" shortLastName="Courtois" matchName="T. Courtois" shirtNumber="1" position="Goalkeeper" positionSide="Centre" crossLost="0" crossSuccess="0" passLost="12" passSuccess="19" x="8.79" y="48.56">
+<playerPass firstName="Ibrahima" lastName="Konaté" shortFirstName="Ibrahima" shortLastName="Konaté" matchName="I. Konaté" playerId="2zfjgh5747ge9r9q0thbk123t">6</playerPass>
+<playerPass firstName="Dean Donny" lastName="Huijsen Wijsmuller" shortFirstName="Dean" shortLastName="Huijsen" matchName="Dean Huijsen" playerId="d2hnxi1yi5rgqj1tvxh1813x0">3</playerPass>
+<playerPass firstName="Marc" lastName="Cucurella Saseta" shortFirstName="Marc" shortLastName="Cucurella" matchName="Marc Cucurella" playerId="7c2wnewpcf1idj6ghj6gu0wyd">4</playerPass>
+<playerPass firstName="Denzel Justus Morris" lastName="Dumfries" shortFirstName="Denzel" shortLastName="Dumfries" matchName="D. Dumfries" playerId="2r6hs8npijvt4wekd059t6tx">2</playerPass>
+<playerPass firstName="Trent John" lastName="Alexander-Arnold" shortFirstName="Trent" shortLastName="Alexander-Arnold" matchName="T. Alexander-Arnold" playerId="19z8jmren3eytg7fbuzqv73kl">1</playerPass>
+<playerPass firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" playerId="1i9wi65k2foqwudeqiyih87hl">1</playerPass>
+<playerPass firstName="Brahim" lastName="Abdelkader Díaz" shortFirstName="Brahim" shortLastName="Díaz" matchName="B. Díaz" playerId="3jln1gzc0859ymphvq83i0mp5">1</playerPass>
+<playerPass firstName="Aurélien Djani" lastName="Tchouaméni" shortFirstName="Aurélien" shortLastName="Tchouaméni" matchName="A. Tchouaméni" playerId="aipyotc87m5bdvmvizd5n69k9">1</playerPass>
+</player>
+<player playerId="7c2wnewpcf1idj6ghj6gu0wyd" firstName="Marc" lastName="Cucurella Saseta" shortFirstName="Marc" shortLastName="Cucurella" matchName="Marc Cucurella" shirtNumber="17" position="Defender" positionSide="Left" crossLost="0" crossSuccess="0" passLost="2" passSuccess="40" x="44.78" y="83.53">
+<playerPass firstName="Jude Victor William" lastName="Bellingham" shortFirstName="Jude" shortLastName="Bellingham" matchName="J. Bellingham" playerId="e83ula4wockmc2xid7185kcq2">3</playerPass>
+<playerPass firstName="Kylian" lastName="Mbappé Lottin" shortFirstName="Kylian" shortLastName="Mbappé" matchName="K. Mbappé" playerId="5e9ilgrz3tzg9kd1gk3yvrahh">7</playerPass>
+<playerPass firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" playerId="1i9wi65k2foqwudeqiyih87hl">10</playerPass>
+<playerPass firstName="Vinícius José" lastName="Paixão de Oliveira Júnior" shortFirstName="Vinícius José" shortLastName="Paixão de Oliveira Júnior" knownName="Vinícius Júnior" matchName="Vinícius Júnior" playerId="b4witgokm49tidm1a83qcvbop">8</playerPass>
+<playerPass firstName="Brahim" lastName="Abdelkader Díaz" shortFirstName="Brahim" shortLastName="Díaz" matchName="B. Díaz" playerId="3jln1gzc0859ymphvq83i0mp5">1</playerPass>
+<playerPass firstName="Trent John" lastName="Alexander-Arnold" shortFirstName="Trent" shortLastName="Alexander-Arnold" matchName="T. Alexander-Arnold" playerId="19z8jmren3eytg7fbuzqv73kl">1</playerPass>
+<playerPass firstName="Dean Donny" lastName="Huijsen Wijsmuller" shortFirstName="Dean" shortLastName="Huijsen" matchName="Dean Huijsen" playerId="d2hnxi1yi5rgqj1tvxh1813x0">9</playerPass>
+<playerPass firstName="Thibaut Nicolas Marc" lastName="Courtois" shortFirstName="Thibaut" shortLastName="Courtois" matchName="T. Courtois" playerId="6crmq7vzqts58wg196q48sc7p">1</playerPass>
+</player>
+<player playerId="d2hnxi1yi5rgqj1tvxh1813x0" firstName="Dean Donny" lastName="Huijsen Wijsmuller" shortFirstName="Dean" shortLastName="Huijsen" matchName="Dean Huijsen" shirtNumber="4" position="Defender" positionSide="Left/Centre" crossLost="0" crossSuccess="0" passLost="7" passSuccess="32" x="28.36" y="63.3">
+<playerPass firstName="Marc" lastName="Cucurella Saseta" shortFirstName="Marc" shortLastName="Cucurella" matchName="Marc Cucurella" playerId="7c2wnewpcf1idj6ghj6gu0wyd">8</playerPass>
+<playerPass firstName="Kylian" lastName="Mbappé Lottin" shortFirstName="Kylian" shortLastName="Mbappé" matchName="K. Mbappé" playerId="5e9ilgrz3tzg9kd1gk3yvrahh">1</playerPass>
+<playerPass firstName="Jude Victor William" lastName="Bellingham" shortFirstName="Jude" shortLastName="Bellingham" matchName="J. Bellingham" playerId="e83ula4wockmc2xid7185kcq2">3</playerPass>
+<playerPass firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" playerId="1i9wi65k2foqwudeqiyih87hl">5</playerPass>
+<playerPass firstName="Denzel Justus Morris" lastName="Dumfries" shortFirstName="Denzel" shortLastName="Dumfries" matchName="D. Dumfries" playerId="2r6hs8npijvt4wekd059t6tx">1</playerPass>
+<playerPass firstName="Trent John" lastName="Alexander-Arnold" shortFirstName="Trent" shortLastName="Alexander-Arnold" matchName="T. Alexander-Arnold" playerId="19z8jmren3eytg7fbuzqv73kl">1</playerPass>
+<playerPass firstName="Ibrahima" lastName="Konaté" shortFirstName="Ibrahima" shortLastName="Konaté" matchName="I. Konaté" playerId="2zfjgh5747ge9r9q0thbk123t">8</playerPass>
+<playerPass firstName="Thibaut Nicolas Marc" lastName="Courtois" shortFirstName="Thibaut" shortLastName="Courtois" matchName="T. Courtois" playerId="6crmq7vzqts58wg196q48sc7p">4</playerPass>
+<playerPass firstName="Vinícius José" lastName="Paixão de Oliveira Júnior" shortFirstName="Vinícius José" shortLastName="Paixão de Oliveira Júnior" knownName="Vinícius Júnior" matchName="Vinícius Júnior" playerId="b4witgokm49tidm1a83qcvbop">1</playerPass>
+</player>
+<player playerId="2zfjgh5747ge9r9q0thbk123t" firstName="Ibrahima" lastName="Konaté" shortFirstName="Ibrahima" shortLastName="Konaté" matchName="I. Konaté" shirtNumber="16" position="Defender" positionSide="Centre/Right" crossLost="0" crossSuccess="0" passLost="6" passSuccess="26" x="31.44" y="30.94">
+<playerPass firstName="Dean Donny" lastName="Huijsen Wijsmuller" shortFirstName="Dean" shortLastName="Huijsen" matchName="Dean Huijsen" playerId="d2hnxi1yi5rgqj1tvxh1813x0">6</playerPass>
+<playerPass firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" playerId="1i9wi65k2foqwudeqiyih87hl">2</playerPass>
+<playerPass firstName="Denzel Justus Morris" lastName="Dumfries" shortFirstName="Denzel" shortLastName="Dumfries" matchName="D. Dumfries" playerId="2r6hs8npijvt4wekd059t6tx">5</playerPass>
+<playerPass firstName="Brahim" lastName="Abdelkader Díaz" shortFirstName="Brahim" shortLastName="Díaz" matchName="B. Díaz" playerId="3jln1gzc0859ymphvq83i0mp5">4</playerPass>
+<playerPass firstName="Trent John" lastName="Alexander-Arnold" shortFirstName="Trent" shortLastName="Alexander-Arnold" matchName="T. Alexander-Arnold" playerId="19z8jmren3eytg7fbuzqv73kl">2</playerPass>
+<playerPass firstName="Marc" lastName="Cucurella Saseta" shortFirstName="Marc" shortLastName="Cucurella" matchName="Marc Cucurella" playerId="7c2wnewpcf1idj6ghj6gu0wyd">1</playerPass>
+<playerPass firstName="Thibaut Nicolas Marc" lastName="Courtois" shortFirstName="Thibaut" shortLastName="Courtois" matchName="T. Courtois" playerId="6crmq7vzqts58wg196q48sc7p">5</playerPass>
+<playerPass firstName="Aurélien Djani" lastName="Tchouaméni" shortFirstName="Aurélien" shortLastName="Tchouaméni" matchName="A. Tchouaméni" playerId="aipyotc87m5bdvmvizd5n69k9">1</playerPass>
+</player>
+<player playerId="2r6hs8npijvt4wekd059t6tx" firstName="Denzel Justus Morris" lastName="Dumfries" shortFirstName="Denzel" shortLastName="Dumfries" matchName="D. Dumfries" shirtNumber="24" position="Defender" positionSide="Right" crossLost="1" crossSuccess="0" passLost="2" passSuccess="16" x="47.37" y="22.33">
+<playerPass firstName="Trent John" lastName="Alexander-Arnold" shortFirstName="Trent" shortLastName="Alexander-Arnold" matchName="T. Alexander-Arnold" playerId="19z8jmren3eytg7fbuzqv73kl">2</playerPass>
+<playerPass firstName="Thibaut Nicolas Marc" lastName="Courtois" shortFirstName="Thibaut" shortLastName="Courtois" matchName="T. Courtois" playerId="6crmq7vzqts58wg196q48sc7p">2</playerPass>
+<playerPass firstName="Ibrahima" lastName="Konaté" shortFirstName="Ibrahima" shortLastName="Konaté" matchName="I. Konaté" playerId="2zfjgh5747ge9r9q0thbk123t">5</playerPass>
+<playerPass firstName="Brahim" lastName="Abdelkader Díaz" shortFirstName="Brahim" shortLastName="Díaz" matchName="B. Díaz" playerId="3jln1gzc0859ymphvq83i0mp5">3</playerPass>
+<playerPass firstName="Kylian" lastName="Mbappé Lottin" shortFirstName="Kylian" shortLastName="Mbappé" matchName="K. Mbappé" playerId="5e9ilgrz3tzg9kd1gk3yvrahh">1</playerPass>
+<playerPass firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" playerId="1i9wi65k2foqwudeqiyih87hl">1</playerPass>
+<playerPass firstName="Jude Victor William" lastName="Bellingham" shortFirstName="Jude" shortLastName="Bellingham" matchName="J. Bellingham" playerId="e83ula4wockmc2xid7185kcq2">1</playerPass>
+<playerPass firstName="Yan" lastName="Diomande" shortFirstName="Yan" shortLastName="Diomande" knownName="Yan Diomande" matchName="Y. Diomande" playerId="8e6qzf8dp3c9lch7tu5r03qqc">1</playerPass>
+</player>
+<player playerId="1i9wi65k2foqwudeqiyih87hl" firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" shirtNumber="8" position="Defensive Midfielder" positionSide="Left/Centre" crossLost="0" crossSuccess="0" passLost="2" passSuccess="38" x="40.58" y="67.66">
+<playerPass firstName="Ibrahima" lastName="Konaté" shortFirstName="Ibrahima" shortLastName="Konaté" matchName="I. Konaté" playerId="2zfjgh5747ge9r9q0thbk123t">2</playerPass>
+<playerPass firstName="Dean Donny" lastName="Huijsen Wijsmuller" shortFirstName="Dean" shortLastName="Huijsen" matchName="Dean Huijsen" playerId="d2hnxi1yi5rgqj1tvxh1813x0">3</playerPass>
+<playerPass firstName="Kylian" lastName="Mbappé Lottin" shortFirstName="Kylian" shortLastName="Mbappé" matchName="K. Mbappé" playerId="5e9ilgrz3tzg9kd1gk3yvrahh">9</playerPass>
+<playerPass firstName="Marc" lastName="Cucurella Saseta" shortFirstName="Marc" shortLastName="Cucurella" matchName="Marc Cucurella" playerId="7c2wnewpcf1idj6ghj6gu0wyd">8</playerPass>
+<playerPass firstName="Trent John" lastName="Alexander-Arnold" shortFirstName="Trent" shortLastName="Alexander-Arnold" matchName="T. Alexander-Arnold" playerId="19z8jmren3eytg7fbuzqv73kl">5</playerPass>
+<playerPass firstName="Vinícius José" lastName="Paixão de Oliveira Júnior" shortFirstName="Vinícius José" shortLastName="Paixão de Oliveira Júnior" knownName="Vinícius Júnior" matchName="Vinícius Júnior" playerId="b4witgokm49tidm1a83qcvbop">1</playerPass>
+<playerPass firstName="Jude Victor William" lastName="Bellingham" shortFirstName="Jude" shortLastName="Bellingham" matchName="J. Bellingham" playerId="e83ula4wockmc2xid7185kcq2">5</playerPass>
+<playerPass firstName="Brahim" lastName="Abdelkader Díaz" shortFirstName="Brahim" shortLastName="Díaz" matchName="B. Díaz" playerId="3jln1gzc0859ymphvq83i0mp5">1</playerPass>
+<playerPass firstName="Denzel Justus Morris" lastName="Dumfries" shortFirstName="Denzel" shortLastName="Dumfries" matchName="D. Dumfries" playerId="2r6hs8npijvt4wekd059t6tx">1</playerPass>
+<playerPass firstName="Yan" lastName="Diomande" shortFirstName="Yan" shortLastName="Diomande" knownName="Yan Diomande" matchName="Y. Diomande" playerId="8e6qzf8dp3c9lch7tu5r03qqc">3</playerPass>
+</player>
+<player playerId="19z8jmren3eytg7fbuzqv73kl" firstName="Trent John" lastName="Alexander-Arnold" shortFirstName="Trent" shortLastName="Alexander-Arnold" matchName="T. Alexander-Arnold" shirtNumber="12" position="Defensive Midfielder" positionSide="Centre/Right" crossLost="3" crossSuccess="1" passLost="4" passSuccess="20" x="43.54" y="41.01">
+<playerPass firstName="Kylian" lastName="Mbappé Lottin" shortFirstName="Kylian" shortLastName="Mbappé" matchName="K. Mbappé" playerId="5e9ilgrz3tzg9kd1gk3yvrahh">3</playerPass>
+<playerPass firstName="Jude Victor William" lastName="Bellingham" shortFirstName="Jude" shortLastName="Bellingham" matchName="J. Bellingham" playerId="e83ula4wockmc2xid7185kcq2">4</playerPass>
+<playerPass firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" playerId="1i9wi65k2foqwudeqiyih87hl">4</playerPass>
+<playerPass firstName="Denzel Justus Morris" lastName="Dumfries" shortFirstName="Denzel" shortLastName="Dumfries" matchName="D. Dumfries" playerId="2r6hs8npijvt4wekd059t6tx">3</playerPass>
+<playerPass firstName="Marc" lastName="Cucurella Saseta" shortFirstName="Marc" shortLastName="Cucurella" matchName="Marc Cucurella" playerId="7c2wnewpcf1idj6ghj6gu0wyd">2</playerPass>
+<playerPass firstName="Dean Donny" lastName="Huijsen Wijsmuller" shortFirstName="Dean" shortLastName="Huijsen" matchName="Dean Huijsen" playerId="d2hnxi1yi5rgqj1tvxh1813x0">1</playerPass>
+<playerPass firstName="Ibrahima" lastName="Konaté" shortFirstName="Ibrahima" shortLastName="Konaté" matchName="I. Konaté" playerId="2zfjgh5747ge9r9q0thbk123t" cross="1">1</playerPass>
+<playerPass firstName="Brahim" lastName="Abdelkader Díaz" shortFirstName="Brahim" shortLastName="Díaz" matchName="B. Díaz" playerId="3jln1gzc0859ymphvq83i0mp5">2</playerPass>
+</player>
+<player playerId="b4witgokm49tidm1a83qcvbop" firstName="Vinícius José" lastName="Paixão de Oliveira Júnior" shortFirstName="Vinícius José" shortLastName="Paixão de Oliveira Júnior" knownName="Vinícius Júnior" matchName="Vinícius Júnior" shirtNumber="7" position="Attacking Midfielder" positionSide="Left" crossLost="2" crossSuccess="0" passLost="3" passSuccess="24" x="58.62" y="82.03">
+<playerPass firstName="Jude Victor William" lastName="Bellingham" shortFirstName="Jude" shortLastName="Bellingham" matchName="J. Bellingham" playerId="e83ula4wockmc2xid7185kcq2">6</playerPass>
+<playerPass firstName="Marc" lastName="Cucurella Saseta" shortFirstName="Marc" shortLastName="Cucurella" matchName="Marc Cucurella" playerId="7c2wnewpcf1idj6ghj6gu0wyd">5</playerPass>
+<playerPass firstName="Dean Donny" lastName="Huijsen Wijsmuller" shortFirstName="Dean" shortLastName="Huijsen" matchName="Dean Huijsen" playerId="d2hnxi1yi5rgqj1tvxh1813x0">1</playerPass>
+<playerPass firstName="Brahim" lastName="Abdelkader Díaz" shortFirstName="Brahim" shortLastName="Díaz" matchName="B. Díaz" playerId="3jln1gzc0859ymphvq83i0mp5">2</playerPass>
+<playerPass firstName="Kylian" lastName="Mbappé Lottin" shortFirstName="Kylian" shortLastName="Mbappé" matchName="K. Mbappé" playerId="5e9ilgrz3tzg9kd1gk3yvrahh">3</playerPass>
+<playerPass firstName="Trent John" lastName="Alexander-Arnold" shortFirstName="Trent" shortLastName="Alexander-Arnold" matchName="T. Alexander-Arnold" playerId="19z8jmren3eytg7fbuzqv73kl">1</playerPass>
+<playerPass firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" playerId="1i9wi65k2foqwudeqiyih87hl">5</playerPass>
+<playerPass firstName="Ibrahima" lastName="Konaté" shortFirstName="Ibrahima" shortLastName="Konaté" matchName="I. Konaté" playerId="2zfjgh5747ge9r9q0thbk123t">1</playerPass>
+</player>
+<player playerId="e83ula4wockmc2xid7185kcq2" firstName="Jude Victor William" lastName="Bellingham" shortFirstName="Jude" shortLastName="Bellingham" matchName="J. Bellingham" shirtNumber="5" position="Attacking Midfielder" positionSide="Centre" crossLost="1" crossSuccess="0" passLost="3" passSuccess="27" x="50.18" y="61.19">
+<playerPass firstName="Denzel Justus Morris" lastName="Dumfries" shortFirstName="Denzel" shortLastName="Dumfries" matchName="D. Dumfries" playerId="2r6hs8npijvt4wekd059t6tx">1</playerPass>
+<playerPass firstName="Kylian" lastName="Mbappé Lottin" shortFirstName="Kylian" shortLastName="Mbappé" matchName="K. Mbappé" playerId="5e9ilgrz3tzg9kd1gk3yvrahh">2</playerPass>
+<playerPass firstName="Trent John" lastName="Alexander-Arnold" shortFirstName="Trent" shortLastName="Alexander-Arnold" matchName="T. Alexander-Arnold" playerId="19z8jmren3eytg7fbuzqv73kl">2</playerPass>
+<playerPass firstName="Marc" lastName="Cucurella Saseta" shortFirstName="Marc" shortLastName="Cucurella" matchName="Marc Cucurella" playerId="7c2wnewpcf1idj6ghj6gu0wyd">5</playerPass>
+<playerPass firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" playerId="1i9wi65k2foqwudeqiyih87hl">2</playerPass>
+<playerPass firstName="Vinícius José" lastName="Paixão de Oliveira Júnior" shortFirstName="Vinícius José" shortLastName="Paixão de Oliveira Júnior" knownName="Vinícius Júnior" matchName="Vinícius Júnior" playerId="b4witgokm49tidm1a83qcvbop">6</playerPass>
+<playerPass firstName="Brahim" lastName="Abdelkader Díaz" shortFirstName="Brahim" shortLastName="Díaz" matchName="B. Díaz" playerId="3jln1gzc0859ymphvq83i0mp5">4</playerPass>
+<playerPass firstName="Dean Donny" lastName="Huijsen Wijsmuller" shortFirstName="Dean" shortLastName="Huijsen" matchName="Dean Huijsen" playerId="d2hnxi1yi5rgqj1tvxh1813x0">3</playerPass>
+<playerPass firstName="Aurélien Djani" lastName="Tchouaméni" shortFirstName="Aurélien" shortLastName="Tchouaméni" matchName="A. Tchouaméni" playerId="aipyotc87m5bdvmvizd5n69k9">1</playerPass>
+<playerPass firstName="Yan" lastName="Diomande" shortFirstName="Yan" shortLastName="Diomande" knownName="Yan Diomande" matchName="Y. Diomande" playerId="8e6qzf8dp3c9lch7tu5r03qqc">1</playerPass>
+</player>
+<player playerId="3jln1gzc0859ymphvq83i0mp5" firstName="Brahim" lastName="Abdelkader Díaz" shortFirstName="Brahim" shortLastName="Díaz" matchName="B. Díaz" shirtNumber="21" position="Attacking Midfielder" positionSide="Right" crossLost="1" crossSuccess="0" passLost="2" passSuccess="26" x="62.65" y="28.8">
+<playerPass firstName="Kylian" lastName="Mbappé Lottin" shortFirstName="Kylian" shortLastName="Mbappé" matchName="K. Mbappé" playerId="5e9ilgrz3tzg9kd1gk3yvrahh">13</playerPass>
+<playerPass firstName="Ibrahima" lastName="Konaté" shortFirstName="Ibrahima" shortLastName="Konaté" matchName="I. Konaté" playerId="2zfjgh5747ge9r9q0thbk123t">2</playerPass>
+<playerPass firstName="Jude Victor William" lastName="Bellingham" shortFirstName="Jude" shortLastName="Bellingham" matchName="J. Bellingham" playerId="e83ula4wockmc2xid7185kcq2">5</playerPass>
+<playerPass firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" playerId="1i9wi65k2foqwudeqiyih87hl">1</playerPass>
+<playerPass firstName="Denzel Justus Morris" lastName="Dumfries" shortFirstName="Denzel" shortLastName="Dumfries" matchName="D. Dumfries" playerId="2r6hs8npijvt4wekd059t6tx">3</playerPass>
+<playerPass firstName="Trent John" lastName="Alexander-Arnold" shortFirstName="Trent" shortLastName="Alexander-Arnold" matchName="T. Alexander-Arnold" playerId="19z8jmren3eytg7fbuzqv73kl">2</playerPass>
+</player>
+<player playerId="5e9ilgrz3tzg9kd1gk3yvrahh" firstName="Kylian" lastName="Mbappé Lottin" shortFirstName="Kylian" shortLastName="Mbappé" matchName="K. Mbappé" shirtNumber="10" position="Striker" positionSide="Centre" crossLost="0" crossSuccess="0" passLost="4" passSuccess="33" x="63.19" y="58.02">
+<playerPass firstName="Brahim" lastName="Abdelkader Díaz" shortFirstName="Brahim" shortLastName="Díaz" matchName="B. Díaz" playerId="3jln1gzc0859ymphvq83i0mp5">9</playerPass>
+<playerPass firstName="Vinícius José" lastName="Paixão de Oliveira Júnior" shortFirstName="Vinícius José" shortLastName="Paixão de Oliveira Júnior" knownName="Vinícius Júnior" matchName="Vinícius Júnior" playerId="b4witgokm49tidm1a83qcvbop">9</playerPass>
+<playerPass firstName="Marc" lastName="Cucurella Saseta" shortFirstName="Marc" shortLastName="Cucurella" matchName="Marc Cucurella" playerId="7c2wnewpcf1idj6ghj6gu0wyd">5</playerPass>
+<playerPass firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" playerId="1i9wi65k2foqwudeqiyih87hl">2</playerPass>
+<playerPass firstName="Dean Donny" lastName="Huijsen Wijsmuller" shortFirstName="Dean" shortLastName="Huijsen" matchName="Dean Huijsen" playerId="d2hnxi1yi5rgqj1tvxh1813x0">2</playerPass>
+<playerPass firstName="Trent John" lastName="Alexander-Arnold" shortFirstName="Trent" shortLastName="Alexander-Arnold" matchName="T. Alexander-Arnold" playerId="19z8jmren3eytg7fbuzqv73kl">2</playerPass>
+<playerPass firstName="Ibrahima" lastName="Konaté" shortFirstName="Ibrahima" shortLastName="Konaté" matchName="I. Konaté" playerId="2zfjgh5747ge9r9q0thbk123t">1</playerPass>
+<playerPass firstName="Jude Victor William" lastName="Bellingham" shortFirstName="Jude" shortLastName="Bellingham" matchName="J. Bellingham" playerId="e83ula4wockmc2xid7185kcq2">2</playerPass>
+<playerPass firstName="Yan" lastName="Diomande" shortFirstName="Yan" shortLastName="Diomande" knownName="Yan Diomande" matchName="Y. Diomande" playerId="8e6qzf8dp3c9lch7tu5r03qqc">1</playerPass>
+</player>
+<player playerId="ecmpznived7xp45o7bm96csno" firstName="Jorge" lastName="Cestero Sancho" shortFirstName="Jorge" shortLastName="Cestero Sancho" knownName="Cestero" matchName="Cestero" shirtNumber="29" position="Substitute"/>
+<player playerId="8e6qzf8dp3c9lch7tu5r03qqc" firstName="Yan" lastName="Diomande" shortFirstName="Yan" shortLastName="Diomande" knownName="Yan Diomande" matchName="Y. Diomande" shirtNumber="25" position="Substitute" crossLost="0" crossSuccess="0" passLost="0" passSuccess="2" x="78.14" y="22.4">
+<playerPass firstName="Federico Santiago" lastName="Valverde Dipetta" shortFirstName="Federico" shortLastName="Valverde" matchName="F. Valverde" playerId="1i9wi65k2foqwudeqiyih87hl">1</playerPass>
+<playerPass firstName="Denzel Justus Morris" lastName="Dumfries" shortFirstName="Denzel" shortLastName="Dumfries" matchName="D. Dumfries" playerId="2r6hs8npijvt4wekd059t6tx">1</playerPass>
+</player>
+<player playerId="cbh5v5yi380uvbt5z2xbxemfo" firstName="Carlos" lastName="Espí Escrihuela" shortFirstName="Carlos" shortLastName="Espí" matchName="Carlos Espí" shirtNumber="19" position="Substitute" crossLost="0" crossSuccess="0" passLost="0" passSuccess="0" x="0.0" y="0.0"/>
+<player playerId="a4kw8u4dqsslfwe1ux08lbmc" firstName="Álvaro" lastName="Fernández Carreras" shortFirstName="Álvaro" shortLastName="Carreras" matchName="Álvaro Carreras" shirtNumber="18" position="Substitute" crossLost="0" crossSuccess="0" passLost="0" passSuccess="0" x="0.0" y="0.0"/>
+<player playerId="38bp85766w04a0nuulq5fiig9" firstName="Andrii" lastName="Lunin" shortFirstName="Andrii" shortLastName="Lunin" matchName="A. Lunin" shirtNumber="13" position="Substitute"/>
+<player playerId="3krfyio6dlb6gkoggsmqwkj6c" firstName="Sergio" lastName="Mestre Sánchez" shortFirstName="Sergio" shortLastName="Mestre" matchName="Sergio Mestre" shirtNumber="26" position="Substitute"/>
+<player playerId="14qv8npo5alwnb5dud8x82ln8" firstName="Endrick Felipe" lastName="Moreira de Sousa" shortFirstName="Endrick Felipe" shortLastName="Moreira de Sousa" knownName="Endrick" matchName="Endrick" shirtNumber="9" position="Substitute"/>
+<player playerId="9ksawmk9ligul6vfjihf50r8" firstName="Thiago" lastName="Pitarch Pinar" shortFirstName="Thiago" shortLastName="Pitarch" matchName="Thiago Pitarch" shirtNumber="27" position="Substitute"/>
+<player playerId="974pgl5fo69ks8qsv1oorx8us" firstName="Mario" lastName="Rivas Lago" shortFirstName="Mario" shortLastName="Rivas" matchName="Mario Rivas" shirtNumber="33" position="Substitute"/>
+<player playerId="6fzbp94hf19ysotdassrqdc5x" firstName="Antonio" lastName="Rüdiger" shortFirstName="Antonio" shortLastName="Rüdiger" matchName="A. Rüdiger" shirtNumber="22" position="Substitute"/>
+<player playerId="aipyotc87m5bdvmvizd5n69k9" firstName="Aurélien Djani" lastName="Tchouaméni" shortFirstName="Aurélien" shortLastName="Tchouaméni" matchName="A. Tchouaméni" shirtNumber="14" position="Substitute" crossLost="0" crossSuccess="0" passLost="0" passSuccess="3" x="38.3" y="36.63">
+<playerPass firstName="Dean Donny" lastName="Huijsen Wijsmuller" shortFirstName="Dean" shortLastName="Huijsen" matchName="Dean Huijsen" playerId="d2hnxi1yi5rgqj1tvxh1813x0">1</playerPass>
+<playerPass firstName="Ibrahima" lastName="Konaté" shortFirstName="Ibrahima" shortLastName="Konaté" matchName="I. Konaté" playerId="2zfjgh5747ge9r9q0thbk123t">1</playerPass>
+<playerPass firstName="Thibaut Nicolas Marc" lastName="Courtois" shortFirstName="Thibaut" shortLastName="Courtois" matchName="T. Courtois" playerId="6crmq7vzqts58wg196q48sc7p">1</playerPass>
+</player>
+<teamOfficial id="dt8gnan8xmg0gh5xv8ezh8amt" firstName="José Mário" lastName="dos Santos Mourinho Félix" shortFirstName="José Mário" shortLastName="dos Santos Mourinho Félix" knownName="José Mourinho" type="manager"/>
+</lineUp>
+<lineUp contestantId="3vo5mpj7catp66nrwwqiuhuup">
+<player playerId="3yqxkw0tqpoucur51ieh9xdrd" firstName="Josep" lastName="Martínez Riera" shortFirstName="Josep" shortLastName="Martínez" knownName="Josep Martínez" matchName="Josep Martínez" shirtNumber="1" position="Goalkeeper" positionSide="Centre" crossLost="0" crossSuccess="0" passLost="2" passSuccess="30" x="11.4" y="50.9">
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">8</playerPass>
+<playerPass firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" playerId="botfgp0oq4wqlwtcs9m90kded">3</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">8</playerPass>
+<playerPass firstName="Benjamin Jacques Marcel" lastName="Pavard" shortFirstName="Benjamin" shortLastName="Pavard" matchName="B. Pavard" playerId="yq0cm7vwr0tkv7nvt9vo77bp">2</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">2</playerPass>
+<playerPass firstName="Carlos Augusto" lastName="Zopolato Neves" shortFirstName="Carlos Augusto" shortLastName="Zopolato Neves" knownName="Carlos Augusto" matchName="Carlos Augusto" playerId="4d17grk2qflzake218uz76uei">3</playerPass>
+<playerPass firstName="John" lastName="Stones" shortFirstName="John" shortLastName="Stones" matchName="J. Stones" playerId="3gem1jrrkgye0omb88fk1lsk5">3</playerPass>
+<playerPass firstName="Petar" lastName="Sučić" shortFirstName="Petar" shortLastName="Sucic" knownName="Petar Sucic" matchName="P. Sučić" playerId="6u7iuum6kqfwb4pbw5lsoff56">1</playerPass>
+</player>
+<player playerId="q6ns1fyw7w10xkkubh8etfc9" firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" shirtNumber="95" position="Defender" positionSide="Left/Centre" crossLost="2" crossSuccess="0" passLost="3" passSuccess="77" x="47.76" y="73.93">
+<playerPass firstName="Benjamin Jacques Marcel" lastName="Pavard" shortFirstName="Benjamin" shortLastName="Pavard" matchName="B. Pavard" playerId="yq0cm7vwr0tkv7nvt9vo77bp">2</playerPass>
+<playerPass firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" playerId="botfgp0oq4wqlwtcs9m90kded">14</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">18</playerPass>
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">5</playerPass>
+<playerPass firstName="Nicolò" lastName="Barella" shortFirstName="Nicolò" shortLastName="Barella" matchName="N. Barella" playerId="ahgd3on22t4h7gg9ipnj1itw5">5</playerPass>
+<playerPass firstName="Carlos Augusto" lastName="Zopolato Neves" shortFirstName="Carlos Augusto" shortLastName="Zopolato Neves" knownName="Carlos Augusto" matchName="Carlos Augusto" playerId="4d17grk2qflzake218uz76uei">13</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa">3</playerPass>
+<playerPass firstName="Josep" lastName="Martínez Riera" shortFirstName="Josep" shortLastName="Martínez" knownName="Josep Martínez" matchName="Josep Martínez" playerId="3yqxkw0tqpoucur51ieh9xdrd">2</playerPass>
+<playerPass firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" playerId="7r2tgpdrr4v6n9d2gkzwmlazt">2</playerPass>
+<playerPass firstName="Marcus Lilian" lastName="Thuram-Ulien" shortFirstName="Marcus" shortLastName="Thuram" matchName="M. Thuram" playerId="66nvc8a4kd3cyeyj3i474cudx">1</playerPass>
+<playerPass firstName="John" lastName="Stones" shortFirstName="John" shortLastName="Stones" matchName="J. Stones" playerId="3gem1jrrkgye0omb88fk1lsk5">4</playerPass>
+<playerPass firstName="Piotr Sebastian" lastName="Zieliński" shortFirstName="Piotr" shortLastName="Zielinski" matchName="P. Zieliński" playerId="dpcws493fepch23sk26m1a8yd">4</playerPass>
+<playerPass firstName="Petar" lastName="Sučić" shortFirstName="Petar" shortLastName="Sucic" knownName="Petar Sucic" matchName="P. Sučić" playerId="6u7iuum6kqfwb4pbw5lsoff56">1</playerPass>
+<playerPass firstName="Ange-Yoan Laurent" lastName="Bonny" shortFirstName="Ange-Yoan" shortLastName="Bonny" matchName="A. Bonny" playerId="ejbp3sxls7lgrg6y3a9q4u978">1</playerPass>
+<playerPass firstName="Henrikh Hamlet" lastName="Mkhitaryan" shortFirstName="Henrikh" shortLastName="Mkhitaryan" matchName="H. Mkhitaryan" playerId="1xscywgyfqisqexmpfvbf9g45">2</playerPass>
+</player>
+<player playerId="280fh7f5q9lud8lk8reyu7fxm" firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" shirtNumber="31" position="Defender" positionSide="Centre" crossLost="0" crossSuccess="0" passLost="2" passSuccess="57" x="43.09" y="39.69">
+<playerPass firstName="Carlos Augusto" lastName="Zopolato Neves" shortFirstName="Carlos Augusto" shortLastName="Zopolato Neves" knownName="Carlos Augusto" matchName="Carlos Augusto" playerId="4d17grk2qflzake218uz76uei">2</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">5</playerPass>
+<playerPass firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" playerId="7r2tgpdrr4v6n9d2gkzwmlazt">5</playerPass>
+<playerPass firstName="Josep" lastName="Martínez Riera" shortFirstName="Josep" shortLastName="Martínez" knownName="Josep Martínez" matchName="Josep Martínez" playerId="3yqxkw0tqpoucur51ieh9xdrd">6</playerPass>
+<playerPass firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" playerId="botfgp0oq4wqlwtcs9m90kded">3</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">4</playerPass>
+<playerPass firstName="Benjamin Jacques Marcel" lastName="Pavard" shortFirstName="Benjamin" shortLastName="Pavard" matchName="B. Pavard" playerId="yq0cm7vwr0tkv7nvt9vo77bp">4</playerPass>
+<playerPass firstName="Nicolò" lastName="Barella" shortFirstName="Nicolò" shortLastName="Barella" matchName="N. Barella" playerId="ahgd3on22t4h7gg9ipnj1itw5">5</playerPass>
+<playerPass firstName="Marcus Lilian" lastName="Thuram-Ulien" shortFirstName="Marcus" shortLastName="Thuram" matchName="M. Thuram" playerId="66nvc8a4kd3cyeyj3i474cudx">2</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa">7</playerPass>
+<playerPass firstName="John" lastName="Stones" shortFirstName="John" shortLastName="Stones" matchName="J. Stones" playerId="3gem1jrrkgye0omb88fk1lsk5">6</playerPass>
+<playerPass firstName="Petar" lastName="Sučić" shortFirstName="Petar" shortLastName="Sucic" knownName="Petar Sucic" matchName="P. Sučić" playerId="6u7iuum6kqfwb4pbw5lsoff56">4</playerPass>
+<playerPass firstName="Henrikh Hamlet" lastName="Mkhitaryan" shortFirstName="Henrikh" shortLastName="Mkhitaryan" matchName="H. Mkhitaryan" playerId="1xscywgyfqisqexmpfvbf9g45">3</playerPass>
+<playerPass firstName="Piotr Sebastian" lastName="Zieliński" shortFirstName="Piotr" shortLastName="Zielinski" matchName="P. Zieliński" playerId="dpcws493fepch23sk26m1a8yd">1</playerPass>
+</player>
+<player playerId="yq0cm7vwr0tkv7nvt9vo77bp" firstName="Benjamin Jacques Marcel" lastName="Pavard" shortFirstName="Benjamin" shortLastName="Pavard" matchName="B. Pavard" shirtNumber="28" position="Defender" positionSide="Centre/Right" crossLost="0" crossSuccess="0" passLost="2" passSuccess="33" x="42.05" y="32.06">
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa">9</playerPass>
+<playerPass firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" playerId="botfgp0oq4wqlwtcs9m90kded">5</playerPass>
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">4</playerPass>
+<playerPass firstName="Nicolò" lastName="Barella" shortFirstName="Nicolò" shortLastName="Barella" matchName="N. Barella" playerId="ahgd3on22t4h7gg9ipnj1itw5">5</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">5</playerPass>
+<playerPass firstName="Josep" lastName="Martínez Riera" shortFirstName="Josep" shortLastName="Martínez" knownName="Josep Martínez" matchName="Josep Martínez" playerId="3yqxkw0tqpoucur51ieh9xdrd">2</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">3</playerPass>
+</player>
+<player playerId="4d17grk2qflzake218uz76uei" firstName="Carlos Augusto" lastName="Zopolato Neves" shortFirstName="Carlos Augusto" shortLastName="Zopolato Neves" knownName="Carlos Augusto" matchName="Carlos Augusto" shirtNumber="30" position="Midfielder" positionSide="Left" crossLost="5" crossSuccess="2" passLost="3" passSuccess="39" x="59.9" y="80.46">
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">8</playerPass>
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">1</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">10</playerPass>
+<playerPass firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" playerId="botfgp0oq4wqlwtcs9m90kded">8</playerPass>
+<playerPass firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" playerId="7r2tgpdrr4v6n9d2gkzwmlazt">3</playerPass>
+<playerPass firstName="Josep" lastName="Martínez Riera" shortFirstName="Josep" shortLastName="Martínez" knownName="Josep Martínez" matchName="Josep Martínez" playerId="3yqxkw0tqpoucur51ieh9xdrd">3</playerPass>
+<playerPass firstName="Marcus Lilian" lastName="Thuram-Ulien" shortFirstName="Marcus" shortLastName="Thuram" matchName="M. Thuram" playerId="66nvc8a4kd3cyeyj3i474cudx" cross="1">0</playerPass>
+<playerPass firstName="Nicolò" lastName="Barella" shortFirstName="Nicolò" shortLastName="Barella" matchName="N. Barella" playerId="ahgd3on22t4h7gg9ipnj1itw5">3</playerPass>
+<playerPass firstName="Piotr Sebastian" lastName="Zieliński" shortFirstName="Piotr" shortLastName="Zielinski" matchName="P. Zieliński" playerId="dpcws493fepch23sk26m1a8yd">2</playerPass>
+<playerPass firstName="Ange-Yoan Laurent" lastName="Bonny" shortFirstName="Ange-Yoan" shortLastName="Bonny" matchName="A. Bonny" playerId="ejbp3sxls7lgrg6y3a9q4u978">1</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa" cross="1">0</playerPass>
+</player>
+<player playerId="3kdl679ra6mlobdg09xqf7fft" firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" shirtNumber="21" position="Midfielder" positionSide="Left/Centre" crossLost="2" crossSuccess="0" passLost="2" passSuccess="71" x="60.57" y="67.84">
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">5</playerPass>
+<playerPass firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" playerId="botfgp0oq4wqlwtcs9m90kded">9</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">17</playerPass>
+<playerPass firstName="Benjamin Jacques Marcel" lastName="Pavard" shortFirstName="Benjamin" shortLastName="Pavard" matchName="B. Pavard" playerId="yq0cm7vwr0tkv7nvt9vo77bp">3</playerPass>
+<playerPass firstName="Carlos Augusto" lastName="Zopolato Neves" shortFirstName="Carlos Augusto" shortLastName="Zopolato Neves" knownName="Carlos Augusto" matchName="Carlos Augusto" playerId="4d17grk2qflzake218uz76uei">8</playerPass>
+<playerPass firstName="Josep" lastName="Martínez Riera" shortFirstName="Josep" shortLastName="Martínez" knownName="Josep Martínez" matchName="Josep Martínez" playerId="3yqxkw0tqpoucur51ieh9xdrd">1</playerPass>
+<playerPass firstName="Nicolò" lastName="Barella" shortFirstName="Nicolò" shortLastName="Barella" matchName="N. Barella" playerId="ahgd3on22t4h7gg9ipnj1itw5">5</playerPass>
+<playerPass firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" playerId="7r2tgpdrr4v6n9d2gkzwmlazt">8</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa">6</playerPass>
+<playerPass firstName="Petar" lastName="Sučić" shortFirstName="Petar" shortLastName="Sucic" knownName="Petar Sucic" matchName="P. Sučić" playerId="6u7iuum6kqfwb4pbw5lsoff56">3</playerPass>
+<playerPass firstName="Piotr Sebastian" lastName="Zieliński" shortFirstName="Piotr" shortLastName="Zielinski" matchName="P. Zieliński" playerId="dpcws493fepch23sk26m1a8yd">3</playerPass>
+<playerPass firstName="Henrikh Hamlet" lastName="Mkhitaryan" shortFirstName="Henrikh" shortLastName="Mkhitaryan" matchName="H. Mkhitaryan" playerId="1xscywgyfqisqexmpfvbf9g45">2</playerPass>
+<playerPass firstName="John" lastName="Stones" shortFirstName="John" shortLastName="Stones" matchName="J. Stones" playerId="3gem1jrrkgye0omb88fk1lsk5">1</playerPass>
+</player>
+<player playerId="botfgp0oq4wqlwtcs9m90kded" firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" shirtNumber="20" position="Midfielder" positionSide="Centre" crossLost="3" crossSuccess="2" passLost="3" passSuccess="64" x="52.54" y="48.58">
+<playerPass firstName="Benjamin Jacques Marcel" lastName="Pavard" shortFirstName="Benjamin" shortLastName="Pavard" matchName="B. Pavard" playerId="yq0cm7vwr0tkv7nvt9vo77bp">8</playerPass>
+<playerPass firstName="Josep" lastName="Martínez Riera" shortFirstName="Josep" shortLastName="Martínez" knownName="Josep Martínez" matchName="Josep Martínez" playerId="3yqxkw0tqpoucur51ieh9xdrd">3</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">7</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">10</playerPass>
+<playerPass firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" playerId="7r2tgpdrr4v6n9d2gkzwmlazt">5</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa" cross="1">8</playerPass>
+<playerPass firstName="Nicolò" lastName="Barella" shortFirstName="Nicolò" shortLastName="Barella" matchName="N. Barella" playerId="ahgd3on22t4h7gg9ipnj1itw5">8</playerPass>
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">6</playerPass>
+<playerPass firstName="Carlos Augusto" lastName="Zopolato Neves" shortFirstName="Carlos Augusto" shortLastName="Zopolato Neves" knownName="Carlos Augusto" matchName="Carlos Augusto" playerId="4d17grk2qflzake218uz76uei">7</playerPass>
+<playerPass firstName="Marcus Lilian" lastName="Thuram-Ulien" shortFirstName="Marcus" shortLastName="Thuram" matchName="M. Thuram" playerId="66nvc8a4kd3cyeyj3i474cudx" cross="1">2</playerPass>
+</player>
+<player playerId="ahgd3on22t4h7gg9ipnj1itw5" firstName="Nicolò" lastName="Barella" shortFirstName="Nicolò" shortLastName="Barella" matchName="N. Barella" shirtNumber="23" position="Midfielder" positionSide="Centre/Right" crossLost="0" crossSuccess="3" passLost="4" passSuccess="48" x="55.96" y="40.53">
+<playerPass firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" playerId="7r2tgpdrr4v6n9d2gkzwmlazt" cross="2">6</playerPass>
+<playerPass firstName="Carlos Augusto" lastName="Zopolato Neves" shortFirstName="Carlos Augusto" shortLastName="Zopolato Neves" knownName="Carlos Augusto" matchName="Carlos Augusto" playerId="4d17grk2qflzake218uz76uei">4</playerPass>
+<playerPass firstName="Marcus Lilian" lastName="Thuram-Ulien" shortFirstName="Marcus" shortLastName="Thuram" matchName="M. Thuram" playerId="66nvc8a4kd3cyeyj3i474cudx">2</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">7</playerPass>
+<playerPass firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" playerId="botfgp0oq4wqlwtcs9m90kded">10</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">3</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa">5</playerPass>
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">3</playerPass>
+<playerPass firstName="Benjamin Jacques Marcel" lastName="Pavard" shortFirstName="Benjamin" shortLastName="Pavard" matchName="B. Pavard" playerId="yq0cm7vwr0tkv7nvt9vo77bp">6</playerPass>
+<playerPass firstName="Josep" lastName="Martínez Riera" shortFirstName="Josep" shortLastName="Martínez" knownName="Josep Martínez" matchName="Josep Martínez" playerId="3yqxkw0tqpoucur51ieh9xdrd">1</playerPass>
+<playerPass firstName="John" lastName="Stones" shortFirstName="John" shortLastName="Stones" matchName="J. Stones" playerId="3gem1jrrkgye0omb88fk1lsk5" cross="1">1</playerPass>
+</player>
+<player playerId="3hpaoy4qzn5xp7qnzdrj1yvsa" firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" shirtNumber="17" position="Midfielder" positionSide="Right" crossLost="2" crossSuccess="1" passLost="9" passSuccess="43" x="60.95" y="20.22">
+<playerPass firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" playerId="botfgp0oq4wqlwtcs9m90kded">3</playerPass>
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">6</playerPass>
+<playerPass firstName="Benjamin Jacques Marcel" lastName="Pavard" shortFirstName="Benjamin" shortLastName="Pavard" matchName="B. Pavard" playerId="yq0cm7vwr0tkv7nvt9vo77bp" cross="1">4</playerPass>
+<playerPass firstName="Nicolò" lastName="Barella" shortFirstName="Nicolò" shortLastName="Barella" matchName="N. Barella" playerId="ahgd3on22t4h7gg9ipnj1itw5">7</playerPass>
+<playerPass firstName="Marcus Lilian" lastName="Thuram-Ulien" shortFirstName="Marcus" shortLastName="Thuram" matchName="M. Thuram" playerId="66nvc8a4kd3cyeyj3i474cudx">3</playerPass>
+<playerPass firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" playerId="7r2tgpdrr4v6n9d2gkzwmlazt">3</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">6</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">2</playerPass>
+<playerPass firstName="John" lastName="Stones" shortFirstName="John" shortLastName="Stones" matchName="J. Stones" playerId="3gem1jrrkgye0omb88fk1lsk5">1</playerPass>
+<playerPass firstName="Piotr Sebastian" lastName="Zieliński" shortFirstName="Piotr" shortLastName="Zielinski" matchName="P. Zieliński" playerId="dpcws493fepch23sk26m1a8yd">2</playerPass>
+<playerPass firstName="Petar" lastName="Sučić" shortFirstName="Petar" shortLastName="Sucic" knownName="Petar Sucic" matchName="P. Sučić" playerId="6u7iuum6kqfwb4pbw5lsoff56">4</playerPass>
+<playerPass firstName="Henrikh Hamlet" lastName="Mkhitaryan" shortFirstName="Henrikh" shortLastName="Mkhitaryan" matchName="H. Mkhitaryan" playerId="1xscywgyfqisqexmpfvbf9g45">2</playerPass>
+</player>
+<player playerId="66nvc8a4kd3cyeyj3i474cudx" firstName="Marcus Lilian" lastName="Thuram-Ulien" shortFirstName="Marcus" shortLastName="Thuram" matchName="M. Thuram" shirtNumber="9" position="Striker" positionSide="Left/Centre" crossLost="0" crossSuccess="0" passLost="0" passSuccess="10" x="74.99" y="41.01">
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">1</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa">3</playerPass>
+<playerPass firstName="Nicolò" lastName="Barella" shortFirstName="Nicolò" shortLastName="Barella" matchName="N. Barella" playerId="ahgd3on22t4h7gg9ipnj1itw5">2</playerPass>
+<playerPass firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" playerId="botfgp0oq4wqlwtcs9m90kded">1</playerPass>
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">2</playerPass>
+<playerPass firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" playerId="7r2tgpdrr4v6n9d2gkzwmlazt">1</playerPass>
+</player>
+<player playerId="7r2tgpdrr4v6n9d2gkzwmlazt" firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" shirtNumber="10" position="Striker" positionSide="Centre/Right" crossLost="0" crossSuccess="0" passLost="2" passSuccess="37" x="64.65" y="54.42">
+<playerPass firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" playerId="botfgp0oq4wqlwtcs9m90kded">2</playerPass>
+<playerPass firstName="Carlos Augusto" lastName="Zopolato Neves" shortFirstName="Carlos Augusto" shortLastName="Zopolato Neves" knownName="Carlos Augusto" matchName="Carlos Augusto" playerId="4d17grk2qflzake218uz76uei">6</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa">5</playerPass>
+<playerPass firstName="Nicolò" lastName="Barella" shortFirstName="Nicolò" shortLastName="Barella" matchName="N. Barella" playerId="ahgd3on22t4h7gg9ipnj1itw5">5</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">3</playerPass>
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">1</playerPass>
+<playerPass firstName="Benjamin Jacques Marcel" lastName="Pavard" shortFirstName="Benjamin" shortLastName="Pavard" matchName="B. Pavard" playerId="yq0cm7vwr0tkv7nvt9vo77bp">3</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">5</playerPass>
+<playerPass firstName="Marcus Lilian" lastName="Thuram-Ulien" shortFirstName="Marcus" shortLastName="Thuram" matchName="M. Thuram" playerId="66nvc8a4kd3cyeyj3i474cudx">2</playerPass>
+<playerPass firstName="Piotr Sebastian" lastName="Zieliński" shortFirstName="Piotr" shortLastName="Zielinski" matchName="P. Zieliński" playerId="dpcws493fepch23sk26m1a8yd">1</playerPass>
+<playerPass firstName="John" lastName="Stones" shortFirstName="John" shortLastName="Stones" matchName="J. Stones" playerId="3gem1jrrkgye0omb88fk1lsk5">1</playerPass>
+<playerPass firstName="Petar" lastName="Sučić" shortFirstName="Petar" shortLastName="Sucic" knownName="Petar Sucic" matchName="P. Sučić" playerId="6u7iuum6kqfwb4pbw5lsoff56">2</playerPass>
+<playerPass firstName="Henrikh Hamlet" lastName="Mkhitaryan" shortFirstName="Henrikh" shortLastName="Mkhitaryan" matchName="H. Mkhitaryan" playerId="1xscywgyfqisqexmpfvbf9g45">1</playerPass>
+</player>
+<player playerId="almf0gtdjmsdm5zhyot1hvydx" firstName="Manuel Obafemi" lastName="Akanji" shortFirstName="Manuel" shortLastName="Akanji" matchName="M. Akanji" shirtNumber="25" position="Substitute"/>
+<player playerId="ejbp3sxls7lgrg6y3a9q4u978" firstName="Ange-Yoan Laurent" lastName="Bonny" shortFirstName="Ange-Yoan" shortLastName="Bonny" matchName="A. Bonny" shirtNumber="14" position="Substitute" crossLost="0" crossSuccess="0" passLost="1" passSuccess="3" x="75.18" y="52.62">
+<playerPass firstName="Petar" lastName="Sučić" shortFirstName="Petar" shortLastName="Sucic" knownName="Petar Sucic" matchName="P. Sučić" playerId="6u7iuum6kqfwb4pbw5lsoff56">1</playerPass>
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">1</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">1</playerPass>
+</player>
+<player playerId="1e95np0v66lmp2qysqq8f33rp" firstName="Raffaele" lastName="Di Gennaro" shortFirstName="Raffaele" shortLastName="Di Gennaro" matchName="R. Di Gennaro" shirtNumber="12" position="Substitute"/>
+<player playerId="1v6nfd46wx11jbfertslccbo4" firstName="Francesco Pio" lastName="Esposito" shortFirstName="Francesco Pio" shortLastName="Esposito" matchName="F. Esposito" shirtNumber="94" position="Substitute"/>
+<player playerId="1xscywgyfqisqexmpfvbf9g45" firstName="Henrikh Hamlet" lastName="Mkhitaryan" shortFirstName="Henrikh" shortLastName="Mkhitaryan" matchName="H. Mkhitaryan" shirtNumber="22" position="Substitute" crossLost="0" crossSuccess="0" passLost="1" passSuccess="13" x="60.27" y="60.72">
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">2</playerPass>
+<playerPass firstName="Ange-Yoan Laurent" lastName="Bonny" shortFirstName="Ange-Yoan" shortLastName="Bonny" matchName="A. Bonny" playerId="ejbp3sxls7lgrg6y3a9q4u978">2</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa">1</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">2</playerPass>
+<playerPass firstName="Piotr Sebastian" lastName="Zieliński" shortFirstName="Piotr" shortLastName="Zielinski" matchName="P. Zieliński" playerId="dpcws493fepch23sk26m1a8yd">1</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">2</playerPass>
+<playerPass firstName="John" lastName="Stones" shortFirstName="John" shortLastName="Stones" matchName="J. Stones" playerId="3gem1jrrkgye0omb88fk1lsk5">1</playerPass>
+<playerPass firstName="Petar" lastName="Sučić" shortFirstName="Petar" shortLastName="Sucic" knownName="Petar Sucic" matchName="P. Sučić" playerId="6u7iuum6kqfwb4pbw5lsoff56">2</playerPass>
+</player>
+<player playerId="8n4rruxbnzvjgdomxslnmcno5" firstName="Ivan" lastName="Provedel" shortFirstName="Ivan" shortLastName="Provedel" matchName="I. Provedel" shirtNumber="49" position="Substitute"/>
+<player playerId="10lpk2wft7zsd1fa38ulbakno" firstName="Aleksandar" lastName="Stanković" shortFirstName="Aleksandar" shortLastName="Stankovic" matchName="A. Stanković" shirtNumber="5" position="Substitute"/>
+<player playerId="3gem1jrrkgye0omb88fk1lsk5" firstName="John" lastName="Stones" shortFirstName="John" shortLastName="Stones" matchName="J. Stones" shirtNumber="6" position="Substitute" crossLost="0" crossSuccess="0" passLost="0" passSuccess="23" x="41.17" y="49.7">
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">2</playerPass>
+<playerPass firstName="Nicolò" lastName="Barella" shortFirstName="Nicolò" shortLastName="Barella" matchName="N. Barella" playerId="ahgd3on22t4h7gg9ipnj1itw5">3</playerPass>
+<playerPass firstName="Hakan" lastName="Çalhanoğlu" shortFirstName="Hakan" shortLastName="Çalhanoglu" matchName="H. Çalhanoğlu" playerId="botfgp0oq4wqlwtcs9m90kded">2</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">3</playerPass>
+<playerPass firstName="Piotr Sebastian" lastName="Zieliński" shortFirstName="Piotr" shortLastName="Zielinski" matchName="P. Zieliński" playerId="dpcws493fepch23sk26m1a8yd">4</playerPass>
+<playerPass firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" playerId="7r2tgpdrr4v6n9d2gkzwmlazt">1</playerPass>
+<playerPass firstName="Petar" lastName="Sučić" shortFirstName="Petar" shortLastName="Sucic" knownName="Petar Sucic" matchName="P. Sučić" playerId="6u7iuum6kqfwb4pbw5lsoff56">3</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa">2</playerPass>
+<playerPass firstName="Henrikh Hamlet" lastName="Mkhitaryan" shortFirstName="Henrikh" shortLastName="Mkhitaryan" matchName="H. Mkhitaryan" playerId="1xscywgyfqisqexmpfvbf9g45">2</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">1</playerPass>
+</player>
+<player playerId="6u7iuum6kqfwb4pbw5lsoff56" firstName="Petar" lastName="Sučić" shortFirstName="Petar" shortLastName="Sucic" knownName="Petar Sucic" matchName="P. Sučić" shirtNumber="8" position="Substitute" crossLost="5" crossSuccess="2" passLost="4" passSuccess="15" x="63.31" y="40.67">
+<playerPass firstName="Piotr Sebastian" lastName="Zieliński" shortFirstName="Piotr" shortLastName="Zielinski" matchName="P. Zieliński" playerId="dpcws493fepch23sk26m1a8yd">4</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9" cross="1">1</playerPass>
+<playerPass firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" playerId="7r2tgpdrr4v6n9d2gkzwmlazt" cross="1">2</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa">2</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">3</playerPass>
+<playerPass firstName="Henrikh Hamlet" lastName="Mkhitaryan" shortFirstName="Henrikh" shortLastName="Mkhitaryan" matchName="H. Mkhitaryan" playerId="1xscywgyfqisqexmpfvbf9g45">2</playerPass>
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">1</playerPass>
+</player>
+<player playerId="dpcws493fepch23sk26m1a8yd" firstName="Piotr Sebastian" lastName="Zieliński" shortFirstName="Piotr" shortLastName="Zielinski" matchName="P. Zieliński" shirtNumber="7" position="Substitute" crossLost="0" crossSuccess="0" passLost="1" passSuccess="24" x="56.58" y="45.27">
+<playerPass firstName="Petar" lastName="Sučić" shortFirstName="Petar" shortLastName="Sucic" knownName="Petar Sucic" matchName="P. Sučić" playerId="6u7iuum6kqfwb4pbw5lsoff56">1</playerPass>
+<playerPass firstName="Lautaro Javier" lastName="Martínez" shortFirstName="Lautaro" shortLastName="Martínez" knownName="Lautaro Martínez" matchName="Lautaro Martínez" playerId="7r2tgpdrr4v6n9d2gkzwmlazt">4</playerPass>
+<playerPass firstName="Carlos Augusto" lastName="Zopolato Neves" shortFirstName="Carlos Augusto" shortLastName="Zopolato Neves" knownName="Carlos Augusto" matchName="Carlos Augusto" playerId="4d17grk2qflzake218uz76uei">2</playerPass>
+<playerPass firstName="Andy Alune" lastName="Diouf" shortFirstName="Andy" shortLastName="Diouf" matchName="A. Diouf" playerId="3hpaoy4qzn5xp7qnzdrj1yvsa">2</playerPass>
+<playerPass firstName="Alessandro" lastName="Bastoni" shortFirstName="Alessandro" shortLastName="Bastoni" matchName="A. Bastoni" playerId="q6ns1fyw7w10xkkubh8etfc9">4</playerPass>
+<playerPass firstName="Yann Aurel Ludger" lastName="Bisseck" shortFirstName="Yann" shortLastName="Bisseck" matchName="Y. Bisseck" playerId="280fh7f5q9lud8lk8reyu7fxm">4</playerPass>
+<playerPass firstName="Curtis Julian" lastName="Jones" shortFirstName="Curtis" shortLastName="Jones" matchName="C. Jones" playerId="3kdl679ra6mlobdg09xqf7fft">4</playerPass>
+<playerPass firstName="Henrikh Hamlet" lastName="Mkhitaryan" shortFirstName="Henrikh" shortLastName="Mkhitaryan" matchName="H. Mkhitaryan" playerId="1xscywgyfqisqexmpfvbf9g45">1</playerPass>
+<playerPass firstName="John" lastName="Stones" shortFirstName="John" shortLastName="Stones" matchName="J. Stones" playerId="3gem1jrrkgye0omb88fk1lsk5">1</playerPass>
+<playerPass firstName="Josep" lastName="Martínez Riera" shortFirstName="Josep" shortLastName="Martínez" knownName="Josep Martínez" matchName="Josep Martínez" playerId="3yqxkw0tqpoucur51ieh9xdrd">1</playerPass>
+</player>
+<player playerId="7rfw6pyjslb3p5q7gmoj1ysmi" firstName="Luis Henrique Tomaz" lastName="de Lima" shortFirstName="Luis Henrique Tomaz" shortLastName="de Lima" knownName="Luis Henrique" matchName="Luis Henrique" shirtNumber="11" position="Substitute"/>
+<teamOfficial id="a0ncxz4yxub9mhqbqjnxr51at" firstName="Cristian Eugen" lastName="Chivu" shortFirstName="Cristian" shortLastName="Chivu" type="manager"/>
+</lineUp>
+</liveData>
+</passMatrix>

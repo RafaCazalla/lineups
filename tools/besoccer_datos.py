@@ -14,6 +14,10 @@ Peticiones:
   playerStats         una por jugador: estadísticas del partido, mapa de calor
                       y tiros con xG. Son 22 peticiones; --sin-stats las salta.
 
+Y, aparte de la API, --pases admite un passMatrix de Opta (XML) con la matriz de
+pases del partido. Se une por (equipo, dorsal), que es lo único común entre las
+dos fuentes: los identificadores de jugador no se parecen en nada.
+
 Lo que la API NO da:
   · la casilla de cada jugador en la táctica. Manda el nombre («4-2-3-1») y un
     `pos` de 1 a 11, y con eso se reparte la forma del equipo (ver posiciones()).
@@ -21,6 +25,7 @@ Lo que la API NO da:
     REAL se usa el centroide del mapa de calor, que sí es dato medido.
 """
 import argparse, json, os, re, sys, urllib.parse, urllib.request
+import xml.etree.ElementTree as ET
 from datetime import date
 
 BASE = 'https://fast.besoccer.com/scripts/api/api.php'
@@ -256,6 +261,46 @@ def estadisticas(ev):
     return [f for f in fuera if f['local'] is not None or f['visitante'] is not None]
 
 
+def matriz_pases(ruta, jugadores):
+    """passMatrix de Opta -> pases entre los titulares, en las claves de aquí.
+
+    La unión con los datos de BeSoccer se hace por (equipo, dorsal): los ids de
+    jugador de las dos fuentes no tienen nada que ver. Los pases con suplentes
+    se descartan, porque los suplentes no están en el campo del prototipo."""
+    crudo = open(ruta, encoding='utf-8').read()
+    raiz = ET.fromstring(crudo[crudo.index('<passMatrix'):])
+    alineaciones = raiz.findall('.//lineUp')
+    if len(alineaciones) != 2:
+        sys.exit(f'{ruta}: esperaba dos alineaciones y hay {len(alineaciones)}')
+
+    porId = {}          # id de jugador de Opta -> id de aquí
+    sueltos = 0
+    # El primer lineUp es el local: el XML respeta el orden de contestants.
+    for lado, lu in zip(('local', 'visitante'), alineaciones):
+        porDorsal = {j['dorsal']: j for j in jugadores if j['equipo'] == lado}
+        for p in lu.findall('player'):
+            j = porDorsal.get(int(p.get('shirtNumber')))
+            if j:
+                porId[p.get('playerId')] = j['id']
+
+    for lado, lu in zip(('local', 'visitante'), alineaciones):
+        porDorsal = {j['dorsal']: j for j in jugadores if j['equipo'] == lado}
+        for p in lu.findall('player'):
+            j = porDorsal.get(int(p.get('shirtNumber')))
+            if not j:
+                continue
+            j['pasesA'] = []
+            for pp in p.findall('playerPass'):
+                destino = porId.get(pp.get('playerId'))
+                n = int((pp.text or '0').strip() or 0)
+                if destino and n:
+                    j['pasesA'].append([destino, n])
+                elif n:
+                    sueltos += n
+            j['pasesA'].sort(key=lambda x: -x[1])
+    return sueltos
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('match', help='id del partido, p. ej. 208696')
@@ -265,6 +310,7 @@ def main():
     ap.add_argument('--inline', help='index.html en el que sustituir el bloque PARTIDO')
     ap.add_argument('--sin-stats', action='store_true',
                     help='no pedir playerStats (22 peticiones menos, ficha sin estadísticas)')
+    ap.add_argument('--pases', help='passMatrix de Opta (XML) con la matriz de pases')
     a = ap.parse_args()
     if not a.key:
         sys.exit('Falta la clave: BESOCCER_KEY en el entorno, o --key.')
@@ -294,6 +340,14 @@ def main():
         'estadisticas': estadisticas(ev),
         'jugadores': jugadores(lu, a.match, a.year, None if a.sin_stats else a.key),
     }
+    if a.pases:
+        sueltos = matriz_pases(a.pases, partido['jugadores'])
+        partido['fuentePases'] = f'Matriz de pases de Opta · {os.path.basename(a.pases)}'
+        con = sum(1 for j in partido['jugadores'] if j.get('pasesA'))
+        total = sum(n for j in partido['jugadores'] for _, n in (j.get('pasesA') or []))
+        print(f'matriz de pases: {con}/22 jugadores · {total} pases entre titulares'
+              f' · {sueltos} descartados por ser con suplentes')
+
     # La explicación de la nota es la misma para todos: se guarda una vez.
     partido['notaLeyenda'] = ('La valoración se calcula con un modelo de ponderación de '
                               'eventos: cada acción suma o resta según su impacto. En verde, '

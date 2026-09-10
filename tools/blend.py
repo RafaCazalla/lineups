@@ -127,6 +127,11 @@ class Blend:
         return cru.decode('latin1')[2:]
 
     def bloque_en(self, puntero):
+        # El puntero nulo NO es un bloque: el bloque final (ENDB) se guarda con
+        # puntero 0, así que sin esta guarda un campo vacío devuelve el final
+        # del fichero y el siguiente `leer` se sale del buffer.
+        if not puntero:
+            return None
         return self.por_puntero.get(puntero)
 
     def de_codigo(self, code):

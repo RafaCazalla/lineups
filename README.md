@@ -338,6 +338,27 @@ desplaza cuatro bytes todo lo que viene detrás y el fichero deja de tener senti
   cota cero. Así el nuestro cae encima por construcción, no por tanteo.
 - **Una primitiva por material**, para poder colorear cada pieza.
 
+### Por qué no se usan las texturas
+
+Vienen en un `Texture.rar`, pero **no sirven**. El `.blend` referencia **12 imágenes
+externas** y ninguna va empotrada dentro del fichero; el RAR trae **4**, y solo **2
+coinciden** (`fmrf.jpg` y `seats.png`). Las otras dos del RAR (`AVSF.jpg`, `fsa.jpg`) no
+las pide el modelo, y faltan 10 de las que sí pide:
+
+```
+//bench/Carpet_Aqua1.jpg     //bench/Couro_Azul.jpg      //bench/Logo.png
+//bench/Carpet_Frieze_Blue.jpg  //bench/Couro_branco.jpg  //bench/SerrArena_letreiro1.png
+//bench/Phoenix_Civic_Plaza_31.jpg   //IMG-2674.PNG   //MADE BY.psd   //Untitled-1.jpg
+```
+
+Además, las siete que el sistema de materiales enlaza son todas del **banquillo**
+(`bench/`), no de las gradas; y `seats.png`, que sería la que se notaría, va por árbol de
+nodos sobre el material `Seat`, que son los 340.000 triángulos que se descartan.
+
+Con esto no hay textura que poner. Para tenerlas hacen falta los ficheros que faltan, o
+—mejor— un GLB exportado desde Blender con **File → External Data → Pack Resources** y
+las imágenes empotradas.
+
 Tres cosas que hubo que averiguar mirando la geometría, porque el fichero no las dice:
 
 | | |

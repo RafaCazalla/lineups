@@ -119,7 +119,44 @@ body.con-estadio{
 }
 #ajustes{padding:6px; flex:none}
 /* La rueda flotante, el velo y el aspa de los ajustes son solo de móvil. */
-#bt-ajustes, #velo, #ajustes .cerrar{display:none}
+#bt-ajustes, #velo, #ajustes .cerrar, #suplentes{display:none}
+
+/* Banquillos (solo móvil). Dos columnas, once por equipo, y el que entró se
+   distingue del que se quedó sentado: es lo único que el dato dice de ellos. */
+#suplentes{
+  position:fixed; left:0; right:0; z-index:3;
+  padding:2px 10px 0; overflow-y:auto; overscroll-behavior:contain;
+  display:grid; grid-template-columns:1fr 1fr; gap:0 10px; align-content:start;
+}
+#suplentes .rot{
+  grid-column:1 / -1; grid-row:1; margin:0 2px 5px;
+  font-family:var(--font-cond); font-weight:600; font-size:11px; letter-spacing:.4px;
+  text-transform:uppercase; color:var(--green-dark);
+}
+#suplentes h3{
+  grid-row:2; margin:0 0 5px; padding:0 2px 5px; border-bottom:1px solid var(--hairline);
+  display:flex; align-items:center; gap:6px;
+  font-family:var(--font-cond); font-weight:600; font-size:12px; color:var(--ink-2);
+}
+#suplentes h3 img{width:15px; height:15px; object-fit:contain; flex:none}
+#suplentes ul{grid-row:3; margin:0; padding:0; list-style:none}
+#suplentes li{
+  display:flex; align-items:center; gap:6px; padding:3px 2px;
+  font-family:var(--font-cond); font-size:12.5px; line-height:1.2; color:var(--ink-3);
+}
+/* Quien no llegó a jugar se queda en gris: distinguirlos es el único dato. */
+#suplentes li.jugo{color:var(--ink)}
+#suplentes .dor{
+  flex:none; width:19px; text-align:right; font-variant-numeric:tabular-nums;
+  font-weight:600; color:var(--ink-3);
+}
+#suplentes li.jugo .dor{color:var(--ink-2)}
+#suplentes .nom{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+#suplentes .min{
+  flex:none; padding:1px 5px 0; border-radius:5px; font-size:10.5px; font-weight:600;
+  background:rgba(59,129,31,.13); color:var(--green-dark);
+}
+#suplentes .vacio{grid-column:1 / -1; margin:6px 2px; font-size:12px; color:var(--ink-3)}
 #ajustes .cab{
   width:100%; display:flex; align-items:center; gap:9px; padding:8px 10px;
   border:0; border-radius:9px; background:none; cursor:pointer; font:inherit;
@@ -545,8 +582,17 @@ body.con-estadio{
   body.movil #bt-ajustes svg{width:21px; height:21px}
   body.movil #bt-ajustes[aria-expanded="true"]{background:var(--green); color:#fff}
 
-  /* --- El campo se queda con todo lo que sobra -------------------------- */
-  body.movil #escena, body.movil #etiquetas{top:92px; bottom:0; height:auto}
+  /* --- El campo, pegado a la cabecera -----------------------------------
+     El lienzo se corta a la medida del campo (la losa es 116 x 79 m, o sea
+     1,47 de proporción) en vez de estirarse hasta abajo: con un campo
+     horizontal en una pantalla vertical, todo lo que sobre de lienzo es aire
+     entre la cabecera y el césped. Lo de debajo es para los banquillos. */
+  body.movil #escena, body.movil #etiquetas{
+    top:92px; bottom:auto; height:calc(100vw / 1.45);
+  }
+  body.movil #suplentes{
+    display:grid; top:calc(92px + 100vw / 1.45 + 4px); bottom:58px;
+  }
   /* La capa de etiquetas tiene que cubrir EXACTAMENTE lo mismo que el lienzo,
      o los nombres salen desplazados respecto a las fichas. */
   /* Con una hoja abierta el campo se encoge a lo que queda por encima, en vez
@@ -556,8 +602,9 @@ body.con-estadio{
      a apaisada, el campo se pone horizontal solo (`giroVertical`)—.
      La cabecera se retira: esos 92 px son más de un tercio de la franja, y
      mientras miras la ficha de un jugador el marcador no es lo que importa. */
-  body.movil.con-hoja #escena, body.movil.con-hoja #etiquetas{top:0; bottom:70vh}
-  body.movil.con-hoja #cabecera, body.movil.con-hoja #bt-ajustes{display:none}
+  body.movil.con-hoja #escena, body.movil.con-hoja #etiquetas{top:0; bottom:70vh; height:auto}
+  body.movil.con-hoja #cabecera, body.movil.con-hoja #bt-ajustes,
+  body.movil.con-hoja #suplentes{display:none}
 
   /* --- La columna deja de ser columna -----------------------------------
      En móvil no hay nada apilado: hay un cajón y unas hojas, todos fijos.
@@ -678,9 +725,9 @@ body.con-estadio{
 
   /* El aviso baja al pie del campo, y desaparece con cualquier hoja abierta. */
   body.movil #aviso-movil{
-    position:fixed; left:12px; right:150px; bottom:16px; z-index:4;
+    position:fixed; left:12px; right:170px; bottom:18px; z-index:4;
     margin:0; pointer-events:none;
-    font-family:var(--font-cond); font-size:11px; line-height:1.35; color:var(--ink-3);
+    font-family:var(--font-cond); font-size:10.5px; line-height:1.35; color:var(--ink-3);
   }
   body.movil #bt-stats{bottom:12px; right:12px}
   /* La ficha ya no es una tarjeta de la columna: el botón de estadísticas
@@ -743,6 +790,10 @@ body.con-estadio{
   </svg>
 </button>
 <div id="velo"></div>
+
+<!-- Solo en móvil: el hueco que queda bajo el campo se llena con los dos
+     banquillos, que si no era espacio muerto. -->
+<section id="suplentes" aria-label="Suplentes"></section>
 
 <div class="hud" id="izquierda">
 <section class="tarjeta" id="ajustes" data-abierto="true" role="group" aria-label="Ajustes de la escena">
@@ -13286,6 +13337,382 @@ const PARTIDO = {
    ]
   }
  ],
+ "suplentes": [
+  {
+   "id": "sl14",
+   "idApi": "346755",
+   "dorsal": 14,
+   "corto": "A. Tchouaméni",
+   "nombre": "Aurélien Djani Tchouaméni",
+   "rol": "MED",
+   "rolLargo": "Centrocampista",
+   "equipo": "local",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/346755.jpg?size=60x&lossy=1",
+   "edad": "26",
+   "nota": 6.5,
+   "notaColor": "#FFA323",
+   "entra": 79,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sl25",
+   "idApi": "3670288",
+   "dorsal": 25,
+   "corto": "Y. Diomande",
+   "nombre": "Yan Diomande",
+   "rol": "DEL",
+   "rolLargo": "Delantero",
+   "equipo": "local",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/3670288.jpg?size=60x&lossy=1",
+   "edad": "19",
+   "nota": 6.5,
+   "notaColor": "#FFA323",
+   "entra": 79,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sl18",
+   "idApi": "975472",
+   "dorsal": 18,
+   "corto": "Á. Carreras",
+   "nombre": "Álvaro Fernández Carreras",
+   "rol": "DEF",
+   "rolLargo": "Defensa",
+   "equipo": "local",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/975472.jpg?size=60x&lossy=1",
+   "edad": "23",
+   "nota": null,
+   "notaColor": null,
+   "entra": 87,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sl19",
+   "idApi": "3198124",
+   "dorsal": 19,
+   "corto": "Carlos Espí",
+   "nombre": "Carlos Espí Escrihuela",
+   "rol": "DEL",
+   "rolLargo": "Delantero",
+   "equipo": "local",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/3198124.jpg?size=60x&lossy=1",
+   "edad": "21",
+   "nota": null,
+   "notaColor": null,
+   "entra": 93,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sl26",
+   "idApi": "902016",
+   "dorsal": 26,
+   "corto": "Sergio Mestre",
+   "nombre": "Sergio Mestre Sánchez",
+   "rol": "PT",
+   "rolLargo": "Portero",
+   "equipo": "local",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/902016.jpg?size=60x&lossy=1",
+   "edad": "21",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sl13",
+   "idApi": "320249",
+   "dorsal": 13,
+   "corto": "Andriy Lunin",
+   "nombre": "Andrii Lunin",
+   "rol": "PT",
+   "rolLargo": "Portero",
+   "equipo": "local",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/320249.jpg?size=60x&lossy=1",
+   "edad": "27",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sl22",
+   "idApi": "130029",
+   "dorsal": 22,
+   "corto": "A. Rüdiger",
+   "nombre": "Antonio Rüdiger",
+   "rol": "DEF",
+   "rolLargo": "Defensa",
+   "equipo": "local",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/130029.jpg?size=60x&lossy=1",
+   "edad": "33",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sl33",
+   "idApi": "3444423",
+   "dorsal": 33,
+   "corto": "Mario Rivas",
+   "nombre": "Mario Rivas Lagos",
+   "rol": "DEF",
+   "rolLargo": "Defensa",
+   "equipo": "local",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/3444423.jpg?size=60x&lossy=1",
+   "edad": "19",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sl27",
+   "idApi": "3604716",
+   "dorsal": 27,
+   "corto": "T. Pitarch",
+   "nombre": "Thiago Pitarch Pinar",
+   "rol": "MED",
+   "rolLargo": "Centrocampista",
+   "equipo": "local",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/3604716.jpg?size=60x&lossy=1",
+   "edad": "19",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sl29",
+   "idApi": "940718",
+   "dorsal": 29,
+   "corto": "Jorge Cestero",
+   "nombre": "Jorge Cestero Sancho",
+   "rol": "MED",
+   "rolLargo": "Centrocampista",
+   "equipo": "local",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/940718.jpg?size=60x&lossy=1",
+   "edad": "20",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sl9",
+   "idApi": "987453",
+   "dorsal": 9,
+   "corto": "Endrick",
+   "nombre": "Endrick Felipe Moreira De Sousa",
+   "rol": "DEL",
+   "rolLargo": "Delantero",
+   "equipo": "local",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/987453.jpg?size=60x&lossy=1",
+   "edad": "20",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sv6",
+   "idApi": "182519",
+   "dorsal": 6,
+   "corto": "John Stones",
+   "nombre": "John Stones",
+   "rol": "DEF",
+   "rolLargo": "Defensa",
+   "equipo": "visitante",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/182519.jpg?size=60x&lossy=1",
+   "edad": "32",
+   "nota": 6.8,
+   "notaColor": "#FFA323",
+   "entra": 46,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sv7",
+   "idApi": "142317",
+   "dorsal": 7,
+   "corto": "P. Zieliński",
+   "nombre": "Piotr Sebastian Zieliński",
+   "rol": "MED",
+   "rolLargo": "Centrocampista",
+   "equipo": "visitante",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/142317.jpg?size=60x&lossy=1",
+   "edad": "32",
+   "nota": 7.0,
+   "notaColor": "#11AA00",
+   "entra": 60,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sv8",
+   "idApi": "888329",
+   "dorsal": 8,
+   "corto": "Petar Sučić",
+   "nombre": "Petar Sučić",
+   "rol": "MED",
+   "rolLargo": "Centrocampista",
+   "equipo": "visitante",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/888329.jpg?size=60x&lossy=1",
+   "edad": "22",
+   "nota": 7.3,
+   "notaColor": "#11AA00",
+   "entra": 60,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sv14",
+   "idApi": "975208",
+   "dorsal": 14,
+   "corto": "Ange-Yoan Bonny",
+   "nombre": "Ange-Yoan Bonny",
+   "rol": "DEL",
+   "rolLargo": "Delantero",
+   "equipo": "visitante",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/975208.jpg?size=60x&lossy=1",
+   "edad": "22",
+   "nota": 6.5,
+   "notaColor": "#FFA323",
+   "entra": 60,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sv22",
+   "idApi": "139087",
+   "dorsal": 22,
+   "corto": "H. Mkhitaryan",
+   "nombre": "Henrikh Hamlet Mkhitaryan",
+   "rol": "MED",
+   "rolLargo": "Centrocampista",
+   "equipo": "visitante",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/139087.jpg?size=60x&lossy=1",
+   "edad": "37",
+   "nota": 6.6,
+   "notaColor": "#FFA323",
+   "entra": 83,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sv12",
+   "idApi": "21099",
+   "dorsal": 12,
+   "corto": "R. Di Gennaro",
+   "nombre": "Raffaele Di Gennaro",
+   "rol": "PT",
+   "rolLargo": "Portero",
+   "equipo": "visitante",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/21099.jpg?size=60x&lossy=1",
+   "edad": "32",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sv49",
+   "idApi": "218014",
+   "dorsal": 49,
+   "corto": "I. Provedel",
+   "nombre": "Ivan Provedel",
+   "rol": "PT",
+   "rolLargo": "Portero",
+   "equipo": "visitante",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/218014.jpg?size=60x&lossy=1",
+   "edad": "32",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sv25",
+   "idApi": "205348",
+   "dorsal": 25,
+   "corto": "M. Akanji",
+   "nombre": "Manuel Obafemi Akanji",
+   "rol": "DEF",
+   "rolLargo": "Defensa",
+   "equipo": "visitante",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/205348.jpg?size=60x&lossy=1",
+   "edad": "31",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sv5",
+   "idApi": "3192176",
+   "dorsal": 5,
+   "corto": "Aleksandar Stankovic",
+   "nombre": "Aleksandar Stanković",
+   "rol": "MED",
+   "rolLargo": "Centrocampista",
+   "equipo": "visitante",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/3192176.jpg?size=60x&lossy=1",
+   "edad": "21",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sv11",
+   "idApi": "834735",
+   "dorsal": 11,
+   "corto": "Luis Henrique",
+   "nombre": "Luis Henrique Tomaz De Lima",
+   "rol": "MED",
+   "rolLargo": "Centrocampista",
+   "equipo": "visitante",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/834735.jpg?size=60x&lossy=1",
+   "edad": "24",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  },
+  {
+   "id": "sv94",
+   "idApi": "3209304",
+   "dorsal": 94,
+   "corto": "Pio Esposito",
+   "nombre": "Francesco Pio Esposito",
+   "rol": "DEL",
+   "rolLargo": "Delantero",
+   "equipo": "visitante",
+   "foto": "https://cdn.resfu.com/img_data/players/medium/3209304.jpg?size=60x&lossy=1",
+   "edad": "21",
+   "nota": null,
+   "notaColor": null,
+   "entra": null,
+   "goles": 0,
+   "tarjetas": []
+  }
+ ],
  "fuentePases": "Matriz de pases de Opta · passmatrix-208696.xml",
  "notaLeyenda": "La valoración se calcula con un modelo de ponderación de eventos: cada acción suma o resta según su impacto. En verde, las que suman; en rojo, las que restan."
 };
@@ -15676,6 +16103,55 @@ if (esMovil) {
     }
     hoja.insertBefore(b, hoja.querySelector('.top'));
     barras.push(b);
+  }
+
+  /* Los dos banquillos, bajo el campo. Se pintan una vez: no cambian.
+     Solo se dice de ellos lo que el dato dice —dorsal, nombre y el minuto en
+     el que entraron—; no se les piden estadísticas, así que no se abren. */
+  const sup = document.getElementById('suplentes');
+  const bancos = PARTIDO.suplentes || [];
+  if (!bancos.length) {
+    const p = document.createElement('p');
+    p.className = 'vacio';
+    p.textContent = 'La API no trae el banquillo de este partido.';
+    sup.appendChild(p);
+  } else {
+    const rot = document.createElement('p');
+    rot.className = 'rot';
+    rot.textContent = 'Suplentes';
+    sup.appendChild(rot);
+    for (const lado of ['local', 'visitante']) {
+      const eq = PARTIDO[lado];
+      const h = document.createElement('h3');
+      if (eq.escudo) {
+        const img = document.createElement('img');
+        img.src = eq.escudo; img.alt = '';
+        h.appendChild(img);
+      }
+      h.appendChild(document.createTextNode(eq.nombre));
+      const ul = document.createElement('ul');
+      for (const j of bancos.filter(x => x.equipo === lado)) {
+        const li = document.createElement('li');
+        li.classList.toggle('jugo', j.entra != null);
+        const d = document.createElement('span');
+        d.className = 'dor';
+        d.textContent = j.dorsal;
+        const n = document.createElement('span');
+        n.className = 'nom';
+        n.textContent = j.corto;
+        n.title = j.nombre || j.corto;
+        li.append(d, n);
+        if (j.entra != null) {
+          const m = document.createElement('span');
+          m.className = 'min';
+          m.textContent = j.entra + "'";
+          m.title = 'Entró en el minuto ' + j.entra;
+          li.appendChild(m);
+        }
+        ul.appendChild(li);
+      }
+      sup.append(h, ul);
+    }
   }
 
   // La rueda de al lado de la cabecera abre y cierra el cajón.

@@ -340,7 +340,17 @@ Detalles que costaron:
 
 Tres piezas y ya está:
 
-- **El campo se queda con toda la pantalla**, y **en horizontal**. `giroVertical` sabe
+- **El campo va pegado a la cabecera**, y **en horizontal**. El lienzo se corta a la
+  medida del campo —la losa mide 116 x 79 m, o sea 1,47 de proporción, y de ahí sale
+  `height:calc(100vw / 1.45)`— en vez de estirarse hasta abajo: con un campo horizontal
+  en una pantalla vertical, todo lo que sobre de lienzo es aire entre la cabecera y el
+  césped. Lo de debajo es para los banquillos.
+- **Debajo van los dos banquillos**, once por equipo, con el minuto en el que entró cada
+  uno. Los que no llegaron a jugar se quedan en gris: distinguirlos es lo único que el
+  dato dice de ellos. No se les piden `playerStats` —serían 22 peticiones más para una
+  tira de nombres— y por eso no se abren; la nota que traen sirve solo para los que
+  entraron, porque a los demás la API les pone una que no significa nada.
+- **El campo NO se gira**, aunque sabría. `giroVertical` sabe
   poner el campo de canto cuando el lienzo es más alto que ancho, pero en móvil se
   desactiva a propósito: el campo se mira como en la tele, y además girándolo cambiaba de
   orientación cada vez que se abría o cerraba una hoja (la franja de arriba sí es

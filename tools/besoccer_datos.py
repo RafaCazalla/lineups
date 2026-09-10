@@ -171,6 +171,41 @@ def equipo(lado, lu, ev, goles):
     }
 
 
+def suplentes(lu):
+    """El banquillo, tal cual lo da la API: los once de cada equipo, con el
+    minuto en el que entraron si llegaron a jugar.
+
+    No se les piden `playerStats`: son 22 peticiones más para una tira que solo
+    enseña nombre, dorsal y nota, y la nota ya viene aquí. Si algún día se
+    quiere abrir su ficha, hay `idApi` y `hasStats` para pedirla.
+    """
+    banco = lu.get('bench') or {}
+    fuera = []
+    for lado, clave in (('local', 'local'), ('visitante', 'visitor')):
+        for p in banco.get(clave) or []:
+            entra = int(p['in']) if str(p.get('in') or 0) != '0' else None
+            # Quien entra en el 90 puede no tener nota: la API manda un «-».
+            try:
+                nota = float(p['rating']) if entra else None
+            except (TypeError, ValueError):
+                nota = None
+            fuera.append({
+                'id': 's' + lado[0] + p['num'], 'idApi': p['idplayer'],
+                'dorsal': int(p['num']), 'corto': p['nick'],
+                'nombre': ' '.join(x for x in (p.get('name'), p.get('last_name')) if x).strip(),
+                'rol': p['roleAbbr'], 'rolLargo': ROL_LARGO.get(p['roleAbbr'], p['roleAbbr']),
+                'equipo': lado, 'foto': p.get('image'), 'edad': p.get('age'),
+                # La nota solo tiene sentido si ha jugado; a quien no entró la
+                # API le pone una igualmente y no significa nada.
+                'nota': nota,
+                'notaColor': (p.get('ratingColor') or {}).get('lightColor') if nota else None,
+                'entra': entra,
+                'goles': int(p.get('goals') or 0),
+                'tarjetas': [{'tipo': c['action'], 'min': int(c['minute'])} for c in (p.get('cards') or [])],
+            })
+    return fuera
+
+
 def jugadores(lu, match=None, year=None, key=None):
     L, fuera = lu['lineups'], []
     for lado, clave in (('local', 'local'), ('visitante', 'visitor')):
@@ -339,6 +374,7 @@ def main():
         'eventos': eventos(ev),
         'estadisticas': estadisticas(ev),
         'jugadores': jugadores(lu, a.match, a.year, None if a.sin_stats else a.key),
+        'suplentes': suplentes(lu),
     }
     if a.pases:
         sueltos = matriz_pases(a.pases, partido['jugadores'])
@@ -379,6 +415,8 @@ def main():
     tiros = sum(len(j.get('tiros') or []) for j in partido['jugadores'])
     print(f'por jugador: {con_stats}/22 con estadísticas · {con_calor}/22 con mapa de calor'
           f' · {tiros} tiros')
+    sup = partido['suplentes']
+    print(f"banquillo: {len(sup)} suplentes · {sum(1 for s in sup if s['entra'])} entraron")
 
 
 if __name__ == '__main__':

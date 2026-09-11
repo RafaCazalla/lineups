@@ -144,6 +144,20 @@ body.con-estadio{
   display:flex; align-items:center; gap:6px; padding:3px 2px;
   font-family:var(--font-cond); font-size:12.5px; line-height:1.2; color:var(--ink-3);
 }
+/* La fila de quien jugó es un botón que ocupa toda la fila: el objetivo del
+   dedo es la línea entera, no el nombre. */
+#suplentes li > button{
+  flex:1; min-width:0; display:flex; align-items:center; gap:6px;
+  margin:-3px -4px; padding:6px 4px; border:0; border-radius:7px;
+  background:none; cursor:pointer; font:inherit; color:inherit; text-align:left;
+}
+#suplentes li > button:active{background:rgba(56,56,56,.08)}
+#suplentes li > button:focus-visible{outline:2px solid var(--green); outline-offset:-1px}
+/* Quien ya tiene informe lo dice, igual que en las etiquetas del campo. */
+#suplentes li.con-informe .nom::after{
+  content:''; display:inline-block; width:6px; height:6px; margin-left:5px;
+  border-radius:50%; background:var(--green); vertical-align:middle;
+}
 /* Quien no llegó a jugar se queda en gris: distinguirlos es el único dato. */
 #suplentes li.jugo{color:var(--ink)}
 #suplentes .dor{
@@ -329,14 +343,6 @@ body.con-estadio{
   background:#1565C0; color:#fff; font-family:var(--font-cond); font-weight:600;
   font-size:11px; letter-spacing:.4px;
 }
-#ficha .desglose{
-  display:flex; gap:6px; margin-top:9px; font-family:var(--font-cond); font-size:11.5px;
-}
-#ficha .desglose span{
-  flex:1; padding:4px 7px 3px; border-radius:6px; text-align:center; font-weight:600;
-}
-#ficha .desglose .mas{background:rgba(59,129,31,.13); color:#0A6D21}
-#ficha .desglose .menos{background:rgba(204,0,0,.10); color:#CC0000}
 #ficha .marcas{display:flex; flex-wrap:wrap; gap:5px; margin-top:9px}
 #ficha .chapa{
   display:inline-flex; align-items:center; gap:4px;
@@ -567,7 +573,10 @@ body.con-estadio{
    demás. La escena sigue siendo la misma, solo que con la cámara bloqueada:
    no hay una segunda versión que mantener. */
 @media (max-width:820px){
-  body.movil{overflow:hidden}
+  /* El alto de la hoja es UNA variable, y de ella cuelga todo: la propia hoja
+     y hasta dónde llega el campo. Así el dedo mueve un solo número. */
+  body.movil{overflow:hidden; --hoja:70vh}
+  body.movil.con-pestanas{--hoja:80vh}   /* con informe hace falta más sitio */
 
   /* --- Cabecera: marcador centrado y la rueda a su derecha --------------
      Fuera el logo de BeSoccer: se comía el sitio de la cabecera y la dejaba
@@ -602,7 +611,8 @@ body.con-estadio{
      a apaisada, el campo se pone horizontal solo (`giroVertical`)—.
      La cabecera se retira: esos 92 px son más de un tercio de la franja, y
      mientras miras la ficha de un jugador el marcador no es lo que importa. */
-  body.movil.con-hoja #escena, body.movil.con-hoja #etiquetas{top:0; bottom:70vh; height:auto}
+  body.movil.con-hoja #escena, body.movil.con-hoja #etiquetas{top:0; bottom:var(--hoja); height:auto}
+  body.movil.hoja-completa #escena, body.movil.hoja-completa #etiquetas{display:none}
   body.movil.con-hoja #cabecera, body.movil.con-hoja #bt-ajustes,
   body.movil.con-hoja #suplentes{display:none}
 
@@ -649,12 +659,12 @@ body.con-estadio{
      el panel translúcido dejaba pasar el césped por encima del contenido. */
   body.movil #ficha, body.movil #informe, body.movil #stats{
     position:fixed; left:0; right:0; bottom:0; top:auto; order:0;
-    width:auto; height:70vh; max-height:70vh; margin:0;
+    width:auto; height:var(--hoja); max-height:100vh; margin:0;
     border-radius:16px 16px 0 0; border-bottom:0;
     background:#fff; -webkit-backdrop-filter:none; backdrop-filter:none;
     box-shadow:0 -10px 34px rgba(56,56,56,.22);
     overflow:hidden;   /* el que se desplaza es el cuerpo, no la hoja */
-    padding:11px 0 0;  /* hueco del asa */
+    padding:17px 0 0;  /* hueco del asa */
   }
   /* Ojo: #izquierda es position:fixed con z-index, o sea un CONTEXTO DE
      APILADO. Este 12 ordena la ficha y el informe dentro de la columna; ahí
@@ -662,11 +672,21 @@ body.con-estadio{
      que necesitan su propio número por encima del velo. */
   body.movil #ficha, body.movil #informe{z-index:12}
   body.movil #stats{z-index:21}
-  /* El asa no arrastra: dice que esto es una hoja y de dónde ha salido. */
-  body.movil #ficha::before, body.movil #informe::before, body.movil #stats::before{
-    content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%);
-    width:38px; height:4px; border-radius:2px; background:var(--hairline); z-index:3;
+  /* El asa: dice que esto es una hoja, de dónde ha salido y que se arrastra.
+     La zona sensible es toda la banda de arriba (.asa), no los 4 px de la
+     rayita: con el dedo hay que acertar en algo de 40 px, no en una línea. */
+  body.movil .asa{
+    display:block; position:absolute; top:0; left:0; right:0; height:28px; z-index:5;
+    border:0; padding:0; background:none; cursor:grab; touch-action:none;
   }
+  body.movil .asa::before{
+    content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%);
+    width:38px; height:4px; border-radius:2px; background:var(--hairline);
+  }
+  body.movil .asa:active{cursor:grabbing}
+  /* Mientras se arrastra no hay transición que persiga al dedo. */
+  body.movil.arrastrando #ficha, body.movil.arrastrando #informe,
+  body.movil.arrastrando #stats{transition:none}
   body.movil #ficha.abierta, body.movil #informe.abierta, body.movil #stats.abierto{
     display:flex; flex-direction:column;
   }
@@ -675,16 +695,20 @@ body.con-estadio{
      perderían justo cuando hacen falta. */
   body.movil #ficha .top, body.movil #informe .top,
   body.movil #stats h2, body.movil #stats .sub{flex:none}
-  body.movil #ficha .cuerpo, body.movil #informe .campos, body.movil #stats #s-filas{
+  body.movil #ficha .hoja-cuerpo, body.movil #informe .campos, body.movil #stats #s-filas{
     flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;   /* inercia en Safari viejo */
   }
   body.movil #informe .campos{padding-bottom:12px}
   body.movil #informe .pie{flex:none; border-top:1px solid var(--hairline)}
   body.movil #informe .estado{flex:none}
   /* Pestañas: el mismo control segmentado que el selector de equipos, para
      que no haya dos formas distintas de decir «elige una de estas». */
+  /* «Informe de ojeador» sobra: la pestaña ya lo dice, y quitarlo sube el
+     nombre del jugador una línea. */
+  body.movil #informe .rot{display:none}
   body.movil .pestanas{
-    display:none; flex:none; gap:3px; padding:3px; margin:0 56px 8px 12px;
+    display:none; flex:none; gap:3px; padding:3px; margin:6px 56px 8px 12px;
     border-radius:9px; background:rgba(56,56,56,.06);
   }
   body.movil.con-pestanas .pestanas{display:flex}
@@ -700,18 +724,18 @@ body.con-estadio{
   /* La hoja que no toca sigue «abierta» —cuenta para el velo y para que el
      campo se encoja—, pero no se dibuja. */
   body.movil #ficha.oculta, body.movil #informe.oculta{display:none}
-  body.movil #stats{padding:11px 15px 12px}
+  body.movil #stats{padding:17px 15px 12px}
   body.movil #stats h2{padding-right:44px}
   body.movil #stats #s-filas{margin:0 -15px; padding:0 15px}
   /* Aspas de 38 px: con 26 no se aciertan con el dedo. */
   body.movil #ficha .cerrar, body.movil #informe .cerrar,
   body.movil #stats .cerrar, body.movil #ajustes .cerrar{
-    display:grid; place-items:center; position:absolute; top:15px; right:10px;
+    display:grid; place-items:center; position:absolute; top:21px; right:10px;
     width:38px; height:38px; border:0; border-radius:9px; z-index:4;
     background:rgba(56,56,56,.07); color:var(--ink-2); cursor:pointer;
   }
   body.movil #ajustes .cerrar{top:10px}
-  body.movil #stats .cerrar{top:12px; right:12px}
+  body.movil #stats .cerrar{top:18px; right:12px}
   body.movil #ficha .cerrar svg, body.movil #informe .cerrar svg,
   body.movil #stats .cerrar svg, body.movil #ajustes .cerrar svg{width:15px; height:15px}
 
@@ -916,7 +940,6 @@ body.con-estadio{
       <span class="nota" id="f-nota"></span>
     </div>
     <div id="f-mvp"></div>
-    <div class="desglose" id="f-desglose"></div>
     <div class="marcas" id="f-marcas"></div>
   </div>
   <div id="f-secciones"></div>
@@ -1024,7 +1047,7 @@ const CESPED_CLARO  = '#377C29';
 const PARTIDO = {
  "id": "208696",
  "fuente": "API de BeSoccer · match_lineups + match_events_stats",
- "capturado": "2026-09-10",
+ "capturado": "2026-09-11",
  "avisoAlineacion": "Alineación generada automáticamente según las posiciones de los jugadores. Puede no coincidir con la utilizada.",
  "minuto": 90,
  "anadido": 3,
@@ -1772,6 +1795,8 @@ const PARTIDO = {
      "xg": "0.02"
     }
    ],
+   "alto": 199,
+   "peso": 96,
    "pasesA": [
     [
      "l16",
@@ -2320,6 +2345,8 @@ const PARTIDO = {
     ]
    ],
    "tiros": [],
+   "alto": 197,
+   "peso": 86,
    "pasesA": [
     [
      "l17",
@@ -2789,6 +2816,8 @@ const PARTIDO = {
      "xg": "0.08"
     }
    ],
+   "alto": 194,
+   "peso": 95,
    "pasesA": [
     [
      "l4",
@@ -3282,6 +3311,8 @@ const PARTIDO = {
     ]
    ],
    "tiros": [],
+   "alto": 173,
+   "peso": 68,
    "pasesA": [
     [
      "l8",
@@ -3721,6 +3752,8 @@ const PARTIDO = {
      "xg": "0.46"
     }
    ],
+   "alto": 188,
+   "peso": 80,
    "pasesA": [
     [
      "l16",
@@ -3763,7 +3796,7 @@ const PARTIDO = {
    "equipo": "local",
    "x": 0.2567,
    "y": 0.7,
-   "nota": 8.0,
+   "nota": 8.1,
    "notaColor": "#11AA00",
    "foto": "https://cdn.resfu.com/img_data/players/medium/281486.jpg?size=60x&lossy=1",
    "edad": "28",
@@ -3776,9 +3809,9 @@ const PARTIDO = {
    "rolLargoFino": "Mediocentro",
    "rolApi": "MC",
    "mvp": false,
-   "notaValor": "8.0",
+   "notaValor": "8.1",
    "bonos": "+8.1",
-   "penalizaciones": "-0.1",
+   "penalizaciones": "0.0",
    "secciones": [
     {
      "nombre": "Acciones clave",
@@ -3862,7 +3895,7 @@ const PARTIDO = {
      "filas": [
       {
        "titulo": "Toques de balón",
-       "valor": "51",
+       "valor": "52",
        "color": "#1A1A1A",
        "grupo": 0
       },
@@ -3930,7 +3963,7 @@ const PARTIDO = {
       },
       {
        "titulo": "Toques en el área",
-       "valor": "1",
+       "valor": "2",
        "color": "#1A1A1A",
        "grupo": 0
       },
@@ -3945,12 +3978,12 @@ const PARTIDO = {
     {
      "nombre": "Defensa",
      "clave": "defending",
-     "nota": "6.9",
-     "notaColor": "#FFA323",
+     "nota": "7.0",
+     "notaColor": "#11AA00",
      "filas": [
       {
        "titulo": "Entradas",
-       "valor": "3",
+       "valor": "4",
        "color": "#1A1A1A",
        "grupo": 0
       },
@@ -3974,7 +4007,7 @@ const PARTIDO = {
       },
       {
        "titulo": "Duelos en el suelo (Ganado)",
-       "valor": "3 (3)",
+       "valor": "4 (4)",
        "color": "#1A1A1A",
        "grupo": 0
       },
@@ -4235,6 +4268,8 @@ const PARTIDO = {
      "xg": "0.02"
     }
    ],
+   "alto": 182,
+   "peso": 78,
    "pasesA": [
     [
      "l10",
@@ -4718,6 +4753,8 @@ const PARTIDO = {
      "xg": "0.03"
     }
    ],
+   "alto": 180,
+   "peso": 78,
    "pasesA": [
     [
      "l5",
@@ -5314,6 +5351,8 @@ const PARTIDO = {
      "xg": "0.49"
     }
    ],
+   "alto": 186,
+   "peso": 75,
    "pasesA": [
     [
      "l7",
@@ -5483,7 +5522,7 @@ const PARTIDO = {
       },
       {
        "titulo": "Conducciones progresivas",
-       "valor": "15",
+       "valor": "14",
        "color": "#1A1A1A",
        "grupo": 0
       }
@@ -5854,6 +5893,8 @@ const PARTIDO = {
      "xg": "0.08"
     }
    ],
+   "alto": 176,
+   "peso": 73,
    "pasesA": [
     [
      "l5",
@@ -6356,6 +6397,8 @@ const PARTIDO = {
      "xg": "0.23"
     }
    ],
+   "alto": 170,
+   "peso": 68,
    "pasesA": [
     [
      "l10",
@@ -6886,6 +6929,8 @@ const PARTIDO = {
      "xg": "0.18"
     }
    ],
+   "alto": 180,
+   "peso": 75,
    "pasesA": [
     [
      "l21",
@@ -7083,6 +7128,12 @@ const PARTIDO = {
        "titulo": "Duelos aéreos (Ganado)",
        "valor": "1 (1)",
        "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "1 (0)",
+       "color": "#1A1A1A",
        "grupo": 0
       },
       {
@@ -7413,6 +7464,8 @@ const PARTIDO = {
      "xg": "0.02"
     }
    ],
+   "alto": 191,
+   "peso": 78,
    "pasesA": [
     [
      "v31",
@@ -8017,6 +8070,8 @@ const PARTIDO = {
     ]
    ],
    "tiros": [],
+   "alto": 196,
+   "peso": 83,
    "pasesA": [
     [
      "v17",
@@ -8737,6 +8792,8 @@ const PARTIDO = {
      "xg": "0.21"
     }
    ],
+   "alto": 190,
+   "peso": 75,
    "pasesA": [
     [
      "v21",
@@ -9170,6 +9227,8 @@ const PARTIDO = {
     ]
    ],
    "tiros": [],
+   "alto": 186,
+   "peso": 76,
    "pasesA": [
     [
      "v17",
@@ -9884,6 +9943,8 @@ const PARTIDO = {
      "xg": "0.15"
     }
    ],
+   "alto": 178,
+   "peso": 76,
    "pasesA": [
     [
      "v95",
@@ -10579,6 +10640,8 @@ const PARTIDO = {
      "xg": "0.09"
     }
    ],
+   "alto": 185,
+   "peso": 78,
    "pasesA": [
     [
      "v95",
@@ -11166,6 +11229,8 @@ const PARTIDO = {
      "xg": "0.04"
     }
    ],
+   "alto": 175,
+   "peso": 68,
    "pasesA": [
     [
      "v20",
@@ -11701,6 +11766,8 @@ const PARTIDO = {
      "xg": "0.22"
     }
    ],
+   "alto": 184,
+   "peso": 78,
    "pasesA": [
     [
      "v21",
@@ -12296,6 +12363,8 @@ const PARTIDO = {
      "xg": "0.04"
     }
    ],
+   "alto": 187,
+   "peso": 81,
    "pasesA": [
     [
      "v23",
@@ -12728,6 +12797,8 @@ const PARTIDO = {
      "xg": "0.16"
     }
    ],
+   "alto": 192,
+   "peso": 88,
    "pasesA": [
     [
      "v17",
@@ -13297,6 +13368,8 @@ const PARTIDO = {
      "xg": "0.08"
     }
    ],
+   "alto": 174,
+   "peso": 72,
    "pasesA": [
     [
      "v30",
@@ -13353,7 +13426,230 @@ const PARTIDO = {
    "notaColor": "#FFA323",
    "entra": 79,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Mediocentro defensivo",
+   "rolApi": "MCD",
+   "mvp": false,
+   "notaValor": "6.5",
+   "bonos": "+6.5",
+   "penalizaciones": "0.0",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "11'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "3 (3)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases al último tercio",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "4",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo propio",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Errores que acaban en tiro",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.46,
+     0.63
+    ],
+    [
+     0.28,
+     0.16
+    ],
+    [
+     0.22,
+     0.22
+    ],
+    [
+     0.56,
+     0.43
+    ]
+   ],
+   "tiros": [],
+   "alto": 188,
+   "peso": 82
   },
   {
    "id": "sl25",
@@ -13370,7 +13666,260 @@ const PARTIDO = {
    "notaColor": "#FFA323",
    "entra": 79,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Extremo derecho",
+   "rolApi": "ED",
+   "mvp": false,
+   "notaValor": "6.5",
+   "bonos": "+6.5",
+   "penalizaciones": "0.0",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0.02",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0.11",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.01",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "11'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Tiros a puerta",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "2 (2)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases al último tercio",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Toques en el área",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "6.4",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "6",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo propio",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "1 (1)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "3",
+       "color": "#CC0000",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "1 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones en el último tercio",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.96,
+     0.26
+    ],
+    [
+     0.9,
+     0.28
+    ],
+    [
+     0.33,
+     0.03
+    ],
+    [
+     0.56,
+     0.28
+    ],
+    [
+     0.77,
+     0.11
+    ],
+    [
+     0.95,
+     0.27
+    ]
+   ],
+   "tiros": [
+    {
+     "min": "81'",
+     "tipo": "saved",
+     "titulo": "Parada",
+     "pie": "Pierna derecha",
+     "x": 96.1,
+     "y": 26.1,
+     "xg": "0.02"
+    }
+   ],
+   "alto": 180,
+   "peso": 75
   },
   {
    "id": "sl18",
@@ -13384,10 +13933,180 @@ const PARTIDO = {
    "foto": "https://cdn.resfu.com/img_data/players/medium/975472.jpg?size=60x&lossy=1",
    "edad": "23",
    "nota": null,
-   "notaColor": null,
+   "notaColor": "#737373",
    "entra": 87,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Lateral izquierdo",
+   "rolApi": "LI",
+   "mvp": false,
+   "notaValor": "-",
+   "bonos": null,
+   "penalizaciones": null,
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "3'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Duelos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Entradas (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Pases al último tercio (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [],
+   "tiros": [],
+   "alto": 186,
+   "peso": 78
   },
   {
    "id": "sl19",
@@ -13401,10 +14120,204 @@ const PARTIDO = {
    "foto": "https://cdn.resfu.com/img_data/players/medium/3198124.jpg?size=60x&lossy=1",
    "edad": "21",
    "nota": null,
-   "notaColor": null,
+   "notaColor": "#737373",
    "entra": 93,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Delantero centro",
+   "rolApi": "DC",
+   "mvp": false,
+   "notaValor": "-",
+   "bonos": null,
+   "penalizaciones": null,
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "1'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Tiros a puerta",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Grandes oportunidades creadas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Toques en el área",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Pases al último tercio (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tarjetas amarillas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [],
+   "tiros": [],
+   "alto": 194,
+   "peso": 87
   },
   {
    "id": "sl26",
@@ -13421,7 +14334,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Portero"
   },
   {
    "id": "sl13",
@@ -13438,7 +14352,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Portero"
   },
   {
    "id": "sl22",
@@ -13455,7 +14370,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Defensa"
   },
   {
    "id": "sl33",
@@ -13472,7 +14388,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Defensa"
   },
   {
    "id": "sl27",
@@ -13489,7 +14406,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Centrocampista"
   },
   {
    "id": "sl29",
@@ -13506,7 +14424,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Centrocampista"
   },
   {
    "id": "sl9",
@@ -13523,7 +14442,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Delantero"
   },
   {
    "id": "sv6",
@@ -13540,7 +14460,366 @@ const PARTIDO = {
    "notaColor": "#FFA323",
    "entra": 46,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Central",
+   "rolApi": "DFC",
+   "mvp": false,
+   "notaValor": "6.8",
+   "bonos": "+7.0",
+   "penalizaciones": "-0.2",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0.01",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.01",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "45'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Duelos (Ganado)",
+       "valor": "5 (2)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "23 (23)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "1",
+       "color": "#CC0000",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "7.1",
+     "notaColor": "#11AA00",
+     "filas": [
+      {
+       "titulo": "Entradas (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "3",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones en el último tercio",
+       "valor": "2",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes de cabeza efectivos",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "1 (0)",
+       "color": "#CC0000",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "4 (2)",
+       "color": "#3B811F",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "1",
+       "color": "#CC0000",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros bloqueados",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Toques en el área",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "6.9",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "27",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo rival",
+       "valor": "9",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases al último tercio (Éxito)",
+       "valor": "5 (5)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "1 (1)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.05,
+     0.33
+    ],
+    [
+     0.43,
+     0.51
+    ],
+    [
+     0.88,
+     0.6
+    ],
+    [
+     0.88,
+     0.6
+    ],
+    [
+     0.3,
+     0.52
+    ],
+    [
+     0.45,
+     0.4
+    ],
+    [
+     0.39,
+     0.63
+    ],
+    [
+     0.41,
+     0.5
+    ],
+    [
+     0.33,
+     0.57
+    ],
+    [
+     0.6,
+     0.76
+    ],
+    [
+     0.07,
+     0.48
+    ],
+    [
+     0.27,
+     0.48
+    ],
+    [
+     0.13,
+     0.43
+    ],
+    [
+     0.31,
+     0.49
+    ],
+    [
+     0.09,
+     0.61
+    ],
+    [
+     0.09,
+     0.61
+    ],
+    [
+     0.22,
+     0.36
+    ],
+    [
+     0.67,
+     0.55
+    ],
+    [
+     0.86,
+     0.43
+    ],
+    [
+     0.67,
+     0.27
+    ],
+    [
+     0.57,
+     0.27
+    ],
+    [
+     0.53,
+     0.46
+    ],
+    [
+     0.47,
+     0.81
+    ],
+    [
+     0.47,
+     0.81
+    ],
+    [
+     0.06,
+     0.56
+    ],
+    [
+     0.01,
+     0.66
+    ],
+    [
+     0.61,
+     0.3
+    ],
+    [
+     0.36,
+     0.64
+    ],
+    [
+     0.71,
+     0.38
+    ],
+    [
+     0.67,
+     0.48
+    ],
+    [
+     0.45,
+     0.34
+    ],
+    [
+     0.34,
+     0.33
+    ],
+    [
+     0.19,
+     0.85
+    ],
+    [
+     0.43,
+     0.34
+    ]
+   ],
+   "tiros": [
+    {
+     "min": "49'",
+     "tipo": "blocked",
+     "titulo": "Bloqueado",
+     "pie": "Cabeza",
+     "x": 88.3,
+     "y": 60,
+     "xg": "0.01"
+    }
+   ],
+   "alto": 188,
+   "peso": 76
   },
   {
    "id": "sv7",
@@ -13557,7 +14836,358 @@ const PARTIDO = {
    "notaColor": "#11AA00",
    "entra": 60,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Mediocentro",
+   "rolApi": "MC",
+   "mvp": false,
+   "notaValor": "7.0",
+   "bonos": "+7.1",
+   "penalizaciones": "-0.1",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.05",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "30'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "25 (24)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases al último tercio",
+       "valor": "16",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "7.5",
+     "notaColor": "#11AA00",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "31",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo propio",
+       "valor": "2",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "1 (1)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "2",
+       "color": "#CC0000",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "7",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "7.0",
+     "notaColor": "#11AA00",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "2",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "1 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones en el último tercio",
+       "valor": "4",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Errores que acaban en tiro",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.59,
+     0.56
+    ],
+    [
+     0.73,
+     0.35
+    ],
+    [
+     0.75,
+     0.59
+    ],
+    [
+     0.67,
+     0.43
+    ],
+    [
+     0.71,
+     0.34
+    ],
+    [
+     0.19,
+     0.64
+    ],
+    [
+     0.23,
+     0.74
+    ],
+    [
+     0.62,
+     0.28
+    ],
+    [
+     0.59,
+     0.18
+    ],
+    [
+     0.57,
+     0.14
+    ],
+    [
+     0.58,
+     0.14
+    ],
+    [
+     0.57,
+     0.12
+    ],
+    [
+     0.67,
+     0.47
+    ],
+    [
+     0.57,
+     0.31
+    ],
+    [
+     0.6,
+     0.23
+    ],
+    [
+     0.65,
+     0.61
+    ],
+    [
+     0.79,
+     0.32
+    ],
+    [
+     0.72,
+     0.46
+    ],
+    [
+     0.01,
+     0.29
+    ],
+    [
+     0.22,
+     0.23
+    ],
+    [
+     0.67,
+     0.82
+    ],
+    [
+     0.7,
+     0.72
+    ],
+    [
+     0.61,
+     0.81
+    ],
+    [
+     0.12,
+     0.56
+    ],
+    [
+     0.69,
+     0.65
+    ],
+    [
+     0.68,
+     0.8
+    ],
+    [
+     0.64,
+     0.42
+    ],
+    [
+     0.69,
+     0.34
+    ],
+    [
+     0.73,
+     0.42
+    ],
+    [
+     0.43,
+     0.52
+    ],
+    [
+     0.67,
+     0.37
+    ],
+    [
+     0.27,
+     0.61
+    ],
+    [
+     0.63,
+     0.32
+    ]
+   ],
+   "tiros": [],
+   "alto": 180,
+   "peso": 64
   },
   {
    "id": "sv8",
@@ -13574,7 +15204,368 @@ const PARTIDO = {
    "notaColor": "#11AA00",
    "entra": 60,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Mediocentro",
+   "rolApi": "MC",
+   "mvp": false,
+   "notaValor": "7.3",
+   "bonos": "+7.7",
+   "penalizaciones": "-0.4",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.21",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "30'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "19 (15)",
+       "color": "#CC0000",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases al último tercio",
+       "valor": "13",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "3",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "1 (1)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Grandes oportunidades creadas",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "8.0",
+     "notaColor": "#11AA00",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "33",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo propio",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "7 (0)",
+       "color": "#CC0000",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "12",
+       "color": "#CC0000",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "7.2",
+     "notaColor": "#11AA00",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Toques en el área",
+       "valor": "2",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "5",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Córners al área",
+       "valor": "5",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "6.7",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "4 (2)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones en el último tercio",
+       "valor": "2",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Errores que acaban en tiro",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.76,
+     0.23
+    ],
+    [
+     0.87,
+     0.17
+    ],
+    [
+     0.99,
+     0
+    ],
+    [
+     0.7,
+     0.11
+    ],
+    [
+     0.55,
+     0.17
+    ],
+    [
+     0.65,
+     0.28
+    ],
+    [
+     0.59,
+     0.24
+    ],
+    [
+     0.99,
+     0.99
+    ],
+    [
+     0.24,
+     0.39
+    ],
+    [
+     0.45,
+     0.65
+    ],
+    [
+     0.47,
+     0.32
+    ],
+    [
+     0.86,
+     0.21
+    ],
+    [
+     0.74,
+     0.15
+    ],
+    [
+     0.74,
+     0.41
+    ],
+    [
+     0.99,
+     0.99
+    ],
+    [
+     0.72,
+     0.81
+    ],
+    [
+     0.99,
+     0.99
+    ],
+    [
+     0.13,
+     0.69
+    ],
+    [
+     0.13,
+     0.69
+    ],
+    [
+     0.22,
+     0.12
+    ],
+    [
+     0.85,
+     0.06
+    ],
+    [
+     0.3,
+     0.78
+    ],
+    [
+     0.73,
+     0.79
+    ],
+    [
+     0.9,
+     0.69
+    ],
+    [
+     0.72,
+     0.33
+    ],
+    [
+     0.99,
+     0.99
+    ],
+    [
+     0.71,
+     0.66
+    ],
+    [
+     0.71,
+     0.53
+    ],
+    [
+     0.58,
+     0.3
+    ],
+    [
+     0.9,
+     0.14
+    ],
+    [
+     0.91,
+     0.03
+    ]
+   ],
+   "tiros": [],
+   "alto": 183,
+   "peso": 70
   },
   {
    "id": "sv14",
@@ -13591,7 +15582,268 @@ const PARTIDO = {
    "notaColor": "#FFA323",
    "entra": 60,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Delantero centro",
+   "rolApi": "DC",
+   "mvp": false,
+   "notaValor": "6.5",
+   "bonos": "+6.6",
+   "penalizaciones": "-0.1",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.02",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "30'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "1 (0)",
+       "color": "#CC0000",
+       "grupo": 2
+      },
+      {
+       "titulo": "Tiros a puerta",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Grandes oportunidades creadas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Toques en el área",
+       "valor": "4",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "6.4",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "9",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases al último tercio (Éxito)",
+       "valor": "4 (3)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "2",
+       "color": "#CC0000",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "2",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo",
+       "valor": "4",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Regateado",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tarjetas amarillas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.35,
+     0.69
+    ],
+    [
+     0.42,
+     0.67
+    ],
+    [
+     0.74,
+     0.38
+    ],
+    [
+     0.83,
+     0.44
+    ],
+    [
+     0.9,
+     0.5
+    ],
+    [
+     0.97,
+     0.71
+    ],
+    [
+     0.99,
+     0.74
+    ],
+    [
+     0.75,
+     0.76
+    ],
+    [
+     0.75,
+     0.75
+    ],
+    [
+     0.87,
+     0.04
+    ],
+    [
+     0.95,
+     0.25
+    ],
+    [
+     0.5,
+     0.91
+    ]
+   ],
+   "tiros": [],
+   "alto": 189,
+   "peso": 78
   },
   {
    "id": "sv22",
@@ -13608,7 +15860,310 @@ const PARTIDO = {
    "notaColor": "#FFA323",
    "entra": 83,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Mediocentro",
+   "rolApi": "MC",
+   "mvp": false,
+   "notaValor": "6.6",
+   "bonos": "+6.5",
+   "penalizaciones": "0.1",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0.02",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0.17",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.02",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "7'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "14 (13)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases al último tercio",
+       "valor": "8",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Tiros a puerta",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "17",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo propio",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "2",
+       "color": "#CC0000",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "1 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones en el último tercio",
+       "valor": "2",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Errores que acaban en tiro",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.57,
+     0.9
+    ],
+    [
+     0.57,
+     0.89
+    ],
+    [
+     0.36,
+     0.31
+    ],
+    [
+     0.75,
+     0.21
+    ],
+    [
+     0.74,
+     0.24
+    ],
+    [
+     0.75,
+     0.18
+    ],
+    [
+     0.57,
+     0.78
+    ],
+    [
+     0.6,
+     0.72
+    ],
+    [
+     0.7,
+     0.63
+    ],
+    [
+     0.72,
+     0.53
+    ],
+    [
+     0.78,
+     0.62
+    ],
+    [
+     0.76,
+     0.66
+    ],
+    [
+     0.43,
+     0.64
+    ],
+    [
+     0.63,
+     0.69
+    ],
+    [
+     0.64,
+     0.6
+    ],
+    [
+     0.26,
+     0.68
+    ],
+    [
+     0.36,
+     0.96
+    ]
+   ],
+   "tiros": [
+    {
+     "min": "89'",
+     "tipo": "saved",
+     "titulo": "Parada",
+     "pie": "Pie izquierdo",
+     "x": 76.4,
+     "y": 66.7,
+     "xg": "0.02"
+    }
+   ],
+   "alto": 177,
+   "peso": 72
   },
   {
    "id": "sv12",
@@ -13625,7 +16180,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Portero"
   },
   {
    "id": "sv49",
@@ -13642,7 +16198,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Portero"
   },
   {
    "id": "sv25",
@@ -13659,7 +16216,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Defensa"
   },
   {
    "id": "sv5",
@@ -13676,7 +16234,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Centrocampista"
   },
   {
    "id": "sv11",
@@ -13693,7 +16252,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Centrocampista"
   },
   {
    "id": "sv94",
@@ -13710,7 +16270,8 @@ const PARTIDO = {
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Delantero"
   }
  ],
  "fuentePases": "Matriz de pases de Opta · passmatrix-208696.xml",
@@ -15271,6 +17832,11 @@ const secAbierta = {};        // qué secciones deja abiertas el usuario
 let pestana = 'informe';
 const barras = [];            // una barra idéntica en cada hoja
 
+/* Quién se está enseñando en la hoja. NO es lo mismo que `elegido`: un
+   suplente que jugó tiene ficha e informe, pero no tiene ficha en el césped ni
+   índice en JUG, así que `elegido` sigue valiendo -1 mientras se le mira. */
+let mostrado = null;
+
 /* En móvil la ficha entra arriba de la columna (order:-1), pero si el usuario
    había bajado a los ajustes se abriría fuera de la vista. */
 /* --- Qué hay abierto encima del campo -------------------------------------
@@ -15294,7 +17860,7 @@ function refrescarCapas() {
    barra, es un adorno. */
 function sincronizarHojas() {
   if (!esMovil) return;
-  const dos = modoInforme && elegido >= 0;
+  const dos = modoInforme && mostrado;
   document.body.classList.toggle('con-pestanas', dos);
   caja.classList.toggle('oculta', dos && pestana !== 'stats');
   cajaInf.classList.toggle('oculta', dos && pestana !== 'informe');
@@ -15318,7 +17884,7 @@ function verFicha(abierta) {
   caja.classList.toggle('abierta', abierta);
   document.body.classList.toggle('con-ficha', abierta);
   refrescarCapas();
-  if (abierta && esMovil) caja.querySelector('.cuerpo').scrollTop = 0;
+  if (abierta && esMovil) caja.querySelector('.hoja-cuerpo').scrollTop = 0;
 }
 
 /* El cajón de ajustes, solo en móvil: en escritorio los ajustes están a la
@@ -15346,7 +17912,11 @@ function pintarFicha(j) {
   const m = $('f-meta');
   m.textContent = '';
   const b = document.createElement('b'); b.textContent = eq.nombre;
-  m.append(b, document.createTextNode(`${j.rolLargoFino || j.rolLargo} · Dorsal ${j.dorsal}`));
+  // El dorsal ya está en la placa de la foto, repetirlo era gastar la línea.
+  // Altura y peso salen de `req=player`, que es otra petición del extractor.
+  const datos = [j.rolLargoFino || j.rolLargo,
+                 j.alto && `${j.alto} cm`, j.peso && `${j.peso} kg`].filter(Boolean);
+  m.append(b, document.createTextNode(datos.join(' · ')));
 
   const nota = $('f-nota');
   if (j.nota == null) { nota.style.display = 'none'; } else {
@@ -15358,12 +17928,6 @@ function pintarFicha(j) {
 
   $('f-mvp').innerHTML = j.mvp ? '<span class="mvp">MVP DEL PARTIDO</span>' : '';
 
-  // Desglose de la nota: lo que suma y lo que resta, tal como lo da la API.
-  const des = $('f-desglose');
-  des.innerHTML = (j.bonos || j.penalizaciones)
-    ? `<span class="mas">Suma ${j.bonos || '—'}</span><span class="menos">Resta ${j.penalizaciones || '—'}</span>`
-    : '';
-  if (des.innerHTML) des.title = PARTIDO.notaLeyenda || '';
 
   // Marcas: lo que le pasó en el partido.
   const marcas = $('f-marcas');
@@ -15605,8 +18169,8 @@ function pintarInforme(j) {
 }
 
 function guardarInforme() {
-  if (elegido < 0) return;
-  const j = JUG[elegido];
+  const j = mostrado;
+  if (!j) return;
   informes[j.id] = {
     jugador: j.id, idApi: j.idApi, nombre: j.nombre, equipo: PARTIDO[j.equipo].nombre,
     dorsal: Number($('i-dorsal').value) || null,
@@ -15636,11 +18200,14 @@ function marcarConInforme() {
       ya.remove();
     }
   }
+  // Y en la tira de suplentes, donde la marca es una clase y no un nodo.
+  for (const li of document.querySelectorAll('#suplentes li[data-jug]'))
+    li.classList.toggle('con-informe', !!informes[li.dataset.jug]);
 }
 marcarConInforme();
 
 $('i-guardar').addEventListener('click', guardarInforme);
-$('i-cerrar').addEventListener('click', () => elegir(-1));
+$('i-cerrar').addEventListener('click', () => cerrarTodo());
 $('i-exportar').addEventListener('click', async () => {
   const txt = JSON.stringify({
     partido: PARTIDO.id, fuente: PARTIDO.fuente,
@@ -15658,8 +18225,8 @@ palanca('sw-informe', false, v => {
   modoInforme = v;
   // Al encender con alguien ya elegido, el informe aparece sin tener que
   // volver a pulsarlo.
-  if (elegido >= 0) {
-    if (v) { pestana = 'informe'; pintarInforme(JUG[elegido]); } else verInforme(false);
+  if (mostrado) {
+    if (v) { pestana = 'informe'; pintarInforme(mostrado); } else verInforme(false);
   }
   sincronizarHojas();
 });
@@ -15947,8 +18514,9 @@ function elegir(i) {
   // Al ABRIR se empieza por el informe, que es a lo que vas si lo tienes
   // encendido. Al cambiar de jugador con la hoja ya abierta se respeta la
   // pestaña en la que estabas: comparar la misma cara de varios es lo normal.
-  if (i >= 0 && elegido < 0) pestana = 'informe';
+  if (i >= 0 && !mostrado) pestana = 'informe';
   elegido = i;
+  mostrado = i >= 0 ? JUG[i] : null;
   refrescarFichas();
   if (verPases) rehacerPases(); else rehacerFlujo();
   if (i >= 0) {
@@ -15964,6 +18532,35 @@ function elegir(i) {
     verInforme(false);
     pintarCalorCampo(null);
   }
+  sincronizarHojas();
+}
+
+/* Un suplente que entró. Tiene los mismos datos que un titular —se le piden
+   los mismos `playerStats`—, así que abre la misma hoja; lo único que no tiene
+   es sitio en el campo, y por eso `elegido` se suelta antes. A los que no
+   llegaron a jugar no se les llama nunca: no hay nada que enseñar. */
+function abrirSuplente(sup) {
+  if (mostrado === sup) { cerrarJugador(); return; }
+  elegir(-1);
+  if (!mostrado) pestana = 'informe';
+  mostrado = sup;
+  pintarFicha(sup);
+  if (modoInforme) pintarInforme(sup); else verInforme(false);
+  sincronizarHojas();
+}
+
+/* Cerrar del todo. En móvil lo reemplaza el bloque de la hoja arrastrable,
+   que además devuelve el alto a su sitio; en escritorio no hay hoja ni alto
+   que devolver, así que es cerrar al jugador y ya. */
+let cerrarTodo = () => cerrarJugador();
+
+/* Cerrar vale para los dos: el titular suelta además la selección del campo. */
+function cerrarJugador() {
+  if (elegido >= 0) { elegir(-1); return; }
+  mostrado = null;
+  verFicha(false);
+  verInforme(false);
+  pintarCalorCampo(null);
   sincronizarHojas();
 }
 
@@ -15995,7 +18592,7 @@ lienzo.addEventListener('pointerup', ev => {
    mouseup y click—, y aquí no se pierde nada: la selección va por eventos de
    puntero y el lienzo no se desplaza. */
 if (esMovil) lienzo.addEventListener('touchend', ev => ev.preventDefault());
-$('f-cerrar').addEventListener('click', () => elegir(-1));
+$('f-cerrar').addEventListener('click', () => cerrarTodo());
 
 // Vía de teclado: sin esto la selección no existe para quien no usa ratón.
 addEventListener('keydown', ev => {
@@ -16081,7 +18678,7 @@ if (esMovil) {
      vez aquí y no en pintarFicha(), que reescribe #f-secciones en cada
      jugador y se llevaría por delante lo que hubiera dentro. */
   const cuerpo = document.createElement('div');
-  cuerpo.className = 'cuerpo';
+  cuerpo.className = 'hoja-cuerpo';
   caja.appendChild(cuerpo);
   cuerpo.append($('f-secciones'), $('f-calor-caja'), $('f-muestra'));
 
@@ -16104,6 +18701,75 @@ if (esMovil) {
     hoja.insertBefore(b, hoja.querySelector('.top'));
     barras.push(b);
   }
+
+  /* --- Arrastrar la hoja ---------------------------------------------
+     Se coge por la banda de arriba y se sube a pantalla completa o se baja
+     hasta cerrarla. El alto va en la variable --hoja, de la que cuelgan la
+     hoja y el borde inferior del campo; durante el arrastre solo se toca el
+     alto de la hoja, y --hoja se escribe al soltar: si no, el lienzo de WebGL
+     se redimensionaría en cada cuadro del gesto. */
+  const TOPES = {min: 0.32, completa: 0.985};   // fracciones de la pantalla
+  let arrastre = null;
+
+  function altoBase() {
+    // Lo que dice el CSS ahora mismo, resuelto a píxeles.
+    return parseFloat(getComputedStyle(document.body).getPropertyValue('--hoja'))
+      || innerHeight * 0.7;
+  }
+  function hojaVisible() {
+    if (panelStats.classList.contains('abierto')) return panelStats;
+    for (const h of [cajaInf, caja])
+      if (h.classList.contains('abierta') && !h.classList.contains('oculta')) return h;
+    return null;
+  }
+  function fijarAlto(px) {
+    document.body.style.setProperty('--hoja', px == null ? '' : px + 'px');
+  }
+
+  function asaDe(hoja) {
+    const a = document.createElement('button');
+    a.className = 'asa';
+    a.type = 'button';
+    a.setAttribute('aria-label', 'Arrastra para agrandar o cerrar');
+    a.addEventListener('pointerdown', ev => {
+      const h = hojaVisible();
+      if (!h) return;
+      // Sin captura el gesto se pierde en cuanto el dedo sale del asa, pero
+      // no en todos los navegadores se puede: si falla, el gesto sigue.
+      try { a.setPointerCapture(ev.pointerId); } catch (e) {}
+      arrastre = {y: ev.clientY, alto: h.getBoundingClientRect().height, hoja: h, movido: false};
+      document.body.classList.add('arrastrando');
+    });
+    a.addEventListener('pointermove', ev => {
+      if (!arrastre) return;
+      const d = arrastre.y - ev.clientY;          // hacia arriba, crece
+      if (Math.abs(d) > 3) arrastre.movido = true;
+      const alto = Math.min(innerHeight * TOPES.completa,
+                            Math.max(60, arrastre.alto + d));
+      arrastre.ultimo = alto;
+      arrastre.hoja.style.height = alto + 'px';
+    });
+    const soltar = () => {
+      if (!arrastre) return;
+      const {hoja, ultimo, movido} = arrastre;
+      arrastre = null;
+      document.body.classList.remove('arrastrando');
+      hoja.style.height = '';
+      if (!movido || ultimo == null) return;
+      const f = ultimo / innerHeight;
+      // Por debajo del tope mínimo se entiende que la estabas cerrando.
+      if (f < TOPES.min) { cerrarTodo(); return; }
+      // A partir de tres cuartos de pantalla se engancha a pantalla completa;
+      // por debajo, vuelve al alto que le toca por CSS.
+      const completa = f > 0.88;
+      fijarAlto(completa ? Math.round(innerHeight * TOPES.completa) : null);
+      document.body.classList.toggle('hoja-completa', completa);
+    };
+    a.addEventListener('pointerup', soltar);
+    a.addEventListener('pointercancel', soltar);
+    return a;
+  }
+  for (const h of [caja, cajaInf, panelStats]) h.insertBefore(asaDe(h), h.firstChild);
 
   /* Los dos banquillos, bajo el campo. Se pintan una vez: no cambian.
      Solo se dice de ellos lo que el dato dice —dorsal, nombre y el minuto en
@@ -16131,8 +18797,20 @@ if (esMovil) {
       h.appendChild(document.createTextNode(eq.nombre));
       const ul = document.createElement('ul');
       for (const j of bancos.filter(x => x.equipo === lado)) {
+        const jugo = j.entra != null;
+        // Quien entró es un BOTÓN: tiene ficha, estadísticas e informe, igual
+        // que un titular. Quien se quedó sentado no: de él no hay nada que
+        // enseñar, y un botón que no hace nada es peor que no tenerlo.
         const li = document.createElement('li');
-        li.classList.toggle('jugo', j.entra != null);
+        li.classList.toggle('jugo', jugo);
+        const dentro = jugo ? document.createElement('button') : li;
+        if (jugo) {
+          dentro.type = 'button';
+          dentro.dataset.jug = j.id;
+          li.dataset.jug = j.id;
+          dentro.addEventListener('click', () => abrirSuplente(j));
+          li.appendChild(dentro);
+        }
         const d = document.createElement('span');
         d.className = 'dor';
         d.textContent = j.dorsal;
@@ -16140,18 +18818,19 @@ if (esMovil) {
         n.className = 'nom';
         n.textContent = j.corto;
         n.title = j.nombre || j.corto;
-        li.append(d, n);
-        if (j.entra != null) {
+        dentro.append(d, n);
+        if (jugo) {
           const m = document.createElement('span');
           m.className = 'min';
           m.textContent = j.entra + "'";
           m.title = 'Entró en el minuto ' + j.entra;
-          li.appendChild(m);
+          dentro.appendChild(m);
         }
         ul.appendChild(li);
       }
       sup.append(h, ul);
     }
+    marcarConInforme();
   }
 
   // La rueda de al lado de la cabecera abre y cierra el cajón.
@@ -16163,10 +18842,15 @@ if (esMovil) {
     verCajon(abrir);
   });
   $('a-cerrar').addEventListener('click', () => verCajon(false));
+  // Cerrar del todo: también devuelve la hoja a su alto de siempre, o la
+  // siguiente se abriría a pantalla completa sin que nadie lo haya pedido.
+  cerrarTodo = () => {
+    fijarAlto(null);
+    document.body.classList.remove('hoja-completa');
+    verCajon(false); verStats(false); cerrarJugador();
+  };
   // El velo es la salida de siempre: tocar fuera cierra lo que haya.
-  $('velo').addEventListener('click', () => {
-    verCajon(false); verStats(false); elegir(-1);
-  });
+  $('velo').addEventListener('click', cerrarTodo);
 
   controles.enabled = false;
   controles.enableRotate = controles.enableZoom = controles.enablePan = false;

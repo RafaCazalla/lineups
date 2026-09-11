@@ -108,6 +108,32 @@ def filas_seccion(valores, filas, grupo=0):
     return grupo
 
 
+_FICHAS = {}
+
+
+def ficha_jugador(pid, key):
+    """Altura y peso. No vienen ni en las alineaciones ni en `playerStats`:
+    hacen falta de `req=player`, una petición más por jugador. Se cachea por
+    id porque un suplente puede pedirse dos veces."""
+    if pid in _FICHAS:
+        return _FICHAS[pid]
+    try:
+        d = pide('player', key, vr='1', id=pid) or {}
+    except Exception as e:
+        print(f'  ! player {pid}: {e}', file=sys.stderr)
+        d = {}
+    p = d.get('player') if isinstance(d.get('player'), dict) else d
+
+    def num(v):
+        try:
+            return int(float(v)) or None
+        except (TypeError, ValueError):
+            return None
+
+    _FICHAS[pid] = {'alto': num(p.get('height')), 'peso': num(p.get('weight'))}
+    return _FICHAS[pid]
+
+
 def stats_jugador(pid, match, year, key):
     """playerStats de un jugador: secciones, nota desglosada, mapa de calor y
     tiros. Devuelve None si la API no trae nada para ese jugador."""
@@ -171,13 +197,13 @@ def equipo(lado, lu, ev, goles):
     }
 
 
-def suplentes(lu):
-    """El banquillo, tal cual lo da la API: los once de cada equipo, con el
-    minuto en el que entraron si llegaron a jugar.
+def suplentes(lu, match=None, year=None, key=None):
+    """El banquillo: los once de cada equipo, con el minuto en el que entraron.
 
-    No se les piden `playerStats`: son 22 peticiones más para una tira que solo
-    enseña nombre, dorsal y nota, y la nota ya viene aquí. Si algún día se
-    quiere abrir su ficha, hay `idApi` y `hasStats` para pedirla.
+    A los que ENTRARON se les piden `playerStats` y su altura y peso, igual que
+    a un titular: han jugado, así que tienen ficha que enseñar. A los que se
+    quedaron sentados no se les pide nada —no hay nada que pedir— y en la
+    interfaz no se abren.
     """
     banco = lu.get('bench') or {}
     fuera = []
@@ -189,6 +215,12 @@ def suplentes(lu):
                 nota = float(p['rating']) if entra else None
             except (TypeError, ValueError):
                 nota = None
+            extra = {}
+            if entra and key:
+                print(f"  playerStats (suplente) {p['nick']}…")
+                extra = stats_jugador(p['idplayer'], match, year, key) or {}
+                extra.pop('posMedia', None)
+                extra.update(ficha_jugador(p['idplayer'], key))
             fuera.append({
                 'id': 's' + lado[0] + p['num'], 'idApi': p['idplayer'],
                 'dorsal': int(p['num']), 'corto': p['nick'],
@@ -202,6 +234,8 @@ def suplentes(lu):
                 'entra': entra,
                 'goles': int(p.get('goals') or 0),
                 'tarjetas': [{'tipo': c['action'], 'min': int(c['minute'])} for c in (p.get('cards') or [])],
+                'rolLargoFino': ROL_FINO.get(extra.get('rolApi')) or ROL_LARGO.get(p['roleAbbr']),
+                **extra,
             })
     return fuera
 
@@ -229,6 +263,8 @@ def jugadores(lu, match=None, year=None, key=None):
                 print(f"  playerStats {p['nick']}…")
                 extra = stats_jugador(p['idplayer'], match, year, key) or {}
             pm = extra.pop('posMedia', None)
+            if key:
+                extra.update(ficha_jugador(p['idplayer'], key))
             fuera.append({
                 'id': lado[0] + p['num'], 'idApi': p['idplayer'],
                 'dorsal': int(p['num']), 'corto': p['nick'],
@@ -374,7 +410,7 @@ def main():
         'eventos': eventos(ev),
         'estadisticas': estadisticas(ev),
         'jugadores': jugadores(lu, a.match, a.year, None if a.sin_stats else a.key),
-        'suplentes': suplentes(lu),
+        'suplentes': suplentes(lu, a.match, a.year, None if a.sin_stats else a.key),
     }
     if a.pases:
         sueltos = matriz_pases(a.pases, partido['jugadores'])
@@ -416,7 +452,12 @@ def main():
     print(f'por jugador: {con_stats}/22 con estadísticas · {con_calor}/22 con mapa de calor'
           f' · {tiros} tiros')
     sup = partido['suplentes']
-    print(f"banquillo: {len(sup)} suplentes · {sum(1 for s in sup if s['entra'])} entraron")
+    jugaron = [x for x in sup if x['entra']]
+    print(f"banquillo: {len(sup)} suplentes · {len(jugaron)} entraron"
+          f" · {sum(1 for x in jugaron if x.get('secciones'))} con estadísticas")
+    sin_medidas = [j['corto'] for j in partido['jugadores'] if not j.get('alto')]
+    if sin_medidas:
+        print(f"sin altura: {', '.join(sin_medidas)}")
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 {
  "id": "208696",
  "fuente": "API de BeSoccer · match_lineups + match_events_stats",
- "capturado": "2026-09-10",
+ "capturado": "2026-09-11",
  "avisoAlineacion": "Alineación generada automáticamente según las posiciones de los jugadores. Puede no coincidir con la utilizada.",
  "minuto": 90,
  "anadido": 3,
@@ -749,6 +749,8 @@
      "xg": "0.02"
     }
    ],
+   "alto": 199,
+   "peso": 96,
    "pasesA": [
     [
      "l16",
@@ -1297,6 +1299,8 @@
     ]
    ],
    "tiros": [],
+   "alto": 197,
+   "peso": 86,
    "pasesA": [
     [
      "l17",
@@ -1766,6 +1770,8 @@
      "xg": "0.08"
     }
    ],
+   "alto": 194,
+   "peso": 95,
    "pasesA": [
     [
      "l4",
@@ -2259,6 +2265,8 @@
     ]
    ],
    "tiros": [],
+   "alto": 173,
+   "peso": 68,
    "pasesA": [
     [
      "l8",
@@ -2698,6 +2706,8 @@
      "xg": "0.46"
     }
    ],
+   "alto": 188,
+   "peso": 80,
    "pasesA": [
     [
      "l16",
@@ -2740,7 +2750,7 @@
    "equipo": "local",
    "x": 0.2567,
    "y": 0.7,
-   "nota": 8.0,
+   "nota": 8.1,
    "notaColor": "#11AA00",
    "foto": "https://cdn.resfu.com/img_data/players/medium/281486.jpg?size=60x&lossy=1",
    "edad": "28",
@@ -2753,9 +2763,9 @@
    "rolLargoFino": "Mediocentro",
    "rolApi": "MC",
    "mvp": false,
-   "notaValor": "8.0",
+   "notaValor": "8.1",
    "bonos": "+8.1",
-   "penalizaciones": "-0.1",
+   "penalizaciones": "0.0",
    "secciones": [
     {
      "nombre": "Acciones clave",
@@ -2839,7 +2849,7 @@
      "filas": [
       {
        "titulo": "Toques de balón",
-       "valor": "51",
+       "valor": "52",
        "color": "#1A1A1A",
        "grupo": 0
       },
@@ -2907,7 +2917,7 @@
       },
       {
        "titulo": "Toques en el área",
-       "valor": "1",
+       "valor": "2",
        "color": "#1A1A1A",
        "grupo": 0
       },
@@ -2922,12 +2932,12 @@
     {
      "nombre": "Defensa",
      "clave": "defending",
-     "nota": "6.9",
-     "notaColor": "#FFA323",
+     "nota": "7.0",
+     "notaColor": "#11AA00",
      "filas": [
       {
        "titulo": "Entradas",
-       "valor": "3",
+       "valor": "4",
        "color": "#1A1A1A",
        "grupo": 0
       },
@@ -2951,7 +2961,7 @@
       },
       {
        "titulo": "Duelos en el suelo (Ganado)",
-       "valor": "3 (3)",
+       "valor": "4 (4)",
        "color": "#1A1A1A",
        "grupo": 0
       },
@@ -3212,6 +3222,8 @@
      "xg": "0.02"
     }
    ],
+   "alto": 182,
+   "peso": 78,
    "pasesA": [
     [
      "l10",
@@ -3695,6 +3707,8 @@
      "xg": "0.03"
     }
    ],
+   "alto": 180,
+   "peso": 78,
    "pasesA": [
     [
      "l5",
@@ -4291,6 +4305,8 @@
      "xg": "0.49"
     }
    ],
+   "alto": 186,
+   "peso": 75,
    "pasesA": [
     [
      "l7",
@@ -4460,7 +4476,7 @@
       },
       {
        "titulo": "Conducciones progresivas",
-       "valor": "15",
+       "valor": "14",
        "color": "#1A1A1A",
        "grupo": 0
       }
@@ -4831,6 +4847,8 @@
      "xg": "0.08"
     }
    ],
+   "alto": 176,
+   "peso": 73,
    "pasesA": [
     [
      "l5",
@@ -5333,6 +5351,8 @@
      "xg": "0.23"
     }
    ],
+   "alto": 170,
+   "peso": 68,
    "pasesA": [
     [
      "l10",
@@ -5863,6 +5883,8 @@
      "xg": "0.18"
     }
    ],
+   "alto": 180,
+   "peso": 75,
    "pasesA": [
     [
      "l21",
@@ -6060,6 +6082,12 @@
        "titulo": "Duelos aéreos (Ganado)",
        "valor": "1 (1)",
        "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "1 (0)",
+       "color": "#1A1A1A",
        "grupo": 0
       },
       {
@@ -6390,6 +6418,8 @@
      "xg": "0.02"
     }
    ],
+   "alto": 191,
+   "peso": 78,
    "pasesA": [
     [
      "v31",
@@ -6994,6 +7024,8 @@
     ]
    ],
    "tiros": [],
+   "alto": 196,
+   "peso": 83,
    "pasesA": [
     [
      "v17",
@@ -7714,6 +7746,8 @@
      "xg": "0.21"
     }
    ],
+   "alto": 190,
+   "peso": 75,
    "pasesA": [
     [
      "v21",
@@ -8147,6 +8181,8 @@
     ]
    ],
    "tiros": [],
+   "alto": 186,
+   "peso": 76,
    "pasesA": [
     [
      "v17",
@@ -8861,6 +8897,8 @@
      "xg": "0.15"
     }
    ],
+   "alto": 178,
+   "peso": 76,
    "pasesA": [
     [
      "v95",
@@ -9556,6 +9594,8 @@
      "xg": "0.09"
     }
    ],
+   "alto": 185,
+   "peso": 78,
    "pasesA": [
     [
      "v95",
@@ -10143,6 +10183,8 @@
      "xg": "0.04"
     }
    ],
+   "alto": 175,
+   "peso": 68,
    "pasesA": [
     [
      "v20",
@@ -10678,6 +10720,8 @@
      "xg": "0.22"
     }
    ],
+   "alto": 184,
+   "peso": 78,
    "pasesA": [
     [
      "v21",
@@ -11273,6 +11317,8 @@
      "xg": "0.04"
     }
    ],
+   "alto": 187,
+   "peso": 81,
    "pasesA": [
     [
      "v23",
@@ -11705,6 +11751,8 @@
      "xg": "0.16"
     }
    ],
+   "alto": 192,
+   "peso": 88,
    "pasesA": [
     [
      "v17",
@@ -12274,6 +12322,8 @@
      "xg": "0.08"
     }
    ],
+   "alto": 174,
+   "peso": 72,
    "pasesA": [
     [
      "v30",
@@ -12330,7 +12380,230 @@
    "notaColor": "#FFA323",
    "entra": 79,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Mediocentro defensivo",
+   "rolApi": "MCD",
+   "mvp": false,
+   "notaValor": "6.5",
+   "bonos": "+6.5",
+   "penalizaciones": "0.0",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "11'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "3 (3)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases al último tercio",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "4",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo propio",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Errores que acaban en tiro",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.46,
+     0.63
+    ],
+    [
+     0.28,
+     0.16
+    ],
+    [
+     0.22,
+     0.22
+    ],
+    [
+     0.56,
+     0.43
+    ]
+   ],
+   "tiros": [],
+   "alto": 188,
+   "peso": 82
   },
   {
    "id": "sl25",
@@ -12347,7 +12620,260 @@
    "notaColor": "#FFA323",
    "entra": 79,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Extremo derecho",
+   "rolApi": "ED",
+   "mvp": false,
+   "notaValor": "6.5",
+   "bonos": "+6.5",
+   "penalizaciones": "0.0",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0.02",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0.11",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.01",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "11'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Tiros a puerta",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "2 (2)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases al último tercio",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Toques en el área",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "6.4",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "6",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo propio",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "1 (1)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "3",
+       "color": "#CC0000",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "1 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones en el último tercio",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.96,
+     0.26
+    ],
+    [
+     0.9,
+     0.28
+    ],
+    [
+     0.33,
+     0.03
+    ],
+    [
+     0.56,
+     0.28
+    ],
+    [
+     0.77,
+     0.11
+    ],
+    [
+     0.95,
+     0.27
+    ]
+   ],
+   "tiros": [
+    {
+     "min": "81'",
+     "tipo": "saved",
+     "titulo": "Parada",
+     "pie": "Pierna derecha",
+     "x": 96.1,
+     "y": 26.1,
+     "xg": "0.02"
+    }
+   ],
+   "alto": 180,
+   "peso": 75
   },
   {
    "id": "sl18",
@@ -12361,10 +12887,180 @@
    "foto": "https://cdn.resfu.com/img_data/players/medium/975472.jpg?size=60x&lossy=1",
    "edad": "23",
    "nota": null,
-   "notaColor": null,
+   "notaColor": "#737373",
    "entra": 87,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Lateral izquierdo",
+   "rolApi": "LI",
+   "mvp": false,
+   "notaValor": "-",
+   "bonos": null,
+   "penalizaciones": null,
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "3'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Duelos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Entradas (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Pases al último tercio (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [],
+   "tiros": [],
+   "alto": 186,
+   "peso": 78
   },
   {
    "id": "sl19",
@@ -12378,10 +13074,204 @@
    "foto": "https://cdn.resfu.com/img_data/players/medium/3198124.jpg?size=60x&lossy=1",
    "edad": "21",
    "nota": null,
-   "notaColor": null,
+   "notaColor": "#737373",
    "entra": 93,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Delantero centro",
+   "rolApi": "DC",
+   "mvp": false,
+   "notaValor": "-",
+   "bonos": null,
+   "penalizaciones": null,
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "1'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Tiros a puerta",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Grandes oportunidades creadas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Toques en el área",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Pases al último tercio (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tarjetas amarillas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [],
+   "tiros": [],
+   "alto": 194,
+   "peso": 87
   },
   {
    "id": "sl26",
@@ -12398,7 +13288,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Portero"
   },
   {
    "id": "sl13",
@@ -12415,7 +13306,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Portero"
   },
   {
    "id": "sl22",
@@ -12432,7 +13324,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Defensa"
   },
   {
    "id": "sl33",
@@ -12449,7 +13342,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Defensa"
   },
   {
    "id": "sl27",
@@ -12466,7 +13360,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Centrocampista"
   },
   {
    "id": "sl29",
@@ -12483,7 +13378,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Centrocampista"
   },
   {
    "id": "sl9",
@@ -12500,7 +13396,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Delantero"
   },
   {
    "id": "sv6",
@@ -12517,7 +13414,366 @@
    "notaColor": "#FFA323",
    "entra": 46,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Central",
+   "rolApi": "DFC",
+   "mvp": false,
+   "notaValor": "6.8",
+   "bonos": "+7.0",
+   "penalizaciones": "-0.2",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0.01",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.01",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "45'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Duelos (Ganado)",
+       "valor": "5 (2)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "23 (23)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "1",
+       "color": "#CC0000",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "7.1",
+     "notaColor": "#11AA00",
+     "filas": [
+      {
+       "titulo": "Entradas (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "3",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones en el último tercio",
+       "valor": "2",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes de cabeza efectivos",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "1 (0)",
+       "color": "#CC0000",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "4 (2)",
+       "color": "#3B811F",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "1",
+       "color": "#CC0000",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros bloqueados",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Toques en el área",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "6.9",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "27",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo rival",
+       "valor": "9",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases al último tercio (Éxito)",
+       "valor": "5 (5)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "1 (1)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.05,
+     0.33
+    ],
+    [
+     0.43,
+     0.51
+    ],
+    [
+     0.88,
+     0.6
+    ],
+    [
+     0.88,
+     0.6
+    ],
+    [
+     0.3,
+     0.52
+    ],
+    [
+     0.45,
+     0.4
+    ],
+    [
+     0.39,
+     0.63
+    ],
+    [
+     0.41,
+     0.5
+    ],
+    [
+     0.33,
+     0.57
+    ],
+    [
+     0.6,
+     0.76
+    ],
+    [
+     0.07,
+     0.48
+    ],
+    [
+     0.27,
+     0.48
+    ],
+    [
+     0.13,
+     0.43
+    ],
+    [
+     0.31,
+     0.49
+    ],
+    [
+     0.09,
+     0.61
+    ],
+    [
+     0.09,
+     0.61
+    ],
+    [
+     0.22,
+     0.36
+    ],
+    [
+     0.67,
+     0.55
+    ],
+    [
+     0.86,
+     0.43
+    ],
+    [
+     0.67,
+     0.27
+    ],
+    [
+     0.57,
+     0.27
+    ],
+    [
+     0.53,
+     0.46
+    ],
+    [
+     0.47,
+     0.81
+    ],
+    [
+     0.47,
+     0.81
+    ],
+    [
+     0.06,
+     0.56
+    ],
+    [
+     0.01,
+     0.66
+    ],
+    [
+     0.61,
+     0.3
+    ],
+    [
+     0.36,
+     0.64
+    ],
+    [
+     0.71,
+     0.38
+    ],
+    [
+     0.67,
+     0.48
+    ],
+    [
+     0.45,
+     0.34
+    ],
+    [
+     0.34,
+     0.33
+    ],
+    [
+     0.19,
+     0.85
+    ],
+    [
+     0.43,
+     0.34
+    ]
+   ],
+   "tiros": [
+    {
+     "min": "49'",
+     "tipo": "blocked",
+     "titulo": "Bloqueado",
+     "pie": "Cabeza",
+     "x": 88.3,
+     "y": 60,
+     "xg": "0.01"
+    }
+   ],
+   "alto": 188,
+   "peso": 76
   },
   {
    "id": "sv7",
@@ -12534,7 +13790,358 @@
    "notaColor": "#11AA00",
    "entra": 60,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Mediocentro",
+   "rolApi": "MC",
+   "mvp": false,
+   "notaValor": "7.0",
+   "bonos": "+7.1",
+   "penalizaciones": "-0.1",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.05",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "30'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "25 (24)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases al último tercio",
+       "valor": "16",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "7.5",
+     "notaColor": "#11AA00",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "31",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo propio",
+       "valor": "2",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "1 (1)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "2",
+       "color": "#CC0000",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "7",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "7.0",
+     "notaColor": "#11AA00",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "2",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "1 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones en el último tercio",
+       "valor": "4",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Errores que acaban en tiro",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.59,
+     0.56
+    ],
+    [
+     0.73,
+     0.35
+    ],
+    [
+     0.75,
+     0.59
+    ],
+    [
+     0.67,
+     0.43
+    ],
+    [
+     0.71,
+     0.34
+    ],
+    [
+     0.19,
+     0.64
+    ],
+    [
+     0.23,
+     0.74
+    ],
+    [
+     0.62,
+     0.28
+    ],
+    [
+     0.59,
+     0.18
+    ],
+    [
+     0.57,
+     0.14
+    ],
+    [
+     0.58,
+     0.14
+    ],
+    [
+     0.57,
+     0.12
+    ],
+    [
+     0.67,
+     0.47
+    ],
+    [
+     0.57,
+     0.31
+    ],
+    [
+     0.6,
+     0.23
+    ],
+    [
+     0.65,
+     0.61
+    ],
+    [
+     0.79,
+     0.32
+    ],
+    [
+     0.72,
+     0.46
+    ],
+    [
+     0.01,
+     0.29
+    ],
+    [
+     0.22,
+     0.23
+    ],
+    [
+     0.67,
+     0.82
+    ],
+    [
+     0.7,
+     0.72
+    ],
+    [
+     0.61,
+     0.81
+    ],
+    [
+     0.12,
+     0.56
+    ],
+    [
+     0.69,
+     0.65
+    ],
+    [
+     0.68,
+     0.8
+    ],
+    [
+     0.64,
+     0.42
+    ],
+    [
+     0.69,
+     0.34
+    ],
+    [
+     0.73,
+     0.42
+    ],
+    [
+     0.43,
+     0.52
+    ],
+    [
+     0.67,
+     0.37
+    ],
+    [
+     0.27,
+     0.61
+    ],
+    [
+     0.63,
+     0.32
+    ]
+   ],
+   "tiros": [],
+   "alto": 180,
+   "peso": 64
   },
   {
    "id": "sv8",
@@ -12551,7 +14158,368 @@
    "notaColor": "#11AA00",
    "entra": 60,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Mediocentro",
+   "rolApi": "MC",
+   "mvp": false,
+   "notaValor": "7.3",
+   "bonos": "+7.7",
+   "penalizaciones": "-0.4",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.21",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "30'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "19 (15)",
+       "color": "#CC0000",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases al último tercio",
+       "valor": "13",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "3",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "1 (1)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Grandes oportunidades creadas",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "8.0",
+     "notaColor": "#11AA00",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "33",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo propio",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "7 (0)",
+       "color": "#CC0000",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "12",
+       "color": "#CC0000",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "7.2",
+     "notaColor": "#11AA00",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Toques en el área",
+       "valor": "2",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "5",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Córners al área",
+       "valor": "5",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "6.7",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "4 (2)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones en el último tercio",
+       "valor": "2",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Errores que acaban en tiro",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.76,
+     0.23
+    ],
+    [
+     0.87,
+     0.17
+    ],
+    [
+     0.99,
+     0
+    ],
+    [
+     0.7,
+     0.11
+    ],
+    [
+     0.55,
+     0.17
+    ],
+    [
+     0.65,
+     0.28
+    ],
+    [
+     0.59,
+     0.24
+    ],
+    [
+     0.99,
+     0.99
+    ],
+    [
+     0.24,
+     0.39
+    ],
+    [
+     0.45,
+     0.65
+    ],
+    [
+     0.47,
+     0.32
+    ],
+    [
+     0.86,
+     0.21
+    ],
+    [
+     0.74,
+     0.15
+    ],
+    [
+     0.74,
+     0.41
+    ],
+    [
+     0.99,
+     0.99
+    ],
+    [
+     0.72,
+     0.81
+    ],
+    [
+     0.99,
+     0.99
+    ],
+    [
+     0.13,
+     0.69
+    ],
+    [
+     0.13,
+     0.69
+    ],
+    [
+     0.22,
+     0.12
+    ],
+    [
+     0.85,
+     0.06
+    ],
+    [
+     0.3,
+     0.78
+    ],
+    [
+     0.73,
+     0.79
+    ],
+    [
+     0.9,
+     0.69
+    ],
+    [
+     0.72,
+     0.33
+    ],
+    [
+     0.99,
+     0.99
+    ],
+    [
+     0.71,
+     0.66
+    ],
+    [
+     0.71,
+     0.53
+    ],
+    [
+     0.58,
+     0.3
+    ],
+    [
+     0.9,
+     0.14
+    ],
+    [
+     0.91,
+     0.03
+    ]
+   ],
+   "tiros": [],
+   "alto": 183,
+   "peso": 70
   },
   {
    "id": "sv14",
@@ -12568,7 +14536,268 @@
    "notaColor": "#FFA323",
    "entra": 60,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Delantero centro",
+   "rolApi": "DC",
+   "mvp": false,
+   "notaValor": "6.5",
+   "bonos": "+6.6",
+   "penalizaciones": "-0.1",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.02",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "30'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "1 (0)",
+       "color": "#CC0000",
+       "grupo": 2
+      },
+      {
+       "titulo": "Tiros a puerta",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Grandes oportunidades creadas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Toques en el área",
+       "valor": "4",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "6.4",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "9",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases al último tercio (Éxito)",
+       "valor": "4 (3)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "2",
+       "color": "#CC0000",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "2",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo",
+       "valor": "4",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Regateado",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tarjetas amarillas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.35,
+     0.69
+    ],
+    [
+     0.42,
+     0.67
+    ],
+    [
+     0.74,
+     0.38
+    ],
+    [
+     0.83,
+     0.44
+    ],
+    [
+     0.9,
+     0.5
+    ],
+    [
+     0.97,
+     0.71
+    ],
+    [
+     0.99,
+     0.74
+    ],
+    [
+     0.75,
+     0.76
+    ],
+    [
+     0.75,
+     0.75
+    ],
+    [
+     0.87,
+     0.04
+    ],
+    [
+     0.95,
+     0.25
+    ],
+    [
+     0.5,
+     0.91
+    ]
+   ],
+   "tiros": [],
+   "alto": 189,
+   "peso": 78
   },
   {
    "id": "sv22",
@@ -12585,7 +14814,310 @@
    "notaColor": "#FFA323",
    "entra": 83,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Mediocentro",
+   "rolApi": "MC",
+   "mvp": false,
+   "notaValor": "6.6",
+   "bonos": "+6.5",
+   "penalizaciones": "0.1",
+   "secciones": [
+    {
+     "nombre": "Acciones clave",
+     "clave": "key_events",
+     "nota": null,
+     "notaColor": null,
+     "filas": [
+      {
+       "titulo": "Goles",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Goles esperados (xG)",
+       "valor": "0.02",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "xG a puerta (xGOT)",
+       "valor": "0.17",
+       "color": "#1A1A1A",
+       "grupo": 1
+      },
+      {
+       "titulo": "Asistencias",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Asistencias esperadas (xA)",
+       "valor": "0.02",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Minutos jugados",
+       "valor": "7'",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases (Éxito)",
+       "valor": "14 (13)",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases al último tercio",
+       "valor": "8",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Pases clave",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 2
+      },
+      {
+       "titulo": "Tiros a puerta",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 2
+      },
+      {
+       "titulo": "Regates (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 2
+      }
+     ]
+    },
+    {
+     "nombre": "Distribución",
+     "clave": "passing",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Toques de balón",
+       "valor": "17",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en campo propio",
+       "valor": "3",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases en profundidad",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Centros (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pases largos (Éxito)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Pérdidas de balón",
+       "valor": "2",
+       "color": "#CC0000",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Ofensivo",
+     "clave": "offensive",
+     "nota": "6.6",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Tiros",
+       "valor": "1",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Tiros fuera",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas recibidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Conducciones progresivas",
+       "valor": "1",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    },
+    {
+     "nombre": "Defensa",
+     "clave": "defending",
+     "nota": "6.5",
+     "notaColor": "#FFA323",
+     "filas": [
+      {
+       "titulo": "Entradas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Intercepciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Despejes",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos en el suelo (Ganado)",
+       "valor": "1 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Duelos aéreos (Ganado)",
+       "valor": "0 (0)",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Recuperaciones en el último tercio",
+       "valor": "2",
+       "color": "#3B811F",
+       "grupo": 0
+      },
+      {
+       "titulo": "Faltas cometidas",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      },
+      {
+       "titulo": "Errores que acaban en tiro",
+       "valor": "0",
+       "color": "#1A1A1A",
+       "grupo": 0
+      }
+     ]
+    }
+   ],
+   "calor": [
+    [
+     0.57,
+     0.9
+    ],
+    [
+     0.57,
+     0.89
+    ],
+    [
+     0.36,
+     0.31
+    ],
+    [
+     0.75,
+     0.21
+    ],
+    [
+     0.74,
+     0.24
+    ],
+    [
+     0.75,
+     0.18
+    ],
+    [
+     0.57,
+     0.78
+    ],
+    [
+     0.6,
+     0.72
+    ],
+    [
+     0.7,
+     0.63
+    ],
+    [
+     0.72,
+     0.53
+    ],
+    [
+     0.78,
+     0.62
+    ],
+    [
+     0.76,
+     0.66
+    ],
+    [
+     0.43,
+     0.64
+    ],
+    [
+     0.63,
+     0.69
+    ],
+    [
+     0.64,
+     0.6
+    ],
+    [
+     0.26,
+     0.68
+    ],
+    [
+     0.36,
+     0.96
+    ]
+   ],
+   "tiros": [
+    {
+     "min": "89'",
+     "tipo": "saved",
+     "titulo": "Parada",
+     "pie": "Pie izquierdo",
+     "x": 76.4,
+     "y": 66.7,
+     "xg": "0.02"
+    }
+   ],
+   "alto": 177,
+   "peso": 72
   },
   {
    "id": "sv12",
@@ -12602,7 +15134,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Portero"
   },
   {
    "id": "sv49",
@@ -12619,7 +15152,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Portero"
   },
   {
    "id": "sv25",
@@ -12636,7 +15170,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Defensa"
   },
   {
    "id": "sv5",
@@ -12653,7 +15188,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Centrocampista"
   },
   {
    "id": "sv11",
@@ -12670,7 +15206,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Centrocampista"
   },
   {
    "id": "sv94",
@@ -12687,7 +15224,8 @@
    "notaColor": null,
    "entra": null,
    "goles": 0,
-   "tarjetas": []
+   "tarjetas": [],
+   "rolLargoFino": "Delantero"
   }
  ],
  "fuentePases": "Matriz de pases de Opta · passmatrix-208696.xml",

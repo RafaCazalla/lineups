@@ -61,9 +61,12 @@ python3 tools/besoccer_datos.py 208696 --year 2027 \
 `/* PARTIDO:inicio */` … `/* PARTIDO:fin */`, escapando `<` como `<`: sin eso, un
 nombre que contuviera `</script` tumbaría la página. **No pegues el JSON a mano.**
 
-Tres peticiones: `match_lineups`, `match_events_stats` y **`playerStats`, una por
-jugador** (22 más). `--sin-stats` las salta si solo hace falta la alineación. Y `--pases`,
-que no es una petición: lee un `passMatrix` de Opta de un fichero.
+Cuatro peticiones: `match_lineups`, `match_events_stats`, **`playerStats` una por
+jugador** (los 22 titulares más los suplentes que entraron) y **`player` una por jugador**
+(altura y peso, que no vienen en ninguna de las otras). Unas 70 en total, **todas en el
+ordenador de quien genera los datos, ninguna en el navegador de quien abre la página**.
+`--sin-stats` las salta si solo hace falta la alineación. Y `--pases`, que no es una
+petición: lee un `passMatrix` de Opta de un fichero.
 
 Y tres reglas:
 
@@ -72,8 +75,11 @@ Y tres reglas:
   clave en el HTML es una clave regalada. Si algún día tiene que pedir en caliente, la
   clave va en una función de Vercel con la clave en variable de entorno, nunca en el
   cliente.
-- **Los datos van incrustados, no se piden al abrir.** Así funciona con doble clic, sin
-  servidor y sin CORS, que es lo que hace que se pueda enseñar en cualquier sitio.
+- **Los datos van incrustados, no se piden al abrir.** La página **no hace ni una
+  petición**: `index.html` no tiene un solo `fetch`. Las setenta y pico llamadas ocurren
+  una vez, aquí, y lo que se despliega es el resultado. Así funciona con doble clic, sin
+  servidor y sin CORS, y —lo que importa más— **sin poner la clave en el cliente**: para
+  pedir por jugador desde el navegador habría que mandarle la clave, o montar un proxy.
 - **Lo que la API no da, no está.** Ver abajo.
 - **`match_lineups` sin `year` devuelve media respuesta**, y sin dar error. Salen los
   onces, pero desaparecen `team_names`, los entrenadores, las tácticas y el **banquillo
@@ -92,7 +98,8 @@ Y tres reglas:
 | entrenadores, tácticas, nota y edad media de cada equipo | segunda línea de la cabecera |
 | 13 estadísticas de partido (posesión, tiros, pases, faltas…) | panel «Estadísticas del partido» |
 | escudos y retratos por id | imágenes reales, no marcadores de posición |
-| el banquillo (`bench`), once por equipo, con el minuto en que entró cada uno | la tira de suplentes de móvil |
+| el banquillo (`bench`), once por equipo, con el minuto en que entró cada uno | la tira de suplentes de móvil, y ficha completa para los que entraron |
+| altura y peso, de `req=player` (una petición más por jugador) | la línea bajo el nombre en la ficha |
 
 **No da coordenadas de los jugadores.** Manda el nombre de la táctica (`4-2-3-1`,
 `3-5-2`), un `pos` de 1 a 11 que recorre las líneas de atrás hacia delante, y
@@ -352,10 +359,18 @@ Tres piezas y ya está:
   en una pantalla vertical, todo lo que sobre de lienzo es aire entre la cabecera y el
   césped. Lo de debajo es para los banquillos.
 - **Debajo van los dos banquillos**, once por equipo, con el minuto en el que entró cada
-  uno. Los que no llegaron a jugar se quedan en gris: distinguirlos es lo único que el
-  dato dice de ellos. No se les piden `playerStats` —serían 22 peticiones más para una
-  tira de nombres— y por eso no se abren; la nota que traen sirve solo para los que
-  entraron, porque a los demás la API les pone una que no significa nada.
+  uno. **Al que entró se le pide todo lo que se le pide a un titular** —`playerStats` y
+  sus medidas— y su fila es un botón: abre la misma hoja, con las mismas estadísticas y
+  el mismo informe. **Al que se quedó sentado, nada**: ni petición ni botón, y va en
+  gris. De él no hay nada que enseñar, y un botón que no hace nada es peor que no
+  tenerlo. La nota tampoco se guarda para ellos: la API se la pone igualmente y no
+  significa nada.
+
+  Eso obligó a separar dos cosas que eran una: `elegido` es el índice en `JUG` del
+  jugador **del campo**, y `mostrado` es el jugador **de la hoja**. Un suplente tiene
+  ficha e informe pero no tiene sitio en el césped, así que se enseña con `elegido = -1`.
+  Todo lo que preguntaba «¿hay alguien elegido?» para pintar la hoja pregunta ahora por
+  `mostrado`.
 - **El campo NO se gira**, aunque sabría. `giroVertical` sabe
   poner el campo de canto cuando el lienzo es más alto que ancho, pero en móvil se
   desactiva a propósito: el campo se mira como en la tele, y además girándolo cambiaba de
@@ -365,8 +380,17 @@ Tres piezas y ya está:
   partido y el cajón entra por el borde que has pulsado, con velo detrás. Dentro, la
   cabecera «Ajustes» es un título y no un plegable: plegar secciones dentro de un cajón
   que se cierra entero no aporta nada.
-- **Todo lo que se abre es una hoja inferior al 70 %**: la ficha del jugador, el informe
-  y las estadísticas del partido. Misma forma para las tres, así se entiende una vez.
+- **Todo lo que se abre es una hoja inferior**: la ficha del jugador, el informe y las
+  estadísticas del partido. Misma forma para las tres, así se entiende una vez. **70 %
+  de la pantalla, u 80 % cuando hay informe**, que son siete campos y un área de texto.
+- **La hoja se arrastra por la banda de arriba**: hacia arriba se agranda hasta ocupar la
+  pantalla, hacia abajo se cierra. El alto vive en **una sola variable CSS**, `--hoja`,
+  de la que cuelgan la propia hoja y el borde inferior del campo, así que el dedo mueve
+  un número y todo lo demás lo sigue. Durante el gesto se toca solo el alto del elemento
+  y `--hoja` se escribe **al soltar**: si no, el lienzo de WebGL se redimensionaría en
+  cada cuadro del arrastre. A pantalla completa el campo se esconde del todo —un dedo de
+  verde asomando por arriba parece un fallo, no una vista— y al cerrar, el alto vuelve a
+  su sitio, o la siguiente hoja se abriría a pantalla completa sin que nadie lo pida.
 - **Con el informe encendido, la hoja tiene pestañas**: «Informe» y «Estadísticas». Un
   jugador tiene dos caras —lo que hizo y lo que opinas de él— y en un teléfono no caben
   a la vez, pero **se valora mirando los números**, así que hay que poder ir y volver sin
@@ -394,6 +418,13 @@ Lo que costó de esto:
 - **Dos marcas en el `body` lo gobiernan todo**, `con-hoja` y `con-velo`, y las calcula
   `refrescarCapas()` en un solo sitio. Tres paneles por dos marcas son seis ocasiones de
   dejarse una.
+
+### Un aviso sobre la ficha del jugador
+
+`.cuerpo` era el nombre de dos cosas a la vez: el envoltorio que se desplaza dentro de la
+hoja de móvil y **el cuerpo de cada sección plegable de la ficha**. La regla
+`body.movil #ficha .cuerpo{overflow-y:auto}` las cogía todas y convertía cada sección en
+su propio contenedor con desplazamiento. El envoltorio se llama ahora `.hoja-cuerpo`.
 
 ### Las fichas, en móvil, son otras
 
@@ -715,11 +746,9 @@ Cambiar una medida en `M` cambia el campo entero: las líneas se dibujan de ahí
   proporciones del logo; con el SVG o el PNG de marca queda idéntica.
 - **Competición y jornada**: no vienen en estas dos peticiones. La cabecera lleva
   entrenadores y tácticas en su lugar, y no se inventa una jornada.
-- **Suplentes en el campo, y su ficha.** Ya están en los datos (`suplentes`) y en móvil
-  se listan debajo del campo, pero en escritorio no hay nada: cabe un banquillo dibujado
-  al borde del césped, que es lo que hacía el interruptor «Mostrar banquillo» de la
-  maqueta. Y con su `idApi` se les puede pedir `playerStats` para que su ficha se abra
-  igual que la de un titular.
+- **Suplentes en el escritorio.** En móvil se listan debajo del campo y los que entraron
+  abren su ficha; en escritorio no hay nada. Cabe un banquillo dibujado al borde del
+  césped, que es lo que hacía el interruptor «Mostrar banquillo» de la maqueta.
 - **Forma ofensiva, defensiva y balón parado**, los tres puntos de vista del documento de
   encargo. No son ángulos de cámara: son tres juegos alternativos de posiciones, y no hay
   datos tácticos para sostenerlos.

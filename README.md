@@ -426,6 +426,16 @@ hoja de móvil y **el cuerpo de cada sección plegable de la ficha**. La regla
 `body.movil #ficha .cuerpo{overflow-y:auto}` las cogía todas y convertía cada sección en
 su propio contenedor con desplazamiento. El envoltorio se llama ahora `.hoja-cuerpo`.
 
+### «Ver estadísticas»
+
+Un interruptor más en los ajustes, encendido por defecto. Apagado, tocar a un jugador
+sigue haciendo lo suyo **en el campo** —lo resalta, saca su nombre y pinta su mapa de
+calor— pero no abre nada encima. Es para mirar el campo sin que media pantalla se llene
+de números, y para hacer informes sin la ficha delante. Se aplica en caliente sobre la
+hoja que ya esté abierta: apagarlo y que la ficha siguiera ahí sería absurdo. Con las
+estadísticas apagadas el informe va solo y **no hay barra de pestañas**: una barra de una
+pestaña no es una barra.
+
 ### Las fichas, en móvil, son otras
 
 Lo que en escritorio se resuelve con el ratón —pasar por encima, ver el rótulo— aquí no
@@ -500,6 +510,60 @@ La izquierda es una **columna**, no dos tarjetas con posiciones absolutas: los a
 arriba —plegables, y el estado se recuerda— y el informe debajo. Así no se pisan sea cual
 sea su alto. Al abrir un informe los ajustes se apartan solos, pero **ese plegado
 automático no se guarda**: la preferencia es la que el usuario elige a mano.
+
+### Dónde se guardan
+
+Cada informe es **una fila con el esquema de la tabla**, no un objeto a medida de esta
+pantalla:
+
+```sql
+create table scout_reports (
+  id          text primary key,   -- match_id + player_id + user_id
+  player_id   text not null,      -- idplayer de la API de BeSoccer
+  match_id    text not null,
+  user_id     text not null,
+  dorsal      int,
+  born        int,
+  posrm       text,               -- perfil, clave de BeSoccer Pro
+  foot        text,               -- R | L | B  (SUPOSICIÓN, sin confirmar)
+  pts         int,                -- 0 a 10
+  valoration  text,               -- A | B | C | D
+  notes       text,
+  created_at  timestamptz not null,
+  updated_at  timestamptz not null,
+  unique (match_id, player_id, user_id)
+);
+```
+
+El `id` es estable por partido, jugador y usuario **a propósito**: volver a guardar
+actualiza la misma fila en vez de dejar un rastro de informes del mismo jugador.
+
+**Aquí no hay base de datos.** Esto es un HTML suelto que se abre con doble clic y se
+despliega en Pages, así que hay dos destinos y el mismo código escribe en los dos:
+
+- **`localStorage`, siempre.** Es lo que hace que funcione sin servidor y sin conexión,
+  que es como se usa un informe de ojeador en un campo.
+- **Un endpoint HTTP, si está configurado** con `?api=…`. Al guardar hace `POST` con la
+  fila en el cuerpo; al arrancar hace `GET ?match_id=…&user_id=…` y funde lo que venga
+  con lo local, **ganando lo más reciente por `updated_at`**: quien acabe de escribir en
+  el móvil no quiere que se lo pise una copia vieja del portátil. Si el `POST` falla, el
+  informe se queda en local y **se dice en pantalla**: perder un informe en silencio
+  sería lo peor que puede hacer esta pantalla.
+
+**No hay URL por defecto, y es deliberado**: apuntar a un servicio que no es tuyo es peor
+que no guardar. Falta que BeSoccer diga cuál es.
+
+`user_id` es hoy un identificador estable por navegador (`bsp-usuario`), porque **no hay
+autenticación**. Se puede fijar con `?user=…`, que es por donde entrará el usuario real
+el día que esto viva dentro de BeSoccer Pro.
+
+### La lista de informes hechos
+
+Abajo a la izquierda, gemelo del de estadísticas del partido, hay un botón **que solo
+existe si hay informes**: un botón que abre una lista vacía es una promesa incumplida.
+Dentro, quién tiene informe, con su valoración y sus puntos, y el atajo para volver a
+él — que es lo que se hace de verdad: corregir en el descanso lo que escribiste en el
+minuto 20. Si llegas por ahí y el modo informe estaba apagado, se enciende solo.
 
 El formulario sale del **JSON de BeSoccer Pro**: año de nacimiento, perfil (los once de
 su lista, con sus claves), pie, puntos de 0 a 10 (`type_pts: numeric`) y valoración A-D,
